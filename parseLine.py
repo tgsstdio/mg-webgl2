@@ -73,15 +73,12 @@ class TSInterpreter:
     if localType not in self.references:
       self.references[localType] = localType
 
-textData = """  	
-		public MgExtent3D MaxExtent { get; set; }
-		public UInt32 MaxMipLevels { get; set; }
-		public UInt32 MaxArrayLayers { get; set; }
-		public MgSampleCountFlagBits SampleCounts { get; set; }
-		public UInt64 MaxResourceSize { get; set; }
+textData = """
+		public UInt32 Flags { get; set; }
+		public MgDynamicState[] DynamicStates { get; set; }
 		"""		
 
-tp = TSInterpreter('MgImageFormatProperties', False)
+tp = TSInterpreter('MgPipelineDynamicStateCreateInfo', False)
 tp.parse(textData)
 
 

@@ -7,6 +7,16 @@
 /// <reference path="MgPhysicalDeviceMemoryProperties.ts" />
 /// <reference path="MgFormatProperties.ts" />
 /// <reference path="MgImageFormatProperties.ts" />
+/// <reference path="MgLayerProperties.ts" />
+/// <reference path="MgExtensionProperties.ts" />
+/// <reference path="MgSparseImageFormatProperties.ts" />
+/// <reference path="MgSurfaceFormatKHR.ts" />
+/// <reference path="MgDisplayPlanePropertiesKHR.ts" />
+/// <reference path="MgDisplayModeCreateInfoKHR.ts" />
+/// <reference path="IMgDisplayModeKHR.ts" />
+/// <reference path="MgSurfaceCapabilitiesKHR.ts" />
+/// <reference path="MgDisplayModePropertiesKHR.ts" />
+/// <reference path="MgDisplayPlaneCapabilitiesKHR.ts" />
 
 namespace Magnesium {
   export interface IMgPhysicalDevice {

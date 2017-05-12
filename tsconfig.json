@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target":"es5",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": false,
+        "outDir": "dist/Magnesium",
+        "sourceMap": true,
+        "strictNullChecks":true,
+        "alwaysStrict":true,
+        "noImplicitThis":true,
+        "noFallthroughCasesInSwitch":true
+    },
+    "include": [
+        "mg/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

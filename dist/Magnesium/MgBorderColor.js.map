@@ -1,0 +1,1 @@
+{"version":3,"file":"MgBorderColor.js","sourceRoot":"","sources":["../../mg/MgBorderColor.ts"],"names":[],"mappings":";AAAA,IAAU,SAAS,CASlB;AATD,WAAU,SAAS;IACjB,IAAY,aAOZ;IAPA,WAAY,aAAa;QACzB,uFAA2B,CAAA;QAC3B,mFAAyB,CAAA;QACzB,6EAAsB,CAAA;QACtB,yEAAoB,CAAA;QACpB,6EAAsB,CAAA;QACtB,yEAAoB,CAAA;IACrB,CAAC,EAPY,aAAa,GAAb,uBAAa,KAAb,uBAAa,QAOzB;AACF,CAAC,EATS,SAAS,KAAT,SAAS,QASlB"}
