@@ -71,17 +71,14 @@ class TSInterpreter:
     if localType not in self.references:
       self.references[localType] = localType
 
-textData = """  
-		public UInt32 SrcSubpass { get; set; }
-		public UInt32 DstSubpass { get; set; }
-		public MgPipelineStageFlagBits SrcStageMask { get; set; }
-		public MgPipelineStageFlagBits DstStageMask { get; set; }
-		public MgAccessFlagBits SrcAccessMask { get; set; }
-		public MgAccessFlagBits DstAccessMask { get; set; }
-		public MgDependencyFlagBits DependencyFlags { get; set; }
+textData = """  	
+		public UInt32 X { get; set; }
+		public UInt32 Y { get; set; }
+		public UInt32 Z { get; set; }
+		public UInt32 W { get; set; }
 		"""		
 
-tp = TSInterpreter('MgSubpassDependency', False)
+tp = TSInterpreter('MgVec4Ui', False)
 tp.parse(textData)
 
 

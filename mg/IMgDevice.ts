@@ -36,6 +36,9 @@
 /// <reference path="MgSwapchainCreateInfoKHR.ts" />
 /// <reference path="IMgSwapchainKHR.ts" />
 /// <reference path="IMgSemaphore.ts" />
+/// <reference path="MgSemaphoreCreateInfo.ts" />
+/// <reference path="MgFenceCreateInfo.ts" />
+/// <reference path="MgCommandBufferAllocateInfo.ts" />
 
 namespace Magnesium {
   export interface IMgDevice {
