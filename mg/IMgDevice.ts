@@ -1,5 +1,6 @@
 /// <reference path="MgResult.ts" />
 /// <reference path="IMgQueue.ts" />
+/// <reference path="IMgImage.ts" />
 /// <reference path="IMgAllocationCallbacks.ts" />
 /// <reference path="IMgDeviceMemory.ts" />
 /// <reference path="MgMemoryAllocateInfo.ts" />
@@ -20,6 +21,21 @@
 /// <reference path="IMgDescriptorSetLayout.ts" />
 /// <reference path="MgDescriptorPoolCreateInfo.ts" />
 /// <reference path="IMgDescriptorPool.ts" />
+/// <reference path="MgSubresourceLayout.ts" />
+/// <reference path="MgImageViewCreateInfo.ts" />
+/// <reference path="MgDescriptorSetAllocateInfo.ts" />
+/// <reference path="IMgDescriptorSet.ts" />
+/// <reference path="MgCopyDescriptorSet.ts" />
+/// <reference path="MgFramebufferCreateInfo.ts" />
+/// <reference path="IMgFramebuffer.ts" />
+/// <reference path="MgRenderPassCreateInfo.ts" />
+/// <reference path="IMgRenderPass.ts" />
+/// <reference path="MgCommandPoolCreateInfo.ts" />
+/// <reference path="IMgCommandPool.ts" />
+/// <reference path="IMgCommandBuffer.ts" />
+/// <reference path="MgSwapchainCreateInfoKHR.ts" />
+/// <reference path="IMgSwapchainKHR.ts" />
+/// <reference path="IMgSemaphore.ts" />
 
 namespace Magnesium {
   export interface IMgDevice {
@@ -114,5 +130,22 @@ namespace Magnesium {
 		acquireNextImageKHR(swapchain: IMgSwapchainKHR
       , timeout: number, semaphore: IMgSemaphore, fence: IMgFence
       , out: { pImageIndex: number}) : MgResult;
+
+		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
+       , allocator: IMgAllocationCallbacks
+       , out: { pSemaphore: IMgSemaphore }) : MgResult;     
+
+		createFence(pCreateInfo: MgFenceCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { fence: IMgFence})  : MgResult;
+
+		resetFences(pFences: Array<IMgFence>) : MgResult;
+
+		getFenceStatus(fence: IMgFence) : MgResult;
+
+    // WARN: timeout requires UInt64
+		waitForFences(pFences: Array<IMgFence>
+      , waitAll: boolean
+      , timeout: number) : MgResult;
   }
 }

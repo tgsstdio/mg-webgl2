@@ -1,47 +1,90 @@
-def parseLine(line):
-  tokens = line.split()
+class TSInterpreter:
+  def __init__(self, className, isInterface):
+    self.references = {}
+    self.className = className
+    self.isInterface = isInterface
 
-  if (len(tokens) == 0):
-      return ''
+  def parse(self, textData):
+    fields = []
+    for line in textData.split('\n'):
+      inputData = line.strip()
+      if inputData and '//' not in inputData:       
+        field = self.parseLine(inputData)      
+        fields.append(field)
 
-  translatedTypes = {}
-  translatedTypes['bool'] = 'boolean'
-  translatedTypes['UInt32'] = 'number'
-  translatedTypes['UInt64'] = 'number'
-  translatedTypes['UInt32[]'] = 'Array<number>'
-  translatedTypes['int'] = 'number'
-  translatedTypes['Int32'] = 'number'
-  translatedTypes['string'] = 'string'
-  translatedTypes['string[]'] = 'Array<string>'
-  translatedTypes['float'] = 'number'
-  translatedTypes['float[]'] = 'Array<number>'
-  translatedTypes['Result'] = 'MgResult'
+    classType = 'interface' if self.isInterface else 'class'
 
-  paramName = tokens[2][0].lower() + tokens[2][1:]
+    for ref in tp.references:
+      print('/// <reference path="' + ref + '.ts" />')
 
-  comment = ''
-  if tokens[1] == 'UInt64':
-    comment = '// WARN: ' + paramName + ' requires UInt64 \n'
-
-  localType = tokens[1]
-  if localType in translatedTypes:
-    localType = translatedTypes[localType]
-  elif localType.endswith('[]'):
-    localType = 'Array<' + tokens[1][:-2] + '>'
+    if (len(tp.references) > 0):
+      print('')
+  
+    print('namespace Magnesium {')
+    print('  export ' + classType + ' ' + self.className + ' {')
     
+    for field in fields:
+      if field[0]:
+        print('    ' + field[0])
+      print('    ' + field[1] + ': ' + field[2] + ';')      
+    print('  }')    
+    print('}')
+  
+  def parseLine(self, line):
+    tokens = line.split()
 
-  return comment + paramName + ' : ' + localType + ';'
+    if (len(tokens) == 0):
+        return ''
+
+    translatedTypes = {}
+    translatedTypes['bool'] = 'boolean'
+    translatedTypes['UInt32'] = 'number'
+    translatedTypes['UInt64'] = 'number'
+    translatedTypes['UInt32[]'] = 'Array<number>'
+    translatedTypes['int'] = 'number'
+    translatedTypes['Int32'] = 'number'
+    translatedTypes['string'] = 'string'
+    translatedTypes['string[]'] = 'Array<string>'
+    translatedTypes['float'] = 'number'
+    translatedTypes['float[]'] = 'Array<number>'
+    translatedTypes['Result'] = 'MgResult'
+
+    paramName = tokens[2][0].lower() + tokens[2][1:]
+
+    comment = ''
+    if tokens[1] == 'UInt64':
+      comment = '// WARN: ' + paramName + ' requires UInt64'
+
+    localType = tokens[1]
+    if localType in translatedTypes:
+      localType = translatedTypes[localType]
+    elif localType.endswith('[]'):
+      elementType = tokens[1][:-2]
+      localType = 'Array<' + elementType + '>'
+      self.insertType(elementType)
+    else:
+      self.insertType(localType)
+
+    return (comment, paramName, localType)
+
+  def insertType(self, localType):
+    if localType not in self.references:
+      self.references[localType] = localType
 
 textData = """  
-		public float R { get; set; }
-		public float G { get; set; }
-		public float B { get; set; }
-		public float A { get; set; }
-
+		public UInt32 SrcSubpass { get; set; }
+		public UInt32 DstSubpass { get; set; }
+		public MgPipelineStageFlagBits SrcStageMask { get; set; }
+		public MgPipelineStageFlagBits DstStageMask { get; set; }
+		public MgAccessFlagBits SrcAccessMask { get; set; }
+		public MgAccessFlagBits DstAccessMask { get; set; }
+		public MgDependencyFlagBits DependencyFlags { get; set; }
 		"""		
 
-for line in textData.split('\n'):
-  print(parseLine(line))
+tp = TSInterpreter('MgSubpassDependency', False)
+tp.parse(textData)
+
+
 
 
 
