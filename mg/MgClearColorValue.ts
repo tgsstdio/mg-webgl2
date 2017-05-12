@@ -19,11 +19,15 @@ namespace Magnesium {
     }
 
     set int32(value: MgVec4i) {
-      this.mValue = value as MgVec4i;
+      this.mValue = value;
     }    
 
 		get uint32() : MgVec4Ui {
       return this.mValue as MgVec4Ui;
     }   
+
+    set uint32(value: MgVec4Ui) {
+      this.mValue = value;
+    }        
   }
 }

@@ -42,8 +42,10 @@ class TSInterpreter:
     translatedTypes['UInt64'] = 'number'
     translatedTypes['UInt32[]'] = 'Array<number>'
     translatedTypes['int'] = 'number'
+    translatedTypes['uint'] = 'number'
     translatedTypes['Int32'] = 'number'
     translatedTypes['string'] = 'string'
+    translatedTypes['String'] = 'string'
     translatedTypes['string[]'] = 'Array<string>'
     translatedTypes['float'] = 'number'
     translatedTypes['float[]'] = 'Array<number>'
@@ -72,13 +74,14 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """  	
-		public UInt32 X { get; set; }
-		public UInt32 Y { get; set; }
-		public UInt32 Z { get; set; }
-		public UInt32 W { get; set; }
+		public MgExtent3D MaxExtent { get; set; }
+		public UInt32 MaxMipLevels { get; set; }
+		public UInt32 MaxArrayLayers { get; set; }
+		public MgSampleCountFlagBits SampleCounts { get; set; }
+		public UInt64 MaxResourceSize { get; set; }
 		"""		
 
-tp = TSInterpreter('MgVec4Ui', False)
+tp = TSInterpreter('MgImageFormatProperties', False)
 tp.parse(textData)
 
 

@@ -18,6 +18,9 @@
 /// <reference path="MgMemoryBarrier.ts" />
 /// <reference path="IMgEvent.ts" />
 /// <reference path="MgQueryControlFlagBits.ts" />
+/// <reference path="MgClearRect.ts" />
+/// <reference path="MgImageResolve.ts" />
+/// <reference path="IMgQueryPool.ts" />
 
 namespace Magnesium {
   export interface IMgCommandBuffer	{
