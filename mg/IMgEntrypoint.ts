@@ -1,6 +1,8 @@
 /// <reference path="MgResult.ts" />
+/// <reference path="IMgInstance.ts" />
 /// <reference path="MgInstanceCreateInfo.ts" />
 /// <reference path="IMgAllocationCallbacks.ts" />
+/// <reference path="MgLayerProperties.ts" />
 
 namespace Magnesium {
   export interface IMgEntrypoint {

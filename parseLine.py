@@ -10,6 +10,7 @@ def parseLine(line):
   translatedTypes['UInt64'] = 'number'
   translatedTypes['UInt32[]'] = 'Array<number>'
   translatedTypes['int'] = 'number'
+  translatedTypes['Int32'] = 'number'
   translatedTypes['string'] = 'string'
   translatedTypes['string[]'] = 'Array<string>'
   translatedTypes['float'] = 'number'
@@ -24,23 +25,19 @@ def parseLine(line):
 
   localType = tokens[1]
   if localType in translatedTypes:
-     localType = translatedTypes[localType]
+    localType = translatedTypes[localType]
+  elif localType.endswith('[]'):
+    localType = 'Array<' + tokens[1][:-2] + '>'
+    
 
   return comment + paramName + ' : ' + localType + ';'
 
 textData = """  
-		public MgImageCreateFlagBits Flags { get; set; }
-		public MgImageType ImageType { get; set; }
-		public MgFormat Format { get; set; }
-		public MgExtent3D Extent { get; set; }
-		public UInt32 MipLevels { get; set; }
-		public UInt32 ArrayLayers { get; set; }
-		public MgSampleCountFlagBits Samples { get; set; }
-		public MgImageTiling Tiling { get; set; }
-		public MgImageUsageFlagBits Usage { get; set; }
-		public MgSharingMode SharingMode { get; set; }
-		public UInt32[] QueueFamilyIndices { get; set; }
-		public MgImageLayout InitialLayout { get; set; }
+		public float R { get; set; }
+		public float G { get; set; }
+		public float B { get; set; }
+		public float A { get; set; }
+
 		"""		
 
 for line in textData.split('\n'):
