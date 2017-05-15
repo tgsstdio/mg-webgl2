@@ -1,4 +1,5 @@
-/// <reference path="./GLCmdCommandRecording.ts" />
+/// <reference path="GLCmdAction.ts" />
+/// <reference path="GLCmdCommandRecording.ts" />
 
 namespace Magnesium {
   export class GLCmdRecordInstruction {

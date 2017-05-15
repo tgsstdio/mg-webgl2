@@ -5,5 +5,12 @@ namespace Magnesium {
   export class GLCmdGraphicsRecording {
     grid: GLCmdGraphicsGrid;
     stateRenderer: IGLCmdStateRenderer;
+
+    constructor(grid: GLCmdGraphicsGrid
+    , renderer: IGLCmdStateRenderer)
+    {
+      this.grid = grid;
+      this.stateRenderer = renderer;
+    }    
   }
 }

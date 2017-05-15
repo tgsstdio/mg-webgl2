@@ -1,6 +1,7 @@
-/// <reference path="./GLCmdGraphicsGrid.ts" />
-/// <reference path="./GLCmdComputeGrid.ts" />
-/// <reference path="./GLCmdBlitGrid.ts" />
+/// <reference path="GLCmdGraphicsGrid.ts" />
+/// <reference path="GLCmdComputeGrid.ts" />
+/// <reference path="GLCmdBlitGrid.ts" />
+/// <reference path="GLCmdRecordInstruction.ts" />
 
 namespace Magnesium {
   export class GLCmdCommandBufferRecord {

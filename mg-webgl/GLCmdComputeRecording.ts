@@ -4,6 +4,14 @@
 namespace Magnesium {
   export class GLCmdComputeRecording {
     grid: GLCmdComputeGrid;
-    encoder: GLCmdComputeEncoder;
+    encoder: IGLCmdComputeEncoder;
+
+    constructor(
+      grid: GLCmdComputeGrid
+      , encoder: IGLCmdComputeEncoder
+    ) {
+      this.grid = grid;
+      this.encoder = encoder;
+    }
   }
 }

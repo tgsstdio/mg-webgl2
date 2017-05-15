@@ -15,7 +15,10 @@ class TSInterpreter:
     classType = 'interface' if self.isInterface else 'class'
 
     for ref in tp.references:
-      print('/// <reference path="' + ref + '.ts" />')
+      if ref.startswith('Mg') or ref.startswith('IMg'):
+        print('/// <reference path="../mg/' + ref + '.ts" />')
+      else:
+        print('/// <reference path="' + ref + '.ts" />')
 
     if (len(tp.references) > 0):
       print('')
@@ -43,6 +46,7 @@ class TSInterpreter:
     translatedTypes['UInt32[]'] = 'Array<number>'
     translatedTypes['int'] = 'number'
     translatedTypes['uint'] = 'number'
+    translatedTypes['uint[]'] = 'Array<number>'
     translatedTypes['Int32'] = 'number'
     translatedTypes['string'] = 'string'
     translatedTypes['String'] = 'string'
@@ -74,24 +78,10 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-        public IGLGraphicsPipeline Pipeline { get; set; }
-        public MgColor4f BlendConstants { get; internal set; }
-        public GLCmdDepthBiasParameter DepthBias { get; internal set; }
-        public GLCmdDepthBoundsParameter DepthBounds { get; internal set; }
-        public float LineWidth { get; internal set; }
-        public GLCmdScissorParameter Scissors { get; internal set; }
-        public GLCmdViewportParameter Viewports { get; internal set; }
-        internal GLCmdStencilFunctionInfo BackStencilInfo { get; set; }
-        internal GLCmdStencilFunctionInfo FrontStencilInfo { get; set; }
-        public uint FrontStencilWriteMask { get; internal set; }
-        public uint BackStencilWriteMask { get; internal set; }
-		"""		
+		public uint Binding { get; set; }
+		public int First { get; set; }
+		public int Last { get; set; }
+	      """		
 
-tp = TSInterpreter('GLCmdBoundPipelineRecordInfo', False)
+tp = TSInterpreter('GLBindingPointOffsetInfo', False)
 tp.parse(textData)
-
-
-
-
-
-  
