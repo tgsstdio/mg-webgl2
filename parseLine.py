@@ -4,6 +4,25 @@ class TSInterpreter:
     self.className = className
     self.isInterface = isInterface
 
+    translatedTypes = {}
+    translatedTypes['bool'] = 'boolean'
+    translatedTypes['UInt32'] = 'number'
+    translatedTypes['UInt64'] = 'number'
+    translatedTypes['UInt32[]'] = 'Array<number>'
+    translatedTypes['int'] = 'number'
+    translatedTypes['uint'] = 'number'
+    translatedTypes['uint[]'] = 'Array<number>'
+    translatedTypes['Int32'] = 'number'
+    translatedTypes['string'] = 'string'
+    translatedTypes['String'] = 'string'
+    translatedTypes['string[]'] = 'Array<string>'
+    translatedTypes['float'] = 'number'
+    translatedTypes['IntPtr'] = 'any'
+    translatedTypes['UIntPtr'] = 'any'
+    translatedTypes['float[]'] = 'Array<number>'
+    translatedTypes['Result'] = 'MgResult'
+    self.translatedTypes = translatedTypes
+
   def parse(self, textData):
     fields = []
     for line in textData.split('\n'):
@@ -39,33 +58,26 @@ class TSInterpreter:
     if (len(tokens) == 0):
         return ''
 
-    translatedTypes = {}
-    translatedTypes['bool'] = 'boolean'
-    translatedTypes['UInt32'] = 'number'
-    translatedTypes['UInt64'] = 'number'
-    translatedTypes['UInt32[]'] = 'Array<number>'
-    translatedTypes['int'] = 'number'
-    translatedTypes['uint'] = 'number'
-    translatedTypes['uint[]'] = 'Array<number>'
-    translatedTypes['Int32'] = 'number'
-    translatedTypes['string'] = 'string'
-    translatedTypes['String'] = 'string'
-    translatedTypes['string[]'] = 'Array<string>'
-    translatedTypes['float'] = 'number'
-    translatedTypes['float[]'] = 'Array<number>'
-    translatedTypes['Result'] = 'MgResult'
+    typeIndex = 1
+    nameIndex = 2
+    
+    if tokens[0] != 'public':
+      typeIndex = 0
+      nameIndex = 1
+    
+    paramName = tokens[nameIndex][0].lower() + tokens[nameIndex][1:]
 
-    paramName = tokens[2][0].lower() + tokens[2][1:]
-
+    localType = tokens[typeIndex]
     comment = ''
-    if tokens[1] == 'UInt64':
-      comment = '// WARN: ' + paramName + ' requires UInt64'
 
-    localType = tokens[1]
-    if localType in translatedTypes:
-      localType = translatedTypes[localType]
+    for warningType in ['UInt64', 'IntPtr', 'UIntPtr']:    
+      if localType == warningType:
+        comment = '// WARN: ' + paramName + ' requires ' + warningType    
+
+    if localType in self.translatedTypes:
+      localType = self.translatedTypes[localType]
     elif localType.endswith('[]'):
-      elementType = tokens[1][:-2]
+      elementType = tokens[typeIndex][:-2]
       localType = 'Array<' + elementType + '>'
       self.insertType(elementType)
     else:
@@ -78,10 +90,11 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-		public uint Binding { get; set; }
-		public int First { get; set; }
-		public int Last { get; set; }
+		GLMemoryBufferType BufferType { get; }
+		int BufferSize { get; }
+		uint BufferId { get; }
+		IntPtr Handle { get; }
 	      """		
 
-tp = TSInterpreter('GLBindingPointOffsetInfo', False)
+tp = TSInterpreter('IGLDeviceMemory', True)
 tp.parse(textData)

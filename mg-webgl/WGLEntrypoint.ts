@@ -1,5 +1,5 @@
 /// <reference path="../mg/IMgEntrypoint.ts" />
-/// <reference path="./WGLInstance.ts" />
+/// <reference path="WGLInstance.ts" />
 
 namespace Magnesium {
   export class WGLEntrypoint implements IMgEntrypoint {

@@ -6,6 +6,13 @@
 /// <reference path="../mg/MgSubmitInfoWaitSemaphoreInfo.ts" />
 /// <reference path="IGLCommandBuffer.ts" />
 /// <reference path="GLQueueSubmission.ts" />
+/// <reference path="IGLSemaphoreEntrypoint.ts" />
+/// <reference path="IGLCmdStateRenderer.ts" />
+/// <reference path="IGLBlitOperationEntrypoint.ts" />
+/// <reference path="IGLSwapchainKHR.ts" />
+/// <reference path="GLCmdCommandRecording.ts" />
+/// <reference path="IGLFence.ts" />
+/// <reference path="IGLQueueFence.ts" />
 
 namespace Magnesium {
   export class WGLCmdQueue implements IWGLQueue {
@@ -236,8 +243,8 @@ namespace Magnesium {
             order.submissions.set (sub.key, sub.orderFence);
           }
           // JUST LOOP AROUND
-          const MAX_VALUE = 1024;
-          this.mOrderKey = (this.mOrderKey >= MAX_VALUE) ? 0 : this.mOrderKey + 1;
+          const ORDER_MAX_VALUE = 1024;
+          this.mOrderKey = (this.mOrderKey >= ORDER_MAX_VALUE) ? 0 : this.mOrderKey + 1;
           this.mOrders.set (order.key, order);
         }
 
