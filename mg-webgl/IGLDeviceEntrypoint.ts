@@ -3,5 +3,6 @@
 namespace Magnesium {
   export interface IGLDeviceEntrypoint {
     readonly deviceMemory : IGLDeviceMemoryEntrypoint;
+    readonly image: IWGLDeviceImageEntrypoint;
   }
 }

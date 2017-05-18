@@ -4,7 +4,7 @@
 namespace Magnesium {
   export interface IMgDescriptorPool {
 		destroyDescriptorPool(device: IMgDevice
-      , allocator: IMgAllocationCallbacks) : void;
+      , allocator: IMgAllocationCallbacks|null) : void;
 
 		resetDescriptorPool(device: IMgDevice, flags: number) : MgResult;
 	}

@@ -3,6 +3,6 @@
 
 namespace Magnesium {
   export interface IMgFence {
-    destroyFence(device : IMgDevice, allocator : IMgAllocationCallbacks) : void;
+    destroyFence(device : IMgDevice, allocator : IMgAllocationCallbacks|null) : void;
   }
 }

@@ -3,10 +3,16 @@
 
 namespace Magnesium {
   export class WGLDevice implements IWGLDevice {
+    private mGL: WebGL2RenderingContext;
     private mQueue: IWGLQueue;
     private mEntrypoint: IGLDeviceEntrypoint;
 
-    constructor(queue: IWGLQueue, entrypoint: IGLDeviceEntrypoint) {
+    constructor(
+      gl: WebGL2RenderingContext
+      ,queue: IWGLQueue
+      , entrypoint: IGLDeviceEntrypoint
+    ) {
+      this.mGL = gl;
       this.mQueue = queue;
       this.mEntrypoint = entrypoint;
     }
@@ -40,7 +46,7 @@ namespace Magnesium {
 			}
 
 			// ARB_texture_storage
-			let textureId = new Array<number>(1);
+			let textureId : WebGLTexture;
 
 			let width = pCreateInfo.extent.width;
 			let height = pCreateInfo.extent.height;
@@ -55,8 +61,9 @@ namespace Magnesium {
         case MgImageType.TYPE_1D:
   //				GL.CreateTextures (TextureTarget.Texture1D, 1, textureId);
   //				GL.Ext.TextureStorage1D (textureId [0], (ExtDirectStateAccess)All.Texture1D, levels, internalFormat, width);
-          textureId[0] = this.mEntrypoint.image.createTextureStorage1D (
-            levels
+          textureId = this.mEntrypoint.image.createTextureStorage1D (
+            this.mGL
+            ,levels
             , pCreateInfo.format
             , width
           );
@@ -64,8 +71,9 @@ namespace Magnesium {
         case MgImageType.TYPE_2D:
   //				GL.CreateTextures (TextureTarget.Texture2D, 1, textureId);
   //				GL.Ext.TextureStorage2D (textureId[0], (ExtDirectStateAccess)All.Texture2D, levels, internalFormat, width, height);
-          textureId[0] = this.mEntrypoint.image.createTextureStorage2D (
-            levels
+          textureId = this.mEntrypoint.image.createTextureStorage2D (
+            this.mGL
+            ,levels
             , pCreateInfo.format
             , width
             , height
@@ -74,8 +82,9 @@ namespace Magnesium {
         case MgImageType.TYPE_3D:
   //				GL.CreateTextures (TextureTarget.Texture3D, 1, textureId);
   //				GL.Ext.TextureStorage3D (textureId [0], (ExtDirectStateAccess)All.Texture3D, levels, internalFormat, width, height, depth);
-          textureId [0] = this.mEntrypoint.image.CreateTextureStorage3D (
-            levels
+          textureId = this.mEntrypoint.image.createTextureStorage3D (
+            this.mGL
+            ,levels
             , pCreateInfo.format
             , width
             , height
@@ -87,7 +96,7 @@ namespace Magnesium {
 
 			out.pImage = new GLImage(
         this.mEntrypoint.image
-        , textureId[0]
+        , textureId
         , imageType
         , pCreateInfo.format
         , width

@@ -70,7 +70,7 @@ namespace Magnesium {
       ) : MgResult;
 		createDisplayModeKHR(display: IMgDisplayKHR
       , pCreateInfo: MgDisplayModeCreateInfoKHR
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pMode: IMgDisplayModeKHR}) : MgResult;
 		getDisplayPlaneCapabilitiesKHR(
       mode: IMgDisplayModeKHR

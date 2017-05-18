@@ -11,6 +11,6 @@ namespace Magnesium {
       , memoryOffset: number) : MgResult;		
 
 		destroyImage(device: IMgDevice
-      , allocator: IMgAllocationCallbacks) : void;
+      , allocator: IMgAllocationCallbacks|null) : void;
   }
 }

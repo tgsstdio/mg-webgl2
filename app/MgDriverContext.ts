@@ -22,7 +22,7 @@ namespace Magnesium {
       createInfo.applicationInfo = appInfo;
       createInfo.enabledLayerNames = enabledLayerNames;
 			createInfo.enabledExtensionNames = enabledExtensionNames;
-      let out : { instance : IMgInstance };
+      let out : { instance : IMgInstance } = { instance: null };
 			let result = this.mEntrypoint.createInstance (createInfo, null, out);
       this.mInstance = out.instance;
       return result;

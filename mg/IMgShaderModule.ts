@@ -3,6 +3,6 @@
 
 namespace Magnesium {
   export interface IMgShaderModule {
-		destroyShaderModule(device : IMgDevice, allocator : IMgAllocationCallbacks) : void;
+		destroyShaderModule(device : IMgDevice, allocator : IMgAllocationCallbacks|null) : void;
 	}
 }

@@ -9,7 +9,7 @@ namespace Magnesium {
       this.mDevice = device;
     }
 
-    destroyInstance(allocator: IMgAllocationCallbacks) : void {
+    destroyInstance(allocator: IMgAllocationCallbacks|null) : void {
 
     }
 

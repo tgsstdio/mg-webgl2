@@ -42,18 +42,18 @@
 
 namespace Magnesium {
   export interface IMgDevice {
-    destroyDevice(allocator : IMgAllocationCallbacks) : void;
+    destroyDevice(allocator : IMgAllocationCallbacks|null) : void;
 
     getDeviceQueue(queueFamilyIndex : number
       , queueIndex : number
       , out : {pQueue: IMgQueue} ) : void;
 
     allocateMemory(pAllocateInfo : MgMemoryAllocateInfo
-      , allocator : IMgAllocationCallbacks
+      , allocator : IMgAllocationCallbacks|null
       , out : { pMemory : IMgDeviceMemory } ) : MgResult;
 
 		createImage(pCreateInfo: MgImageCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pImage: IMgImage } ) : MgResult;
 		
     getImageSubresourceLayout(image: IMgImage
@@ -61,37 +61,37 @@ namespace Magnesium {
       , out: { pLayout: MgSubresourceLayout }) : void;
 
 		createImageView(pCreateInfo: MgImageViewCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pView: IMgImageView } ) : MgResult;
 
 		createShaderModule(pCreateInfo: MgShaderModuleCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pShaderModule: IMgShaderModule } ) : MgResult;
 
 		createGraphicsPipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgGraphicsPipelineCreateInfo>
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelines: Array<IMgPipeline> }) : MgResult;
 
 		createComputePipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgComputePipelineCreateInfo>
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelines: Array<IMgPipeline> } ) : MgResult;
 
 		createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelineLayout: IMgPipelineLayout }) : MgResult;
 
 		createSampler(pCreateInfo: MgSamplerCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSampler: IMgSampler } ) : MgResult;
 
 		createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSetLayout: IMgDescriptorSetLayout }) : MgResult;
 
 		createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pDescriptorPool: IMgDescriptorPool}) : MgResult;
 
 		allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
@@ -105,15 +105,15 @@ namespace Magnesium {
       , pDescriptorCopies: Array<MgCopyDescriptorSet>) : void;
 
 		createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pFramebuffer: IMgFramebuffer }) : MgResult;
 
 		createRenderPass(pCreateInfo: MgRenderPassCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pRenderPass: IMgRenderPass }) : MgResult;
 
 		createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pCommandPool: IMgCommandPool }) : MgResult;
 
 		allocateCommandBuffers(pAllocateInfo: MgCommandBufferAllocateInfo
@@ -123,7 +123,7 @@ namespace Magnesium {
       , pCommandBuffers: Array<IMgCommandBuffer>) : void;
 
 		createSwapchainKHR(pCreateInfo: MgSwapchainCreateInfoKHR
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSwapchain : IMgSwapchainKHR }) : MgResult;
 
 		getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
@@ -135,11 +135,11 @@ namespace Magnesium {
       , out: { pImageIndex: number}) : MgResult;
 
 		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
-       , allocator: IMgAllocationCallbacks
+       , allocator: IMgAllocationCallbacks|null
        , out: { pSemaphore: IMgSemaphore }) : MgResult;     
 
 		createFence(pCreateInfo: MgFenceCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { fence: IMgFence})  : MgResult;
 
 		resetFences(pFences: Array<IMgFence>) : MgResult;

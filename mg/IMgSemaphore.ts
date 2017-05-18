@@ -4,6 +4,6 @@
 namespace Magnesium {
   export interface IMgSemaphore	{
 		destroySemaphore (device: IMgDevice
-      , allocator: IMgAllocationCallbacks) : void;
+      , allocator: IMgAllocationCallbacks|null) : void;
 	}
 }

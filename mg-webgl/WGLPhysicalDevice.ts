@@ -12,7 +12,7 @@ namespace Magnesium {
 		
     createDevice(
       pCreateInfo : MgDeviceCreateInfo
-      , allocator : IMgAllocationCallbacks
+      , allocator : IMgAllocationCallbacks|null
       , out : { pDevice : IMgDevice}
     ) : MgResult {
         out.pDevice = this.mDevice;
@@ -131,7 +131,7 @@ namespace Magnesium {
 
 		createDisplayModeKHR(display: IMgDisplayKHR
       , pCreateInfo: MgDisplayModeCreateInfoKHR
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pMode: IMgDisplayModeKHR}
     ) : never {
       throw new Error('Not implemented');

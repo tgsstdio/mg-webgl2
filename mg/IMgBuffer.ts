@@ -5,7 +5,7 @@
 namespace Magnesium {
   export interface IMgBuffer {
 		destroyBuffer(device: IMgDevice
-      , allocator: IMgAllocationCallbacks) : void;
+      , allocator: IMgAllocationCallbacks|null) : void;
 
     // WARN: memoryOffset requires UInt64
 		bindBufferMemory(device: IMgDevice

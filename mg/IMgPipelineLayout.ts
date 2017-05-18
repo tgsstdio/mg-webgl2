@@ -3,6 +3,6 @@
 namespace Magnesium {
   export interface IMgPipelineLayout {
 		destroyPipelineLayout(device: IMgDevice
-      , allocator: IMgAllocationCallbacks) : void;
+      , allocator: IMgAllocationCallbacks|null) : void;
 	}
 }

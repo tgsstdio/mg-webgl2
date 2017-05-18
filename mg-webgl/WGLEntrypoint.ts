@@ -3,17 +3,17 @@
 
 namespace Magnesium {
   export class WGLEntrypoint implements IMgEntrypoint {
-    private mGL: object;
+    private mDevice: IWGLDevice;
 
-    constructor(gl : object) {
-      this.mGL = gl;
+    constructor(device : IWGLDevice) {
+      this.mDevice = gl;
     }
 
     createInstance(createInfo : MgInstanceCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { instance?: IMgInstance }) : MgResult
+      , allocator: IMgAllocationCallbacks|null
+      , out: { instance: IMgInstance|null }) : MgResult
     {
-      out.instance = new WGLInstance(this.mGL);
+      out.instance = new WGLInstance(this.mDevice);
       return MgResult.SUCCESS;
     }
 

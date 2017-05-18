@@ -1,39 +1,31 @@
 namespace Magnesium {
-	class WebGLContext {
-
-  }
-  
-  class WebGLTexture {
-
-  }
-
   export interface IWGLDeviceImageEntrypoint {
 		deleteImage(
-      gl: WebGLContext
+      gl: WebGL2RenderingContext
       , textureId: WebGLTexture) : void;
 
 		createTextureStorage1D (
-      gl: WebGLContext
+      gl: WebGL2RenderingContext
       , levels: number
       , format: MgFormat
       , width: number
-    ) : number;
+    ) : WebGLTexture;
 
 		createTextureStorage2D (
-      gl: WebGLContext
+      gl: WebGL2RenderingContext
       , levels: number
       , format: MgFormat
       , width: number
       , height: number
-    ) : number;
+    ) : WebGLTexture;
 
 		createTextureStorage3D (
-      gl: WebGLContext
+      gl: WebGL2RenderingContext
       , levels: number
       , format: MgFormat
       , width: number
       , height: number
       , depth: number
-    ) : number;    
+    ) : WebGLTexture;    
 	}
 }

@@ -6,7 +6,7 @@
 
 namespace Magnesium {
   export interface IMgEntrypoint {
-    createInstance(createInfo : MgInstanceCreateInfo, allocator: IMgAllocationCallbacks, out: { instance?: IMgInstance }) : MgResult;
+    createInstance(createInfo : MgInstanceCreateInfo, allocator: IMgAllocationCallbacks|null, out: { instance: IMgInstance|null }) : MgResult;
 		enumerateInstanceLayerProperties(out: {properties?: Array<MgLayerProperties> } ) : MgResult;
 		enumerateInstanceExtensionProperties(layerName : string, out: { pProperties: Array<MgExtensionProperties>} ) : MgResult;    
   }
