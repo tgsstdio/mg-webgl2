@@ -11,6 +11,9 @@
   "keywords": [
     "webgl2"
   ],
+  "dependencies": {
+    "@types/webgl2": "0.0.1"
+  },
   "devDependencies": {
     "standard": "10.0.2",
     "typescript": "^2.2.1",

@@ -10,10 +10,13 @@
         "strictNullChecks":true,
         "alwaysStrict":true,
         "noImplicitThis":true,
-        "noFallthroughCasesInSwitch":true
+        "noFallthroughCasesInSwitch":true,
+        "types" : ["webgl2"]
     },
     "include": [
-        "mg/*"
+        "mg/*",
+        "mg-webgl/*",
+        "app/*"
     ],
     "exclude": [
         "node_modules",

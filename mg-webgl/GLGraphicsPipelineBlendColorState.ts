@@ -1,4 +1,4 @@
-/// <reference path="MgLogicOp.ts" />
+/// <reference path="../mg/MgLogicOp.ts" />
 /// <reference path="GLGraphicsPipelineBlendColorAttachmentState.ts" />
 
 namespace Magnesium {

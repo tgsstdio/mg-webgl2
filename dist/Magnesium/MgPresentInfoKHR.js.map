@@ -1,1 +1,1 @@
-{"version":3,"file":"MgPresentInfoKHR.js","sourceRoot":"","sources":["../../mg/MgPresentInfoKHR.ts"],"names":[],"mappings":";AAAA,IAAU,SAAS,CAIlB;AAJD,WAAU,SAAS;IACjB;QAAA;QAEA,CAAC;QAAD,uBAAC;IAAD,CAAC,AAFD,IAEC;IAFY,0BAAgB,mBAE5B,CAAA;AACH,CAAC,EAJS,SAAS,KAAT,SAAS,QAIlB"}
+{"version":3,"file":"MgPresentInfoKHR.js","sourceRoot":"","sources":["../../mg/MgPresentInfoKHR.ts"],"names":[],"mappings":";AAGA,IAAU,SAAS,CAMlB;AAND,WAAU,SAAS;IACjB;QAAA;QAIA,CAAC;QAAD,uBAAC;IAAD,CAAC,AAJD,IAIC;IAJY,0BAAgB,mBAI5B,CAAA;AACH,CAAC,EANS,SAAS,KAAT,SAAS,QAMlB"}

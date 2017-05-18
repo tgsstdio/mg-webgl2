@@ -1,1 +1,1 @@
-{"version":3,"file":"MgSubmitInfo.js","sourceRoot":"","sources":["../../mg/MgSubmitInfo.ts"],"names":[],"mappings":";AAAA,IAAU,SAAS,CAIlB;AAJD,WAAU,SAAS;IACjB;QAAA;QAEA,CAAC;QAAD,mBAAC;IAAD,CAAC,AAFD,IAEC;IAFY,sBAAY,eAExB,CAAA;AACH,CAAC,EAJS,SAAS,KAAT,SAAS,QAIlB"}
+{"version":3,"file":"MgSubmitInfo.js","sourceRoot":"","sources":["../../mg/MgSubmitInfo.ts"],"names":[],"mappings":";AAIA,IAAU,SAAS,CAMlB;AAND,WAAU,SAAS;IACjB;QAAA;QAIA,CAAC;QAAD,mBAAC;IAAD,CAAC,AAJD,IAIC;IAJY,sBAAY,eAIxB,CAAA;AACH,CAAC,EANS,SAAS,KAAT,SAAS,QAMlB"}

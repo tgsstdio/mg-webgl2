@@ -1,3 +1,5 @@
+/// <reference path="GLVertexAttributeType.ts" />
+
 namespace Magnesium {
 	export interface IGLCmdVBOEntrypoint
 	{

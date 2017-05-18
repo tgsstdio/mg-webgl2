@@ -9,7 +9,7 @@ namespace Magnesium {
       constructor
       (
          pipelineLayout: IGLPipelineLayout
-        , blockEntries: Array<GLUniformBlockEntry>,
+        , blockEntries: Array<GLUniformBlockEntry>
         , arrayMapper: GLInternalCacheArrayMapper
       ) {
         this.mArrayMapper = arrayMapper;
