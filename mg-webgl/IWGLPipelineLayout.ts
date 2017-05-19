@@ -3,7 +3,7 @@
 /// <reference path="GLBindingPointOffsetInfo.ts" />
 
 namespace Magnesium {
-  export interface IGLPipelineLayout {
+  export interface IWGLPipelineLayout extends IMgPipelineLayout {
     readonly bindings: Array<GLUniformBinding>;
     readonly noOfBindingPoints: number;
     readonly ranges: Map<number, GLBindingPointOffsetInfo>;

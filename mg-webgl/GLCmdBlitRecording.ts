@@ -1,14 +1,14 @@
-/// <reference path="IGLBlitOperationEntrypoint.ts" />
+/// <reference path="IWGLBlitOperationEntrypoint.ts" />
 /// <reference path="GLCmdBlitGrid.ts" />
 
 namespace Magnesium {
   export class GLCmdBlitRecording {
     grid: GLCmdBlitGrid;
-    entrypoint: IGLBlitOperationEntrypoint;
+    entrypoint: IWGLBlitOperationEntrypoint;
 
     constructor(
       grid: GLCmdBlitGrid
-      , entrypoint: IGLBlitOperationEntrypoint
+      , entrypoint: IWGLBlitOperationEntrypoint
     ) {
       this.grid = grid;
       this.entrypoint = entrypoint;

@@ -2,7 +2,7 @@
 /// <reference path="GLCmdClearValuesParameter.ts" />
 
 namespace Magnesium {
-  export class GLCmdBeginRenderpassRecord {
+  export class WGLCmdBeginRenderpassRecord {
     bitmask: GLQueueClearBufferMask;
     clearState: GLCmdClearValuesParameter;
   }

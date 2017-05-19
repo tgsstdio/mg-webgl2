@@ -9,14 +9,14 @@
 /// <reference path="../mg/MgColor4f.ts" />
 /// <reference path="GLCmdStencilFunctionInfo.ts" />
 /// <reference path="GLCmdPipelineStencilWriteInfo.ts" />
-/// <reference path="GLCmdInternalDraw.ts" />
+/// <reference path="WGLCmdInternalDraw.ts" />
 /// <reference path="GLCmdDepthBiasParameter.ts" />
 /// <reference path="GLCmdBoundPipelineRecordInfo.ts" />
 /// <reference path="GLCmdInternalDrawIndexedIndirect.ts" />
 
 namespace Magnesium {
   export class GLCmdGraphicsGrid {
-    renderpasses: Array<GLCmdBeginRenderpassRecord>;
+    renderpasses: Array<WGLCmdBeginRenderpassRecord>;
     pipelines: Array<GLCmdBoundPipelineRecordInfo>;
     stencilWrites: Array<GLCmdPipelineStencilWriteInfo>;
     viewports: Array<GLCmdViewportParameter>;
@@ -27,7 +27,7 @@ namespace Magnesium {
     blendConstants: Array<MgColor4f>;
     vAOs: Array<GLCmdVertexBufferObject>;
     stencilFunctions: Array<GLCmdStencilFunctionInfo>;
-    draws: Array<GLCmdInternalDraw>;
+    draws: Array<WGLCmdInternalDraw>;
     drawIndexeds: Array<GLCmdInternalDrawIndexed>;
     drawIndirects: Array<GLCmdInternalDrawIndirect>;
     drawIndexedIndirects: Array<GLCmdInternalDrawIndexedIndirect>;

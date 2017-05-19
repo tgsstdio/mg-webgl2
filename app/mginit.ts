@@ -15,16 +15,18 @@ appInfo.engineName = "Engine";
 appInfo.engineVersion = 1;
 
 
-let canvas = document.getElementById('glCanvas');
-let gl = canvas.getContext('webgl2') as WebGL2RenderingContext | null;
+let canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
+let gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
 if (gl == null)
   throw new Error();
 
 let semaphores: Magnesium.IWGLSemaphoreEntrypoint = new Magnesium.WGLSemaphoreEntrypoint();
 let renderer: Magnesium.IGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer();
-let blit: Magnesium.IGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
+let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
-let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint();
+let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();
+let image = new Magnesium.WGLDeviceImageEntrypoint(gl);
+let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(deviceMemory, image);
 let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint);
 
 let entrypoint = new Magnesium.WGLEntrypoint(device);

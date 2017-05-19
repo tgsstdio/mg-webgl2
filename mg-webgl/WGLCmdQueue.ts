@@ -1,14 +1,14 @@
 /// <reference path="IWGLQueue.ts" />
-/// <reference path="GLCmdEncoderCategory.ts" />
+/// <reference path="WGLCmdEncoderCategory.ts" />
 /// <reference path="GLQueueSubmitOrder.ts" />
-/// <reference path="GLCmdEncoderContext.ts" />
+/// <reference path="WGLCmdEncoderContext.ts" />
 /// <reference path="GLCmdComputeRecording.ts" />
 /// <reference path="../mg/MgSubmitInfoWaitSemaphoreInfo.ts" />
 /// <reference path="IGLCommandBuffer.ts" />
 /// <reference path="GLQueueSubmission.ts" />
-/// <reference path="IGLSemaphoreEntrypoint.ts" />
+/// <reference path="IWGLSemaphoreEntrypoint.ts" />
 /// <reference path="IGLCmdStateRenderer.ts" />
-/// <reference path="IGLBlitOperationEntrypoint.ts" />
+/// <reference path="IWGLBlitOperationEntrypoint.ts" />
 /// <reference path="IGLSwapchainKHR.ts" />
 /// <reference path="GLCmdCommandRecording.ts" />
 /// <reference path="IGLFence.ts" />
@@ -21,13 +21,13 @@ namespace Magnesium {
     private mSubmissionKey: number;
     private mOrderKey: number;
 
-    private mSemaphores : IGLSemaphoreEntrypoint;
+    private mSemaphores : IWGLSemaphoreEntrypoint;
     private mRenderer: IGLCmdStateRenderer;
-    private mBlit : IGLBlitOperationEntrypoint;
+    private mBlit : IWGLBlitOperationEntrypoint;
 
-    constructor(semaphores: IGLSemaphoreEntrypoint
+    constructor(semaphores: IWGLSemaphoreEntrypoint
       , renderer: IGLCmdStateRenderer
-      , blit: IGLBlitOperationEntrypoint
+      , blit: IWGLBlitOperationEntrypoint
     ) {
       this.mSemaphores = semaphores;
       this.mRenderer = renderer;
@@ -109,7 +109,7 @@ namespace Magnesium {
     performRequests(key : number) : void {
       if (this.mSubmissions.has(key))
       {
-			  let request : GLQueueSubmission = this.mSubmissions.get(key);
+			  let request : GLQueueSubmission = this.mSubmissions.get(key) as GLQueueSubmission;
         let requirements : number = request.waits.length;
         let checks : number = 0;
 
@@ -164,7 +164,7 @@ namespace Magnesium {
 				for (let orderKey of orderKeys)	{
 					
 					if (this.mOrders.has(orderKey)) {
-            let order: GLQueueSubmitOrder = this.mOrders.get(orderKey);
+            let order: GLQueueSubmitOrder = this.mOrders.get(orderKey) as GLQueueSubmitOrder;
 
             // Copy keys across to temp array
 						let submissionKeys = new Array<number>(order.submissions.size);            
@@ -174,7 +174,7 @@ namespace Magnesium {
 
 						for (let key of submissionKeys) {
               if (order.submissions.has(key)) {
-                let signal : IWGLSemaphore = order.submissions.get(key);
+                let signal : IWGLSemaphore = order.submissions.get(key) as IWGLSemaphore;
 
                 if (signal.isReady()) {
 									signal.reset ();

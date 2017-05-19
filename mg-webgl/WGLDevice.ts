@@ -1,5 +1,6 @@
 /// <reference path="IWGLQueue.ts" />
-/// <reference path="IGLDeviceEntrypoint.ts" />
+/// <reference path="IWGLDeviceEntrypoint.ts" />
+/// <reference path="WGLImage.ts" />
 
 namespace Magnesium {
   export class WGLDevice implements IWGLDevice {
@@ -37,8 +38,8 @@ namespace Magnesium {
     }
 
 		createImage(pCreateInfo: MgImageCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pImage: IMgImage }
+      , allocator: IMgAllocationCallbacks|null
+      , out: { pImage: IMgImage|null }
     ) : MgResult {
 		
 			if (pCreateInfo == null) {
@@ -53,38 +54,28 @@ namespace Magnesium {
 			let depth = pCreateInfo.extent.depth;
 			let levels = pCreateInfo.mipLevels;
 			let arrayLayers = pCreateInfo.arrayLayers;
-			//var internalFormat = GetInternalFormat(pCreateInfo.Format);
 
 			let imageType = pCreateInfo.imageType;
 
 			switch (imageType) {
         case MgImageType.TYPE_1D:
-  //				GL.CreateTextures (TextureTarget.Texture1D, 1, textureId);
-  //				GL.Ext.TextureStorage1D (textureId [0], (ExtDirectStateAccess)All.Texture1D, levels, internalFormat, width);
           textureId = this.mEntrypoint.image.createTextureStorage1D (
-            this.mGL
-            ,levels
+             levels
             , pCreateInfo.format
             , width
           );
           break;
         case MgImageType.TYPE_2D:
-  //				GL.CreateTextures (TextureTarget.Texture2D, 1, textureId);
-  //				GL.Ext.TextureStorage2D (textureId[0], (ExtDirectStateAccess)All.Texture2D, levels, internalFormat, width, height);
           textureId = this.mEntrypoint.image.createTextureStorage2D (
-            this.mGL
-            ,levels
+             levels
             , pCreateInfo.format
             , width
             , height
           );
           break;
         case MgImageType.TYPE_3D:
-  //				GL.CreateTextures (TextureTarget.Texture3D, 1, textureId);
-  //				GL.Ext.TextureStorage3D (textureId [0], (ExtDirectStateAccess)All.Texture3D, levels, internalFormat, width, height, depth);
           textureId = this.mEntrypoint.image.createTextureStorage3D (
-            this.mGL
-            ,levels
+             levels
             , pCreateInfo.format
             , width
             , height
@@ -94,7 +85,7 @@ namespace Magnesium {
           throw new Error('MgImageType not supported');
 			}
 
-			out.pImage = new GLImage(
+			out.pImage = new WGLImage(
         this.mEntrypoint.image
         , textureId
         , imageType
@@ -106,100 +97,176 @@ namespace Magnesium {
         , arrayLayers);
 			return MgResult.SUCCESS;
     }
-		
-    getImageSubresourceLayout(image: IMgImage
+    
+    getImageSubresourceLayout(
+      image: IMgImage
       , pSubresource: MgImageSubresource
-      , out: { pLayout: MgSubresourceLayout }) : void;
+      , out: { pLayout: MgSubresourceLayout }
+    ) : void
+		{
+			var internalImage : IWGLImage = image as IWGLImage;
+
+			if (internalImage != null
+				&& pSubresource.arrayLayer < internalImage.arrayLayers.length 
+				&& pSubresource.mipLevel < internalImage.arrayLayers[pSubresource.arrayLayer].levels.length)
+			{
+				out.pLayout = internalImage
+          .arrayLayers[pSubresource.arrayLayer]
+          .levels[pSubresource.mipLevel]
+          .subresourceLayout;
+			}
+			else
+			{
+				out.pLayout = new MgSubresourceLayout();
+			}
+		}
 
 		createImageView(pCreateInfo: MgImageViewCreateInfo
       , allocator: IMgAllocationCallbacks
-      , out: { pView: IMgImageView } ) : MgResult;
+      , out: { pView: IMgImageView|null }
+    ) : MgResult {
+			if (pCreateInfo == null) {
+				throw new Error("pCreateInfo is null");
+			}
+
+			if (pCreateInfo.image == null) {
+				throw new Error("pCreateInfo.image is null");
+			}
+
+			if (pCreateInfo.subresourceRange == null)	{
+				throw new Error ("pCreateInfo.SubresourceRange is null");
+			}
+
+      let originalImage = pCreateInfo.image as IWGLImage;
+
+      // STUB: not sure what required YET ...
+      out.pView = new WGLImageView(originalImage);
+      return MgResult.SUCCESS;
+    }
 
 		createShaderModule(pCreateInfo: MgShaderModuleCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pShaderModule: IMgShaderModule } ) : MgResult;
+      , allocator: IMgAllocationCallbacks|null
+      , out: { pShaderModule: IMgShaderModule|null }
+    ) : MgResult
+    {
+			if (pCreateInfo == null) {
+				throw new Error("pCreateInfo is null");
+			}
+
+			out.pShaderModule = new WGLShaderModule (pCreateInfo);
+			return MgResult.SUCCESS;
+    }
 
 		createGraphicsPipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgGraphicsPipelineCreateInfo>
       , allocator: IMgAllocationCallbacks
-      , out: { pPipelines: Array<IMgPipeline> }) : MgResult;
+      , out: { pPipelines: Array<IMgPipeline> }
+    ) : MgResult {
+      let output = new Array<IMgPipeline>();
 
-		createComputePipelines(pipelineCache: IMgPipelineCache
-      , pCreateInfos: Array<MgComputePipelineCreateInfo>
-      , allocator: IMgAllocationCallbacks
-      , out: { pPipelines: Array<IMgPipeline> } ) : MgResult;
+			if (pCreateInfos == null) {
+				throw new Error("pCreateInfos is null");
+			}
 
-		createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pPipelineLayout: IMgPipelineLayout }) : MgResult;
+      for (let info of pCreateInfos) {
+        let bLayout: IWGLPipelineLayout = info.layout as IWGLPipelineLayout;
+        if (bLayout == null) {
+          throw new Error("pCreateInfos[].Layout is null");
+        }
 
-		createSampler(pCreateInfo: MgSamplerCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pSampler: IMgSampler } ) : MgResult;
+        if (info.vertexInputState == null) {
+            throw new Error("pCreateInfos[].VertexInputState");
+        }
 
-		createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pSetLayout: IMgDescriptorSetLayout }) : MgResult;
+        if (info.inputAssemblyState == null) {
+            throw new Error("pCreateInfos[].InputAssemblyState");
+        }
 
-		createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pDescriptorPool: IMgDescriptorPool}) : MgResult;
+        if (info.rasterizationState == null) {
+            throw new Error("pCreateInfos[].RasterizationState");
+        }
 
-		allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
-      , out: { pDescriptorSets: Array<IMgDescriptorSet> } ) : MgResult;
+        let program = this.mEntrypoint.graphicsCompiler.compile(info);
+      }
+      return MgResult.SUCCESS;
+    }
 
-		freeDescriptorSets(descriptorPool: IMgDescriptorPool
-      , pDescriptorSets: Array<IMgDescriptorSet>) : MgResult;
+		// createComputePipelines(pipelineCache: IMgPipelineCache
+    //   , pCreateInfos: Array<MgComputePipelineCreateInfo>
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pPipelines: Array<IMgPipeline> } ) : MgResult;
 
-		updateDescriptorSets(
-      pDescriptorWrites: Array<MgWriteDescriptorSet>
-      , pDescriptorCopies: Array<MgCopyDescriptorSet>) : void;
+		// createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pPipelineLayout: IMgPipelineLayout }) : MgResult;
 
-		createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pFramebuffer: IMgFramebuffer }) : MgResult;
+		// createSampler(pCreateInfo: MgSamplerCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pSampler: IMgSampler } ) : MgResult;
 
-		createRenderPass(pCreateInfo: MgRenderPassCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pRenderPass: IMgRenderPass }) : MgResult;
+		// createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pSetLayout: IMgDescriptorSetLayout }) : MgResult;
 
-		createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { pCommandPool: IMgCommandPool }) : MgResult;
+		// createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pDescriptorPool: IMgDescriptorPool}) : MgResult;
 
-		allocateCommandBuffers(pAllocateInfo: MgCommandBufferAllocateInfo
-      , pCommandBuffers: Array<IMgCommandBuffer>) : MgResult;
+		// allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
+    //   , out: { pDescriptorSets: Array<IMgDescriptorSet> } ) : MgResult;
 
-		freeCommandBuffers(commandPool: IMgCommandPool
-      , pCommandBuffers: Array<IMgCommandBuffer>) : void;
+		// freeDescriptorSets(descriptorPool: IMgDescriptorPool
+    //   , pDescriptorSets: Array<IMgDescriptorSet>) : MgResult;
 
-		createSwapchainKHR(pCreateInfo: MgSwapchainCreateInfoKHR
-      , allocator: IMgAllocationCallbacks
-      , out: { pSwapchain : IMgSwapchainKHR }) : MgResult;
+		// updateDescriptorSets(
+    //   pDescriptorWrites: Array<MgWriteDescriptorSet>
+    //   , pDescriptorCopies: Array<MgCopyDescriptorSet>) : void;
 
-		getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
-      , out: { pSwapchainImages: Array<IMgImage>} ) : MgResult;
+		// createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pFramebuffer: IMgFramebuffer }) : MgResult;
 
-    // WARN: timeout requires UInt64
-		acquireNextImageKHR(swapchain: IMgSwapchainKHR
-      , timeout: number, semaphore: IMgSemaphore, fence: IMgFence
-      , out: { pImageIndex: number}) : MgResult;
+		// createRenderPass(pCreateInfo: MgRenderPassCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pRenderPass: IMgRenderPass }) : MgResult;
 
-		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
-       , allocator: IMgAllocationCallbacks
-       , out: { pSemaphore: IMgSemaphore }) : MgResult;     
+		// createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pCommandPool: IMgCommandPool }) : MgResult;
 
-		createFence(pCreateInfo: MgFenceCreateInfo
-      , allocator: IMgAllocationCallbacks
-      , out: { fence: IMgFence})  : MgResult;
+		// allocateCommandBuffers(pAllocateInfo: MgCommandBufferAllocateInfo
+    //   , pCommandBuffers: Array<IMgCommandBuffer>) : MgResult;
 
-		resetFences(pFences: Array<IMgFence>) : MgResult;
+		// freeCommandBuffers(commandPool: IMgCommandPool
+    //   , pCommandBuffers: Array<IMgCommandBuffer>) : void;
 
-		getFenceStatus(fence: IMgFence) : MgResult;
+		// createSwapchainKHR(pCreateInfo: MgSwapchainCreateInfoKHR
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { pSwapchain : IMgSwapchainKHR }) : MgResult;
 
-    // WARN: timeout requires UInt64
-		waitForFences(pFences: Array<IMgFence>
-      , waitAll: boolean
-      , timeout: number) : MgResult;
+		// getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
+    //   , out: { pSwapchainImages: Array<IMgImage>} ) : MgResult;
+
+    // // WARN: timeout requires UInt64
+		// acquireNextImageKHR(swapchain: IMgSwapchainKHR
+    //   , timeout: number, semaphore: IMgSemaphore, fence: IMgFence
+    //   , out: { pImageIndex: number}) : MgResult;
+
+		// createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
+    //    , allocator: IMgAllocationCallbacks
+    //    , out: { pSemaphore: IMgSemaphore }) : MgResult;     
+
+		// createFence(pCreateInfo: MgFenceCreateInfo
+    //   , allocator: IMgAllocationCallbacks
+    //   , out: { fence: IMgFence})  : MgResult;
+
+		// resetFences(pFences: Array<IMgFence>) : MgResult;
+
+		// getFenceStatus(fence: IMgFence) : MgResult;
+
+    // // WARN: timeout requires UInt64
+		// waitForFences(pFences: Array<IMgFence>
+    //   , waitAll: boolean
+    //   , timeout: number) : MgResult;
   }
 }

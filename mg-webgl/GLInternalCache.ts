@@ -1,4 +1,4 @@
-/// <reference path="IGLPipelineLayout.ts" />
+/// <reference path="IWGLPipelineLayout.ts" />
 /// <reference path="GLUniformBlockEntry.ts" />
 /// <reference path="GLInternalCacheArrayMapper.ts" />
 
@@ -8,7 +8,7 @@ namespace Magnesium {
 
       constructor
       (
-         pipelineLayout: IGLPipelineLayout
+         pipelineLayout: IWGLPipelineLayout
         , blockEntries: Array<GLUniformBlockEntry>
         , arrayMapper: GLInternalCacheArrayMapper
       ) {

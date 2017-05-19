@@ -1,11 +1,11 @@
 /// <reference path="IGLDescriptorSet.ts" />
 /// <reference path="../mg/MgPipelineBindPoint.ts" />
-/// <reference path="IGLPipelineLayout.ts" />
+/// <reference path="IWGLPipelineLayout.ts" />
 
 namespace Magnesium {
   export class GLCmdDescriptorSetParameter {
     descriptorSet: IGLDescriptorSet;
-    layout: IGLPipelineLayout;
+    layout: IWGLPipelineLayout;
     dynamicOffsets: Array<number>;
     bindpoint: MgPipelineBindPoint;
   }

@@ -1,7 +1,7 @@
 /// <reference path="GLCmdImageInstructionSet.ts" />
 
 namespace Magnesium {
-  export interface IGLBlitOperationEntrypoint {
+  export interface IWGLBlitOperationEntrypoint {
     initialize() : void;
     copyBuffer(
       src:number
