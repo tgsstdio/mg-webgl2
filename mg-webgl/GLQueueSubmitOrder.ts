@@ -4,11 +4,11 @@ namespace Magnesium {
   export class GLQueueSubmitOrder {
     key : number;
     fence : IGLFence;
-    submissions: Map<number, IGLSemaphore>;
+    submissions: Map<number, IWGLSemaphore>;
 
     constructor(key: number) {
       this.key = key;
-      this.submissions = new Map<number, IGLSemaphore>();
+      this.submissions = new Map<number, IWGLSemaphore>();
     }
   }  
 }

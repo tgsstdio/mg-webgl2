@@ -46,7 +46,7 @@ namespace Magnesium {
 
     getDeviceQueue(queueFamilyIndex : number
       , queueIndex : number
-      , out : {pQueue: IMgQueue} ) : void;
+      , out : {pQueue: IMgQueue | null } ) : void;
 
     allocateMemory(pAllocateInfo : MgMemoryAllocateInfo
       , allocator : IMgAllocationCallbacks|null
@@ -114,7 +114,7 @@ namespace Magnesium {
 
 		createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pCommandPool: IMgCommandPool }) : MgResult;
+      , out: { pCommandPool: IMgCommandPool|null }) : MgResult;
 
 		allocateCommandBuffers(pAllocateInfo: MgCommandBufferAllocateInfo
       , pCommandBuffers: Array<IMgCommandBuffer>) : MgResult;

@@ -1,8 +1,8 @@
 /// <reference path="IGLDeviceMemoryEntrypoint.ts" />
 
 namespace Magnesium {
-  export interface IGLDeviceEntrypoint {
-    readonly deviceMemory : IGLDeviceMemoryEntrypoint;
+  export interface IWGLDeviceEntrypoint {
+    readonly deviceMemory : IWGLDeviceMemoryEntrypoint;
     readonly image: IWGLDeviceImageEntrypoint;
   }
 }

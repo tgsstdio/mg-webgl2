@@ -8,7 +8,7 @@
 
 namespace Magnesium {
   export class GLCmdBoundPipelineRecordInfo {
-    pipeline: IGLGraphicsPipeline;
+    pipeline: IWGLGraphicsPipeline;
     blendConstants: MgColor4f;
     depthBias: GLCmdDepthBiasParameter;
     depthBounds: GLCmdDepthBoundsParameter;

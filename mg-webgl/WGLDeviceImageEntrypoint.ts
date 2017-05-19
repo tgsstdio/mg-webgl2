@@ -7,7 +7,7 @@ namespace Magnesium {
         gl.deleteTexture(textureId);
       }
 
-    getInternalFormat(
+    private getInternalFormat(
        gl: WebGL2RenderingContext
        ,format: MgFormat
     ) : number {
@@ -59,18 +59,27 @@ namespace Magnesium {
           return gl.RGBA32F;
         case MgFormat.R8G8B8A8_UINT:
           return gl.RGBA8UI;
-        /*      
-        return gl.COMPRESSED_R11_EAC;
-        return gl.COMPRESSED_SIGNED_R11_EAC;
-        return gl.COMPRESSED_RG11_EAC;
-        return gl.COMPRESSED_SIGNED_RG11_EAC;
-        return gl.COMPRESSED_RGB8_ETC2;
-        return gl.COMPRESSED_RGBA8_ETC2_EAC;
-        return gl.COMPRESSED_SRGB8_ETC2;
-        return gl.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
-        return gl.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
-        return gl.COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2; 
-        */ 
+        // WEBGL_compressed_texture_etc https://www.khronos.org/registry/webgl/extensions/WEBGL_compressed_texture_etc/
+        case MgFormat.EAC_R11_UNORM_BLOCK:
+          return 0x9270; // COMPRESSED_R11_EAC;
+        case MgFormat.EAC_R11_SNORM_BLOCK:
+          return 0x9271; // COMPRESSED_SIGNED_R11_EAC;
+        case MgFormat.EAC_R11G11_UNORM_BLOCK:
+          return 0x9272; // COMPRESSED_RG11_EAC
+        case MgFormat.EAC_R11G11_SNORM_BLOCK:
+          return 0x9273; // COMPRESSED_SIGNED_RG11_EAC
+        case MgFormat.ETC2_R8G8B8_UNORM_BLOCK:
+          return 0x9274; // COMPRESSED_RGB8_ETC2
+        case MgFormat.ETC2_R8G8B8A8_UNORM_BLOCK:
+          return 0x9278; // COMPRESSED_RGBA8_ETC2_EAC
+        case MgFormat.ETC2_R8G8B8_SRGB_BLOCK:
+          return 0x9275; // COMPRESSED_SRGB8_ETC2                     
+        case MgFormat.ETC2_R8G8B8A8_SRGB_BLOCK:
+          return 0x9279; // COMPRESSED_SRGB8_ALPHA8_ETC2_EAC
+        case MgFormat.ETC2_R8G8B8A1_UNORM_BLOCK:
+          return 0x9276; // COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2
+        case MgFormat.ETC2_R8G8B8A1_SRGB_BLOCK:
+          return 0x9277; // COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2
         // DERIVED FORMAT 
         case MgFormat.R8_SNORM:
           return gl.R8_SNORM;        
@@ -79,7 +88,7 @@ namespace Magnesium {
         case MgFormat.R16_UINT:
           return gl.R16UI;
         case MgFormat.R16_SINT:
-          return gl.R16I;    
+          return gl.R16I;  
         default:
           throw new Error('Not supported');
       }
@@ -91,21 +100,40 @@ namespace Magnesium {
       , format: MgFormat
       , width: number
     ) : WebGLTexture {
-      let tex = gl.createTexture();
+      let tex : WebGLTexture | null = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, tex);
       let internalFormat = this.getInternalFormat(gl, format);
       gl.texStorage2D(gl.TEXTURE_2D, levels, internalFormat, width, 1);
+      return tex as WebGLTexture;
     }   
 
-		createTextureStorage1D (
+		createTextureStorage2D (
       gl: WebGL2RenderingContext
       , levels: number
       , format: MgFormat
       , width: number
-    ) : WebGLTexture | null {
-      let tex = gl.createTexture();
-      gl.texStorage2D(;
-      return tex;
-    }        
+      , height: number
+    ) : WebGLTexture {
+      let tex : WebGLTexture | null = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      let internalFormat = this.getInternalFormat(gl, format);
+      gl.texStorage2D(gl.TEXTURE_2D, levels, internalFormat, width, height);
+      return tex as WebGLTexture;
+    }      
+
+		createTextureStorage3D (
+      gl: WebGL2RenderingContext
+      , levels: number
+      , format: MgFormat
+      , width: number
+      , height: number
+      , depth: number
+    ) : WebGLTexture {
+      let tex : WebGLTexture | null = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_3D, tex);
+      let internalFormat = this.getInternalFormat(gl, format);
+      gl.texStorage3D(gl.TEXTURE_3D, levels, internalFormat, width, height, depth);
+      return tex as WebGLTexture;
+    }          
   }
 }

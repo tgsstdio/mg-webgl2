@@ -4,7 +4,7 @@
 
 namespace Magnesium {
   export interface IMgInstance {
-		destroyInstance(allocator: IMgAllocationCallbacks) : void;
-		enumeratePhysicalDevices(out : { physicalDevices: Array<IMgPhysicalDevice>} ): MgResult;
+		destroyInstance(allocator: IMgAllocationCallbacks | null) : void;
+		enumeratePhysicalDevices(out : { physicalDevices: Array<IMgPhysicalDevice> | null} ): MgResult;
   }
 }

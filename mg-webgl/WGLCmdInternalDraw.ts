@@ -1,9 +1,8 @@
 /// <reference path="../mg/MgPrimitiveTopology.ts" />
 
 namespace Magnesium {
-  export class GLCmdInternalDraw {
+  export class WGLCmdInternalDraw {
     topology: MgPrimitiveTopology;
-    firstInstance: number;
     firstVertex: number;
     instanceCount: number;
     vertexCount: number;

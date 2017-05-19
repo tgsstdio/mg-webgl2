@@ -4,8 +4,8 @@
 /// <reference path="GLCmdRecordInstruction.ts" />
 
 namespace Magnesium {
-  export class GLCmdCommandBufferRecord {
-    contexts: Array<GLCmdEncoderContext>;
+  export class WGLCmdCommandBufferRecord {
+    contexts: Array<WGLCmdEncoderContext>;
     instructions: Array<GLCmdRecordInstruction>;
     graphicsGrid: GLCmdGraphicsGrid;
     computeGrid: GLCmdComputeGrid;

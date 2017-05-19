@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export interface GLCmdAction {
+  export interface WGLCmdAction {
     action(
       recording: GLCmdCommandRecording
       , index: number

@@ -44,21 +44,23 @@ namespace Magnesium {
 			cmdPoolCreateInfo.queueFamilyIndex = this.mQueueFamilyIndex,
 			cmdPoolCreateInfo.flags = flags;		
 
-      let out_0 :{ pCommandPool: IMgCommandPool};
+      let out_0 :{ pCommandPool: IMgCommandPool | null} = { pCommandPool: null };
 			var errCode = this.mDevice.createCommandPool (cmdPoolCreateInfo, null, out_0);
 			if (errCode != MgResult.SUCCESS) {
         throw new Error('createPartition - command pool error')
       }
 
-			let prop : { pMemoryProperties: MgPhysicalDeviceMemoryProperties};
+			let prop : { pMemoryProperties: MgPhysicalDeviceMemoryProperties | null } = { pMemoryProperties: null };
 			this.mParent.getPhysicalDeviceMemoryProperties (prop);
 
-			var result = new MgThreadPartition (
+			let commandPool = out_0.pCommandPool as IMgCommandPool;
+			let memoryProperties = prop.pMemoryProperties as MgPhysicalDeviceMemoryProperties;
+			let result = new MgThreadPartition (
         this.mParent
         , this.mDevice
         , this.mQueue
-        , out_0.pCommandPool
-        , prop.pMemoryProperties);
+        , commandPool
+        , memoryProperties);
 
 			return result;
 		}

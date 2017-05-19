@@ -2,7 +2,7 @@
 /// <reference path="../mg/MgMemoryAllocateInfo.ts" />
 
 namespace Magnesium {
-  export interface IGLDeviceMemoryEntrypoint {
+  export interface IWGLDeviceMemoryEntrypoint {
     createDeviceMemory(createInfo: MgMemoryAllocateInfo) : IGLDeviceMemory;
   }
 }

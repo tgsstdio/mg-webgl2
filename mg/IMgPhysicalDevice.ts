@@ -22,17 +22,17 @@ namespace Magnesium {
   export interface IMgPhysicalDevice {
 		createDevice(
       pCreateInfo : MgDeviceCreateInfo,
-      allocator : IMgAllocationCallbacks,
-      out : { pDevice : IMgDevice} ) : MgResult;
+      allocator : IMgAllocationCallbacks | null,
+      out : { pDevice : IMgDevice | null} ) : MgResult;
 
 		getPhysicalDeviceProperties(
-      out : { pProperties: MgPhysicalDeviceProperties }
+      out : { pProperties: MgPhysicalDeviceProperties | null }
       ) : void;
 		getPhysicalDeviceQueueFamilyProperties(
-      out: { pQueueFamilyProperties: Array<MgQueueFamilyProperties> }
+      out: { pQueueFamilyProperties: Array<MgQueueFamilyProperties> | null }
       ) : void;
 		getPhysicalDeviceMemoryProperties(
-      out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties }
+      out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties | null }
       ) : void;
 		getPhysicalDeviceFeatures(
       out: { pFeatures: MgPhysicalDeviceFeatures }
@@ -47,8 +47,8 @@ namespace Magnesium {
     enumerateDeviceLayerProperties(
       out: { pProperties : Array<MgLayerProperties> }
       ) : MgResult;
-		enumerateDeviceExtensionProperties(layerName: string
-      , out: { pProperties: Array<MgExtensionProperties> }
+		enumerateDeviceExtensionProperties(layerName: string|null
+      , out: { pProperties: Array<MgExtensionProperties> | null }
       ) : MgResult;
 		getPhysicalDeviceSparseImageFormatProperties(
       format: MgFormat

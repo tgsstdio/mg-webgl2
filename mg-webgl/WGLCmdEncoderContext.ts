@@ -1,9 +1,9 @@
-/// <reference path="./GLCmdEncoderCategory.ts" />
+/// <reference path="WGLCmdEncoderCategory.ts" />
 
 namespace Magnesium {
   export class GLCmdEncoderContext {
     first: number;
     last: number;
-    category: GLCmdEncoderCategory;
+    category: WGLCmdEncoderCategory;
   }
 }

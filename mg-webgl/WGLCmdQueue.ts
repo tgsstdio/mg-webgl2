@@ -174,7 +174,7 @@ namespace Magnesium {
 
 						for (let key of submissionKeys) {
               if (order.submissions.has(key)) {
-                let signal : IGLSemaphore = order.submissions.get(key);
+                let signal : IWGLSemaphore = order.submissions.get(key);
 
                 if (signal.isReady()) {
 									signal.reset ();

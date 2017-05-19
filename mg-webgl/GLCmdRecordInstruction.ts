@@ -4,7 +4,7 @@
 namespace Magnesium {
   export class GLCmdRecordInstruction {
     index: number;
-    operation: GLCmdAction;
+    operation: WGLCmdAction;
 
     perform(recording: GLCmdCommandRecording): void {
       this.operation.action(recording, this.index);

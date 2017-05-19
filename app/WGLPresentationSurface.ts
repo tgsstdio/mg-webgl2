@@ -15,7 +15,7 @@ namespace Magnesium {
        */
     }
 
-    get surface(): IMgSurfaceKHR {      
+    get surface(): IMgSurfaceKHR | null {      
       return null;
     }
   }

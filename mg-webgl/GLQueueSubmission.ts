@@ -1,10 +1,10 @@
 namespace Magnesium {
   export class GLQueueSubmission {
     key : number;
-    waits: Array<IGLSemaphore>;
-    signals: Array<IGLSemaphore>;
+    waits: Array<IWGLSemaphore>;
+    signals: Array<IWGLSemaphore>;
     commandBuffers: Array<IGLCommandBuffer>;
-    orderFence: IGLSemaphore;
+    orderFence: IWGLSemaphore;
     
     constructor(key: number, submit: MgSubmitInfo) {
       this.key = key;

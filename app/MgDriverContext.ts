@@ -15,16 +15,16 @@ namespace Magnesium {
     private mInstance : IMgInstance;
     initializeAll (
       appInfo: MgApplicationInfo
-      , enabledLayerNames: Array<string>
-      , enabledExtensionNames: Array<string>
+      , enabledLayerNames: Array<string> | null
+      , enabledExtensionNames: Array<string> | null
     ) : MgResult {
 			let createInfo = new MgInstanceCreateInfo();
       createInfo.applicationInfo = appInfo;
-      createInfo.enabledLayerNames = enabledLayerNames;
-			createInfo.enabledExtensionNames = enabledExtensionNames;
-      let out : { instance : IMgInstance } = { instance: null };
+      createInfo.enabledLayerNames = enabledLayerNames as Array<string>;
+			createInfo.enabledExtensionNames = enabledExtensionNames as Array<string>;
+      let out : { instance : IMgInstance | null } = { instance: null };
 			let result = this.mEntrypoint.createInstance (createInfo, null, out);
-      this.mInstance = out.instance;
+      this.mInstance = out.instance as IMgInstance;
       return result;
 		}
 
@@ -38,7 +38,7 @@ namespace Magnesium {
     ) : MgResult {
       let extensions = new Array<string>();
       if (options == MgInstanceExtensionOptions.ALL) {
-        let out : { pProperties : Array<MgExtensionProperties>};
+        let out : { pProperties : Array<MgExtensionProperties> | null } = { pProperties: null };
         let err = this.mEntrypoint.enumerateInstanceExtensionProperties(null, out);
 
         if (err != MgResult.SUCCESS) {
@@ -46,7 +46,7 @@ namespace Magnesium {
         }
 
         let enabledExtensions = new Array<string>();
-        let extensionProperties = out.pProperties;
+        let extensionProperties = out.pProperties as Array<MgExtensionProperties>;
         if (out.pProperties != null) {
           for (let ext of extensionProperties) {
             extensions.push(ext.extensionName);
@@ -59,23 +59,23 @@ namespace Magnesium {
     }
 
     createLogicalDevice(
-      presentationSurface: IMgSurfaceKHR
+      presentationSurface: IMgSurfaceKHR | null
       , option: MgDeviceExtensionOptions
       , allocationUsage: MgQueueAllocation
       , deviceUsage: MgQueueFlagBits
     ) : IMgLogicalDevice {
-      let out_0 : { physicalDevices: Array<IMgPhysicalDevice> };
+      let out_0 : { physicalDevices: Array<IMgPhysicalDevice> | null } = { physicalDevices: null };
       let err_0 = this.mInstance.enumeratePhysicalDevices(out_0);
 
       if (err_0 != MgResult.SUCCESS) {
         throw new Error('createLogicalDevice: enumeratePhysicalDevices');
       }
 
-      let first = out_0.physicalDevices[0];
+      let first : IMgPhysicalDevice = (out_0.physicalDevices as Array<IMgPhysicalDevice>)[0];
 
       let enabledExtensions = new Array<string>(); 
       if (option == MgDeviceExtensionOptions.ALL) {
-        let out_1: { pProperties: Array<MgExtensionProperties> };
+        let out_1: { pProperties: Array<MgExtensionProperties> | null } = { pProperties: null };
         let err_1 = first.enumerateDeviceExtensionProperties(
           null
           , out_1);
@@ -84,12 +84,14 @@ namespace Magnesium {
           throw new Error('createLogicalDevice: enumerateDeviceExtensionProperties');
         }
 
-        for (let ext of out_1.pProperties) {
+        let properties : Array<MgExtensionProperties> = out_1.pProperties as Array<MgExtensionProperties>;
+        for (let ext of properties) {
           enabledExtensions.push(ext.extensionName);
         }        
       }
 
-      return this.createDeviceA(first, presentationSurface, allocationUsage, deviceUsage, enabledExtensions);
+      let surface : IMgSurfaceKHR = presentationSurface as IMgSurfaceKHR;
+      return this.createDeviceA(first, surface, allocationUsage, deviceUsage, enabledExtensions);
     }
 
     private createDeviceA(
@@ -101,7 +103,7 @@ namespace Magnesium {
     ): IMgLogicalDevice {
 
 			// Find a queue that supports graphics operations
-			let out : { pQueueFamilyProperties: Array<MgQueueFamilyProperties>};
+			let out : { pQueueFamilyProperties: Array<MgQueueFamilyProperties> | null } = { pQueueFamilyProperties: null};
 			gpu.getPhysicalDeviceQueueFamilyProperties (out);
 			if (out.pQueueFamilyProperties == null) {
         throw new Error('out.pQueueFamilyProperties == null');        
@@ -155,25 +157,27 @@ namespace Magnesium {
       deviceCreateInfo.queueCreateInfos = qcis;
       deviceCreateInfo.enabledExtensionNames = enabledExtensions;
 
-      let out_0 : { pDevice: IMgDevice};
+      let out_0 : { pDevice: IMgDevice | null} = { pDevice: null };
       let err = gpu.createDevice(deviceCreateInfo, null, out_0);
       if (err != MgResult.SUCCESS) {
         throw new Error('createLogicalDevice - IMgPhysicalDevice.createDevice');
       }
 
-      let device = out_0.pDevice;
+      let device : IMgDevice = out_0.pDevice as IMgDevice;
       // Get the graphics queue
       let noOfQueues = queueCreateInfo.queueCount;
       let availableQueues = new Array<IMgQueueInfo>(noOfQueues);
       for(let i = 0; i < noOfQueues; i += 1) {
-        let out_1: { pQueue: IMgQueue };
+        let out_1: { pQueue: IMgQueue | null } = { pQueue: null };
         device.getDeviceQueue(queueCreateInfo.queueFamilyIndex, i, out_1);
+        
+        let queue : IMgQueue = out_1.pQueue as IMgQueue;
         availableQueues[i] = new MgQueueInfo(
           i
           , gpu
           , device
           , queueCreateInfo.queueFamilyIndex
-          , out_1.pQueue          
+          , queue          
         );
       }
 
@@ -184,19 +188,25 @@ namespace Magnesium {
       queueProps: Array<MgQueueFamilyProperties>
       , requestedQueueType: MgQueueFlagBits
     ) : number {
+
+      const NOT_FOUND = 0;
+      let isFound : boolean = false;
+      let family : number = NOT_FOUND;
 			for (let i = 0; i < queueProps.length; i += 1)
 			{
 				// Find a queue that supports gfx
 				if ((queueProps[i].queueFlags & requestedQueueType) == requestedQueueType) {
-					return i;
+					family = i;
+          isFound = true;
+          break;
 				}
 			}
 
-			MgDriverContext.throwQueueNotFound();
-    }
+      if (!isFound) {
+		    throw new Error("Could not find a queue");
+      }
 
-    private static throwQueueNotFound() : never {
-      throw new Error("Could not find a queue");
+      return family;
     }
 
     private static findAppropriateQueueFamilyForSurface(
@@ -209,7 +219,7 @@ namespace Magnesium {
       let noOfQueues: number = queueProps.length;
       let supportsPresent = new Array<boolean>(queueProps.length);
       
-      let ref : {pSupported: boolean};
+      let ref : {pSupported: boolean} = { pSupported: false };
       // Iterate over each queue to learn whether it supports presenting:
       for (let i = 0; i < noOfQueues; i += 1) {
         gpu.getPhysicalDeviceSurfaceSupportKHR(

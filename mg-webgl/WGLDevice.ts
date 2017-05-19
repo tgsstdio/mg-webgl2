@@ -5,12 +5,12 @@ namespace Magnesium {
   export class WGLDevice implements IWGLDevice {
     private mGL: WebGL2RenderingContext;
     private mQueue: IWGLQueue;
-    private mEntrypoint: IGLDeviceEntrypoint;
+    private mEntrypoint: IWGLDeviceEntrypoint;
 
     constructor(
       gl: WebGL2RenderingContext
       ,queue: IWGLQueue
-      , entrypoint: IGLDeviceEntrypoint
+      , entrypoint: IWGLDeviceEntrypoint
     ) {
       this.mGL = gl;
       this.mQueue = queue;

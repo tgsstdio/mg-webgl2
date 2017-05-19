@@ -5,6 +5,6 @@ namespace Magnesium {
       , height:number
     ) : void;
     
-		readonly surface: IMgSurfaceKHR;
+		readonly surface: IMgSurfaceKHR | null;
   }
 }
