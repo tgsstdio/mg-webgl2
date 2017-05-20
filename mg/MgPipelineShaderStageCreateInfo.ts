@@ -5,7 +5,7 @@ namespace Magnesium {
     flags : number;
     stage : MgShaderStageFlagBits;
     module : IMgShaderModule;
-    name : String;
+    name : string;
     specializationInfo : MgSpecializationInfo;
 	}
 }

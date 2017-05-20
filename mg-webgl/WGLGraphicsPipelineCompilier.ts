@@ -1,24 +1,119 @@
+/// <reference path="WGLUniformBlockNameInfo.ts" />
+/// <reference path="WGLActiveUniformBlockInfo.ts" />
+
 namespace Magnesium {
-  export interface IWGLShaderModuleEntrypoint {
-      createShaderModule(stage: MgShaderStageFlagBits) : any;
-      compileShaderModule(shader:any, builder: string): void;
-      deleteShaderModule(shader:any): void;
-      getCompilerMessages(shader:any): string;
-      hasCompilerMessages(shader:any): boolean;
-      isCompiled(shader:any) : boolean;
-  }
+	export interface IWGLUniformBlockNameParser  {
+			parse(name: string) : WGLUniformBlockNameInfo;
+	}
+
+	export interface IWGLUniformBlockEntrypoint {
+		getNoOfActiveUniformBlocks(program: WebGLProgram) : number;
+		getActiveUniformBlockName(
+			program: WebGLProgram
+			, index: number
+		) : string;
+		getActiveUniformBlockInfo(
+			program: WebGLProgram
+			, index: number
+		) : WGLActiveUniformBlockInfo;
+	}
 
 	export class WGLGraphicsPipelineCompiler implements IWGLGraphicsPipelineCompiler {
-		compile(info: MgGraphicsPipelineCreateInfo): number {
-      let modules = new Array<number>();
+		private mErrHandler: IWGLErrorHandler;
+		private mShaders: IWGLShaderModuleEntrypoint;
+		private mPrograms: IWGLGraphicsPipelineEntrypoint;
+		private mUniforms: IWGLUniformBlockEntrypoint;
+		private mParser: IWGLUniformBlockNameParser;
+		constructor(
+			errorHandler: IWGLErrorHandler
+			, shaders: IWGLShaderModuleEntrypoint
+			, programs: IWGLGraphicsPipelineEntrypoint
+			, uniforms: IWGLUniformBlockEntrypoint
+			, parser: IWGLUniformBlockNameParser
+		) {
+			this.mErrHandler = errorHandler;
+			this.mShaders = shaders;
+			this.mPrograms = programs;
+			this.mUniforms = uniforms;
+			this.mParser = parser;
+		}
+
+		public inspect(program: WebGLProgram) : Array<WGLProgramUniformBlock>
+		{
+				let count = this.mUniforms.getNoOfActiveUniformBlocks(program);
+				let entries = new Array<WGLProgramUniformBlock>();
+				for (let index = 0; index < count; index += 1)
+				{
+						let blockName : string = this.mUniforms.getActiveUniformBlockName(
+							program, index);
+						let token = this.mParser.parse(blockName);
+						let blockInfo = this.mUniforms.getActiveUniformBlockInfo(
+							program, index);
+						token.bindingIndex = blockInfo.bindingIndex;
+
+						let entry = new WGLProgramUniformBlock(
+							blockName
+							, index
+							, blockInfo.stride
+							, token);
+						entries.push(entry);
+				}
+				return entries;
+		}
+
+		compile(info: MgGraphicsPipelineCreateInfo): WebGLProgram {
+      let modules = new Array<WebGLShader>();
       if (info.stages != null) {
         for (let stage of info.stages) {
           let module : WGLShaderModule = stage.module as WGLShaderModule;
-          
+					let fileContents = ''
+          let shaderId = WGLGraphicsPipelineCompiler.compileShader(
+						this.mShaders
+						, stage.stage
+						, fileContents
+						, ""
+						, stage.name);
+					modules.push(shaderId);
         }
       }
-      return 0;
+			return WGLGraphicsPipelineCompiler.linkShaders(
+				this.mErrHandler
+				, this.mPrograms
+				, modules);
     }
+
+		static linkShaders(
+			errHandler: IWGLErrorHandler
+			, programs: IWGLGraphicsPipelineEntrypoint
+			, modules: Array<WebGLShader>
+		) : WebGLProgram {
+			let program = programs.createProgram();
+			for (let shader of modules) {
+				programs.attach(program, shader);
+			}
+			programs.link(program);
+
+			let isCompiled = programs.isCompiled(program);
+
+			let error = programs.getCompilerMessages(program);
+
+			if (!isCompiled) {
+				if (error.length > 0) {
+					throw new Error(
+						"ERROR : Shader compilation failed with messages - "
+						+ error);	
+				}
+				else {
+					throw new Error("ERROR : Shader compilation failed");				
+				}
+			}
+
+			if (error.length > 0) {
+				errHandler.trace(error);
+			}
+
+			return program;
+		}
 
 		static compileShader(
       entrypoint: IWGLShaderModuleEntrypoint
@@ -27,7 +122,7 @@ namespace Magnesium {
        , shaderPrefix: string
        , functionName: string)
 		{
-			let retVal = entrypoint.createShaderModule(stage);
+			let shader = entrypoint.createShaderModule(stage);
 			// GL.CreateShader(type);
 			//string includePath = ".";
 
@@ -49,31 +144,23 @@ namespace Magnesium {
       builder += functionName;
       builder += "(); }";
 
-      entrypoint.compileShaderModule(retVal, builder);
+      entrypoint.compileShaderModule(shader, builder);
 
-			//GL.ShaderSource(retVal, builder.ToString());
-			//GL.CompileShader(retVal);
+			let isCompiled = entrypoint.isCompiled(shader);
 
-			let isCompiled = entrypoint.isCompiled(retVal);
-
-			let hasMessages : boolean = entrypoint.hasCompilerMessages(retVal);
-
-			if (hasMessages)
-			{
-				let buffer = entrypoint.getCompilerMessages(retVal);
-				if (!isCompiled)
-				{
-					throw new Error("Shader Compilation failed for shader with the following errors: " + buffer);
-				}
+			let error = entrypoint.getCompilerMessages(shader);
+			if (error.length > 0) {
+					throw new Error(
+						"ERROR : Shader Compilation failed - " + error);
 			}
 
 			if (!isCompiled)
 			{
-				entrypoint.deleteShaderModule(retVal);
-				retVal = 0;
+				entrypoint.deleteShaderModule(shader);
+				shader = 0;
 			}
 
-			return retVal;
+			return shader;
 		}
 
 		static versionSplit(srcString: string) : {versionStr: string, shaderContents: string}

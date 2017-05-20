@@ -187,6 +187,8 @@ namespace Magnesium {
         }
 
         let program = this.mEntrypoint.graphicsCompiler.compile(info);
+
+        let blocks = this.mEntrypoint.graphicsCompiler.inspect(program);
       }
       return MgResult.SUCCESS;
     }

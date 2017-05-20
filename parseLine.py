@@ -90,11 +90,12 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-		GLMemoryBufferType BufferType { get; }
-		int BufferSize { get; }
-		uint BufferId { get; }
-		IntPtr Handle { get; }
+		public int ActiveIndex { get; set; }
+		public string BlockName { get; set; }
+        public int FirstBinding { get; set; }
+        public int Stride { get; set; }
+		public GLUniformBlockInfo Token { get; set; }
 	      """		
 
-tp = TSInterpreter('IGLDeviceMemory', True)
+tp = TSInterpreter('GLUniformBlockEntry', False)
 tp.parse(textData)

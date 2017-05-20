@@ -1,5 +1,5 @@
 /// <reference path="IWGLPipelineLayout.ts" />
-/// <reference path="GLUniformBlockEntry.ts" />
+/// <reference path="WGLUniformBlockNameInfo.ts" />
 /// <reference path="GLInternalCacheArrayMapper.ts" />
 
 namespace Magnesium {
@@ -9,7 +9,7 @@ namespace Magnesium {
       constructor
       (
          pipelineLayout: IWGLPipelineLayout
-        , blockEntries: Array<GLUniformBlockEntry>
+        , blockEntries: Array<WGLProgramUniformBlock>
         , arrayMapper: GLInternalCacheArrayMapper
       ) {
         this.mArrayMapper = arrayMapper;
@@ -17,7 +17,7 @@ namespace Magnesium {
       }
 
       setupBlockBindings(
-        blockEntries: Array<GLUniformBlockEntry>
+        blockEntries: Array<WGLProgramUniformBlock>
         , arrayMapper: GLInternalCacheArrayMapper
       ) : void 
       {
