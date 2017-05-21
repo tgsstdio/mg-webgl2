@@ -90,12 +90,15 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-		public int ActiveIndex { get; set; }
-		public string BlockName { get; set; }
-        public int FirstBinding { get; set; }
-        public int Stride { get; set; }
-		public GLUniformBlockInfo Token { get; set; }
+		public string Prefix { get;  set; }
+        public int FirstBinding { get;  set; }
+        public int Count { get; set; }
+		public int ArrayStride { get; set; }
+		public int HighestRow { get; set; }
+		public int MatrixStride { get; set; }
+		public int HighestLayer { get; set; }
+		public int CubeStride { get; set; }
 	      """		
 
-tp = TSInterpreter('GLUniformBlockEntry', False)
+tp = TSInterpreter('GLUniformBlockGroupInfo', False)
 tp.parse(textData)

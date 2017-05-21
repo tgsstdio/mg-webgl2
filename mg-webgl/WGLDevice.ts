@@ -189,14 +189,30 @@ namespace Magnesium {
         let program = this.mEntrypoint.graphicsCompiler.compile(info);
 
         let blocks = this.mEntrypoint.graphicsCompiler.inspect(program);
+
+        let arrayMapper = new WGLInternalCacheArrayMapper(bLayout, blocks);
+
+        let internalCache = new GLInternalCache(bLayout, blocks, arrayMapper);
+
+        let pipeline = new WGLGraphicsPipeline(
+          this.mEntrypoint.graphicsPipeline
+          , program
+          , info
+          , internalCache
+          , bLayout
+        );
+        output.push(pipeline);
       }
       return MgResult.SUCCESS;
     }
 
-		// createComputePipelines(pipelineCache: IMgPipelineCache
-    //   , pCreateInfos: Array<MgComputePipelineCreateInfo>
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pPipelines: Array<IMgPipeline> } ) : MgResult;
+		createComputePipelines(pipelineCache: IMgPipelineCache
+      , pCreateInfos: Array<MgComputePipelineCreateInfo>
+      , allocator: IMgAllocationCallbacks
+      , out: { pPipelines: Array<IMgPipeline> }
+    ) : never {
+      throw new Error('ERROR: not implemented');
+    }
 
 		// createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
     //   , allocator: IMgAllocationCallbacks
