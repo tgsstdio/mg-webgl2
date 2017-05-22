@@ -1,16 +1,11 @@
 /// <reference path="IWGLPipelineLayout.ts" />
 /// <reference path="WGLUniformBlockNameInfo.ts" />
 /// <reference path="WGLInternalCacheArrayMapper.ts" />
+/// <reference path="GLInternalCacheBlockBinding.ts" />
 
 namespace Magnesium {
-  export class GLInternalCacheBlockBinding {
-    blockName: string;
-    activeIndex: number;
-    bindingPoint: number;
-  }
-
   export class GLInternalCache {
-    private mBlockBindings: Array<GLInternalCacheBlockBinding>;
+    private mBlockBindings: Array<WGLInternalCacheBlockBinding>;
 
     private mArrayMapper: WGLInternalCacheArrayMapper;
     constructor
@@ -29,10 +24,10 @@ namespace Magnesium {
     ) : void 
     {
         let count = blockEntries.length;
-        this.mBlockBindings = new Array<GLInternalCacheBlockBinding>(count);
+        this.mBlockBindings = new Array<WGLInternalCacheBlockBinding>(count);
         for (let i = 0; i < count; i += 1) {
           let entry = blockEntries[i];
-          let binding = new GLInternalCacheBlockBinding();
+          let binding = new WGLInternalCacheBlockBinding();
           binding.blockName = entry.blockName;
           binding.activeIndex = entry.activeIndex;
           binding.bindingPoint = arrayMapper.calculateArrayIndex(entry);

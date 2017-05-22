@@ -1,26 +1,26 @@
-/// <reference path="GLVertexAttributeType.ts" />
+/// <reference path="WGLVertexAttributeType.ts" />
 
 namespace Magnesium {
 	export interface IGLCmdVBOEntrypoint
 	{
-		bindIndexBuffer (vbo: number, bufferId: number) : void;
-		bindDoubleVertexAttribute(
+    bindIndexBuffer (vbo: number, bufferId: number) : void;
+    bindDoubleVertexAttribute(
       vbo: number
       , location: number
       , size: number
-      , pointerType: GLVertexAttributeType
-      , offset: number);
+      , pointerType: WGLVertexAttributeType
+      , offset: number) : void;
 		bindIntVertexAttribute(
       vbo: number
       , location: number
       , size: number
-      , pointerType: GLVertexAttributeType
+      , pointerType: WGLVertexAttributeType
       , offset: number) : void;
 		bindFloatVertexAttribute (
       vbo: number
       , location: number
       , size: number
-      , pointerType: GLVertexAttributeType
+      , pointerType: WGLVertexAttributeType
       , isNormalized: boolean
       , offset: number) : void;
 
