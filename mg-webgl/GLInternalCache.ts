@@ -1,7 +1,7 @@
 /// <reference path="IWGLPipelineLayout.ts" />
 /// <reference path="WGLUniformBlockNameInfo.ts" />
 /// <reference path="WGLInternalCacheArrayMapper.ts" />
-/// <reference path="GLInternalCacheBlockBinding.ts" />
+/// <reference path="WGLInternalCacheBlockBinding.ts" />
 
 namespace Magnesium {
   export class GLInternalCache {

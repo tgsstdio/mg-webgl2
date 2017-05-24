@@ -90,11 +90,11 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-		public GLVertexAttributeType PointerType { get; set; }
-		public int Size {get; set;}
-		public bool IsNormalized { get; set; }
-		public GLVertexAttribFunction Function { get; set; }
+        public uint First { get; set; }
+        public uint Last { get; set; }
+        public uint Count { get; set; }
+        public GLPoolResourceNode Next { get; set; }
 	      """		
 
-tp = TSInterpreter('GLVertexAttributeInfo', False)
+tp = TSInterpreter('GLPoolResourceNode', False)
 tp.parse(textData)

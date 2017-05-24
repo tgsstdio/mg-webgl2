@@ -26,7 +26,19 @@ let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperation
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
 let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();
 let image = new Magnesium.WGLDeviceImageEntrypoint(gl);
-let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(deviceMemory, image);
+let shaders = new Magnesium.WGLShaderModuleEntrypoint(gl);
+let programs = new Magnesium.WGLGraphicsPipelineEntrypoint(gl);
+let errorHandler = new Magnesium.WGLErrorHandler(gl);
+let uniforms = new Magnesium.WGLUniformBlockEntrypoint(gl, errorHandler);
+let parser = new Magnesium.WGLUniformBlockNameParser();
+let compiler = new Magnesium.WGLGraphicsPipelineCompiler(
+  errorHandler
+  , shaders
+  , programs
+  , uniforms
+  , parser);
+let sampler = new Magnesium.WGLSamplerEntrypoint(gl, errorHandler);
+let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(deviceMemory, image, compiler, programs, sampler);
 let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint);
 
 let entrypoint = new Magnesium.WGLEntrypoint(device);

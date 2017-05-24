@@ -1,4 +1,4 @@
-/// <reference path="IGLGraphicsPipeline.ts" />
+/// <reference path="IWGLGraphicsPipeline.ts" />
 /// <reference path="../mg/MgColor4f.ts" />
 /// <reference path="GLCmdDepthBiasParameter.ts" />
 /// <reference path="GLCmdScissorParameter.ts" />
@@ -13,8 +13,8 @@ namespace Magnesium {
     depthBias: GLCmdDepthBiasParameter;
     depthBounds: GLCmdDepthBoundsParameter;
     lineWidth: number;
-    scissors: GLCmdScissorParameter;
-    viewports: GLCmdViewportParameter;
+    scissors: WGLCmdScissorParameter;
+    viewports: WGLCmdViewportParameter;
     backStencilInfo: GLCmdStencilFunctionInfo;
     frontStencilInfo: GLCmdStencilFunctionInfo;
     frontStencilWriteMask: number;

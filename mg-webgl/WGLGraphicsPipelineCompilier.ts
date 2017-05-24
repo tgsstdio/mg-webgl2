@@ -1,23 +1,9 @@
 /// <reference path="WGLUniformBlockNameInfo.ts" />
 /// <reference path="WGLActiveUniformBlockInfo.ts" />
+/// <reference path="IWGLUniformBlockEntrypoint.ts" />
+/// <reference path="IWGLUniformBlockNameParser.ts" />
 
 namespace Magnesium {
-	export interface IWGLUniformBlockNameParser  {
-			parse(name: string) : WGLUniformBlockNameInfo;
-	}
-
-	export interface IWGLUniformBlockEntrypoint {
-		getNoOfActiveUniformBlocks(program: WebGLProgram) : number;
-		getActiveUniformBlockName(
-			program: WebGLProgram
-			, index: number
-		) : string;
-		getActiveUniformBlockInfo(
-			program: WebGLProgram
-			, index: number
-		) : WGLActiveUniformBlockInfo;
-	}
-
 	export class WGLGraphicsPipelineCompiler implements IWGLGraphicsPipelineCompiler {
 		private mErrHandler: IWGLErrorHandler;
 		private mShaders: IWGLShaderModuleEntrypoint;

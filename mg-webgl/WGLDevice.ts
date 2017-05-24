@@ -160,7 +160,7 @@ namespace Magnesium {
 		createGraphicsPipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgGraphicsPipelineCreateInfo>
       , allocator: IMgAllocationCallbacks
-      , out: { pPipelines: Array<IMgPipeline> }
+      , out: { pPipelines: Array<IMgPipeline>|null }
     ) : MgResult {
       let output = new Array<IMgPipeline>();
 
@@ -203,32 +203,76 @@ namespace Magnesium {
         );
         output.push(pipeline);
       }
+      out.pPipelines = output;
       return MgResult.SUCCESS;
     }
 
 		createComputePipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgComputePipelineCreateInfo>
       , allocator: IMgAllocationCallbacks
-      , out: { pPipelines: Array<IMgPipeline> }
+      , out: { pPipelines: Array<IMgPipeline>|null }
     ) : never {
       throw new Error('ERROR: not implemented');
     }
 
-		// createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pPipelineLayout: IMgPipelineLayout }) : MgResult;
+		createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pPipelineLayout: IMgPipelineLayout|null }
+    ) : MgResult
+    {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
 
-		// createSampler(pCreateInfo: MgSamplerCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pSampler: IMgSampler } ) : MgResult;
+      if (pCreateInfo.setLayouts == null) {
+        throw new Error('ERROR: pCreateInfo.setLayouts is null');
+      }
 
-		// createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pSetLayout: IMgDescriptorSetLayout }) : MgResult;
+      if (pCreateInfo.setLayouts.length > 1) {
+        throw new Error('ERROR: - pCreateInfo.SetLayouts.length must be <= 1');
+      }
 
-		// createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pDescriptorPool: IMgDescriptorPool}) : MgResult;
+      out.pPipelineLayout = new WGLPipelineLayout(pCreateInfo);
+      return MgResult.SUCCESS;
+    }
+
+		createSampler(pCreateInfo: MgSamplerCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pSampler: IMgSampler|null }
+    ) : MgResult {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
+
+      out.pSampler = new WGLSampler(
+        this.mEntrypoint.sampler
+        , pCreateInfo);
+      return MgResult.SUCCESS; 
+    }
+
+		createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pSetLayout: IMgDescriptorSetLayout|null }
+    ) : MgResult {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
+
+			out.pSetLayout  = new WGLDescriptorSetLayout (pCreateInfo); 
+			return MgResult.SUCCESS;      
+    }
+
+		createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pDescriptorPool: IMgDescriptorPool|null }
+    ) : MgResult {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
+
+      out.pDescriptorPool = this.mEntrypoint.descriptorPool.createPool(pCreateInfo);
+      return MgResult.SUCCESS;
+    }
 
 		// allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
     //   , out: { pDescriptorSets: Array<IMgDescriptorSet> } ) : MgResult;

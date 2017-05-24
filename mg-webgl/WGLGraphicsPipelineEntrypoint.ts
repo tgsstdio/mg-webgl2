@@ -34,5 +34,9 @@ namespace Magnesium {
 			let message = this.mGL.getProgramInfoLog(program) as string;
 			return message;
 		}
+
+		deleteProgram(program: WebGLProgram) : void {
+			this.mGL.deleteProgram(program);
+		}
 	}
 }

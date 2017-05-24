@@ -19,8 +19,8 @@ namespace Magnesium {
     renderpasses: Array<WGLCmdBeginRenderpassRecord>;
     pipelines: Array<GLCmdBoundPipelineRecordInfo>;
     stencilWrites: Array<GLCmdPipelineStencilWriteInfo>;
-    viewports: Array<GLCmdViewportParameter>;
-    scissors: Array<GLCmdScissorParameter>;
+    viewports: Array<WGLCmdViewportParameter>;
+    scissors: Array<WGLCmdScissorParameter>;
     depthBias: Array<GLCmdDepthBiasParameter>;
     lineWidths: Array<number>;
     depthBounds: Array<GLCmdDepthBoundsParameter>;
