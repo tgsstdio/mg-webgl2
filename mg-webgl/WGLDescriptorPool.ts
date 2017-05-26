@@ -1,13 +1,11 @@
 namespace Magnesium {
-  export class WGLDescriptorPool
-    implements IWGLDescriptorPool {
-
+  export class WGLDescriptorPool implements IWGLDescriptorPool {
     private mMaxSets: number;
     get maxSets(): number {
       return this.maxSets;
     }
 
-    private mAvailableSets: Map<number, IWGLDescriptorSet>;
+    private mAvailableSets: Array<IWGLDescriptorSet>;
     private mAllocatedSets: Map<number, IWGLDescriptorSet>;
     get allocatedSets(): Map<number, IWGLDescriptorSet> {
       return this.mAllocatedSets;
@@ -18,13 +16,11 @@ namespace Magnesium {
       , entrypoint: IGLImageDescriptorEntrypoint
     ) {
       this.mMaxSets = createInfo.maxSets;
-      this.mAvailableSets = new Map<number, IWGLDescriptorSet>();
+      this.mAvailableSets = new Array<IWGLDescriptorSet>();
 
-      let parent : IWGLDescriptorPool = this;
-      for (let i = 0; i <= this.mMaxSets; i += 1) {
-        
-        let temp = new WGLDescriptorSet(i, parent);
-        this.mAvailableSets.set(i, temp);
+      for (let i = 0; i <= this.mMaxSets; i += 1) {        
+        let temp = new WGLDescriptorSet(i, this as IWGLDescriptorPool);
+        this.mAvailableSets.push(temp);
       }
 
       let noOfUniformBlocks = 0;
@@ -52,8 +48,52 @@ namespace Magnesium {
       this.setupStorageBuffers(noOfStorageBuffers);
     }
 
-    private setupCombinedImageSamplers() : void {
+		destroyDescriptorPool(
+      device: IMgDevice
+      , allocator: IMgAllocationCallbacks|null
+    ) : void {
 
+    }
+
+		resetDescriptorPool(
+      device: IMgDevice
+      , flags: number
+    ) : MgResult {
+			for (let dSet of this.mAllocatedSets.values()) {
+				if (dSet != null && dSet.isValidDescriptorSet) {
+					for (let resource of dSet.resources) {
+						this.resetResource(resource);
+					}
+					dSet.invalidate();
+				}
+			}
+			return MgResult.SUCCESS;
+    }
+
+    private mStorageBuffers: WGLDescriptorPoolResource<GLBufferDescriptor>;
+		private setupStorageBuffers(noOfStorageBuffers: number): void {
+			let buffers = new Array<GLBufferDescriptor>(noOfStorageBuffers);
+			for (let i = 0; i < noOfStorageBuffers; i += 1) {
+				buffers[i] = new GLBufferDescriptor();
+			}
+
+			this.mStorageBuffers = new WGLDescriptorPoolResource<GLBufferDescriptor>(
+				noOfStorageBuffers
+        ,	buffers);
+		}
+
+    private mCombinedImageSamplers: WGLDescriptorPoolResource<GLImageDescriptor>;
+    private setupCombinedImageSamplers(
+      entrypoint: IGLImageDescriptorEntrypoint
+      , noOfCombinedImageSamplers: number
+    ) : void {
+      let cis = new Array<GLImageDescriptor>(noOfCombinedImageSamplers);
+			for (let i = 0; i < noOfCombinedImageSamplers; i += 1) {
+				cis[i] = new GLImageDescriptor(entrypoint);
+			}
+			this.mCombinedImageSamplers = new WGLDescriptorPoolResource<GLImageDescriptor>(
+				noOfCombinedImageSamplers
+        ,	cis);
     }
 
     private mUniformBuffers: WGLDescriptorPoolResource<GLBufferDescriptor>;
@@ -63,14 +103,42 @@ namespace Magnesium {
         blocks[i] = new GLBufferDescriptor();
       }
 
+			this.mUniformBuffers = new WGLDescriptorPoolResource<GLBufferDescriptor>(
+				noOfUniformBlocks
+        ,	blocks);
     }
 
     readonly combinedImageSamplers: IGLDescriptorPoolResource<GLImageDescriptor>;
     readonly uniformBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
     readonly storageBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
 
-		resetResource(resource: GLDescriptorPoolResourceInfo) : void;
+		resetResource(resourceInfo: GLDescriptorPoolResourceInfo) : void {
+			if (resourceInfo != null)	{
+				switch (resourceInfo.groupType)
+				{
+					case GLDescriptorBindingGroup.UniformBuffer:
+						this.mUniformBuffers.free(resourceInfo.ticket);
+						break;
+					case GLDescriptorBindingGroup.CombinedImageSampler:
+						this.mCombinedImageSamplers.free(resourceInfo.ticket);
+						break;
+					case GLDescriptorBindingGroup.StorageBuffer:
+						this.mStorageBuffers.free(resourceInfo.ticket);
+						break;
+				}
+			}      
+    }
 
-		tryTake(out: {result: IWGLDescriptorSet|null } ) : boolean;
+		tryTake(out: {result: IWGLDescriptorSet|null } ) : boolean {
+      if (this.mAvailableSets.length > 0) {
+        let result = this.mAvailableSets.pop() as IWGLDescriptorSet;
+        out.result = result;
+        return true;
+      }
+      else {
+        out.result = null;
+        return false;
+      }
+    }
   }
 }

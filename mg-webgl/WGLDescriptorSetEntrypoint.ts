@@ -1,3 +1,5 @@
+/// <reference path="./IWGLDescriptorSet.ts" />
+
 namespace Magnesium {
   export class WGLDescriptorSetEntrypoint implements IWGLDescriptorSetEntrypoint {
     allocate(
@@ -22,16 +24,19 @@ namespace Magnesium {
 				for (let uniform of bSetLayout.uniforms) {
 					highestBinding = Math.max(highestBinding, uniform.binding);
 					
-          GLPoolResourceTicket ticket;
-					switch (uniform.descriptorType)	{
+          let ticket: { range: GLPoolResourceTicket|null } = { range: null };
+					switch (uniform.descriptorType)	{						
 						case MgDescriptorType.COMBINED_IMAGE_SAMPLER:
-							if (parentPool.combinedImageSamplers.allocate(uniform.descriptorCount, out ticket))	{
-
+							if (
+								parentPool.combinedImageSamplers.allocate(
+									uniform.descriptorCount
+									, ticket)
+							)	{
 								let info = new GLDescriptorPoolResourceInfo();
 								info.binding = uniform.binding;
 								info.descriptorCount = uniform.descriptorCount;
 								info.groupType = GLDescriptorBindingGroup.CombinedImageSampler;
-								info.ticket = ticket;
+								info.ticket = ticket.range as GLPoolResourceTicket;
 								sortedResources.push(info);
 							}
 							else {
@@ -41,17 +46,17 @@ namespace Magnesium {
 							}
 							break;
 						case MgDescriptorType.STORAGE_BUFFER:
-							if (parentPool.StorageBuffers.Allocate(uniform.DescriptorCount, out ticket))
-							{
-								sortedResources.push(
-									new GLDescriptorPoolResourceInfo
-									{
-									Binding = uniform.Binding,
-									DescriptorCount = uniform.DescriptorCount,
-									GroupType = GLDescriptorBindingGroup.StorageBuffer,
-									Ticket = ticket,
-									}
-								);
+							if (
+								parentPool.storageBuffers.allocate(
+									uniform.descriptorCount
+									, ticket)
+							) {
+								let info = new GLDescriptorPoolResourceInfo();
+								info.binding = uniform.binding;
+								info.descriptorCount = uniform.descriptorCount;
+								info.groupType = GLDescriptorBindingGroup.StorageBuffer;
+								info.ticket = ticket.range as GLPoolResourceTicket;
+								sortedResources.push(info);
 							}
 							else {
 								// VK_ERROR_FRAGMENTED_POOL = -12
@@ -60,23 +65,22 @@ namespace Magnesium {
 							}
 							break;
 						case MgDescriptorType.UNIFORM_BUFFER:
-							if (parentPool.UniformBuffers.Allocate(uniform.DescriptorCount, out ticket))
-							{
-								sortedResources.Add(
-									new GLDescriptorPoolResourceInfo
-									{
-									Binding = uniform.Binding,
-									DescriptorCount = uniform.DescriptorCount,
-									GroupType = GLDescriptorBindingGroup.UniformBuffer,
-									Ticket = ticket,
-									}
-								);
+							if (
+								parentPool.uniformBuffers.allocate(
+									uniform.descriptorCount
+									, ticket)
+							)	{
+								let info = new GLDescriptorPoolResourceInfo();
+								info.binding = uniform.binding;
+								info.descriptorCount = uniform.descriptorCount;
+								info.groupType = GLDescriptorBindingGroup.UniformBuffer;
+								info.ticket = ticket.range as GLPoolResourceTicket;
+								sortedResources.push(info);
 							}
-							else
-							{
-                                // VK_ERROR_FRAGMENTED_POOL = -12
-                                pDescriptorSets = null;
-                                return Result.ERROR_OUT_OF_HOST_MEMORY;
+							else {
+									// VK_ERROR_FRAGMENTED_POOL = -12
+									out.pDescriptorSets = null;
+									return MgResult.ERROR_OUT_OF_HOST_MEMORY;
 							}
 							break;
 					}
@@ -90,11 +94,12 @@ namespace Magnesium {
 					resources[res.binding] = res;
 				}
 
-				IWGLDescriptorSet item;
-        if (parentPool.TryTake(out item)) {
-          item.Initialize(resources);
-          parentPool.AllocatedSets.Add(item.Key, item);
-          output.Add(item);
+				let item: { result: IWGLDescriptorSet| null } = { result: null };
+        if (parentPool.tryTake(item)) {
+					let dSet = item.result as IWGLDescriptorSet;
+          dSet.initialize(resources);
+          parentPool.allocatedSets.set(dSet.key, dSet);
+          output.push(dSet);
         }
         else {
           // TOO MANY DESCRIPTOR SETS FOR POOL
@@ -121,15 +126,11 @@ namespace Magnesium {
 
       let parentPool = descriptorPool as IGLNextDescriptorPool
 
-			for (let descSet of pDescriptorSets)
-			{
-				var bDescSet = descSet as IGLDescriptorSet;
-				if (bDescSet != null && parentPool === bDescSet.parent)
-				{
-					if (bDescSet.isValidDescriptorSet())
-					{
-						for (var resource of bDescSet.resources)
-						{
+			for (let descSet of pDescriptorSets) {
+				let bDescSet = descSet as IWGLDescriptorSet;
+				if (bDescSet != null && parentPool === bDescSet.parent)	{
+					if (bDescSet.isValidDescriptorSet) {
+						for (var resource of bDescSet.resources) {
 							parentPool.resetResource(resource);
 						}
 						bDescSet.invalidate();
