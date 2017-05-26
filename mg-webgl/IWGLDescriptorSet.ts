@@ -7,5 +7,6 @@ namespace Magnesium {
 		initialize(resources: Array<GLDescriptorPoolResourceInfo>): void;
 		readonly isValidDescriptorSet: boolean;
 		invalidate() : void;
+		isDifferent(other: IWGLDescriptorSet|null): boolean;
   }
 }

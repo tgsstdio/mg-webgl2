@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class GLCmdComputeGrid {
+  export class WGLCmdComputeGrid {
     // INTENTIONALLY BLANK
   }
 }

@@ -3,8 +3,9 @@
 
 /// <reference path="../mg-webgl/WGLDevice.ts" />
 
-/// <reference path="MgDriverContext.ts" />
-/// <reference path="WGLPresentationSurface.ts" />
+/// <reference path="../mg/MgDriverContext.ts" />
+/// <reference path="../mg-webgl/WGLPresentationSurface.ts" />
+/// <reference path="../mg-webgl/WGLDeviceEntrypoint.ts" />
 /// <reference path="../mg-webgl/IWGLSemaphoreEntrypoint.ts" />
 
 
@@ -25,7 +26,7 @@ let renderer: Magnesium.IGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer(
 let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
 let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();
-let image = new Magnesium.WGLDeviceImageEntrypoint(gl);
+let deviceImage = new Magnesium.WGLDeviceImageEntrypoint(gl);
 let shaders = new Magnesium.WGLShaderModuleEntrypoint(gl);
 let programs = new Magnesium.WGLGraphicsPipelineEntrypoint(gl);
 let errorHandler = new Magnesium.WGLErrorHandler(gl);
@@ -38,7 +39,17 @@ let compiler = new Magnesium.WGLGraphicsPipelineCompiler(
   , uniforms
   , parser);
 let sampler = new Magnesium.WGLSamplerEntrypoint(gl, errorHandler);
-let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(deviceMemory, image, compiler, programs, sampler);
+let imageDescriptor = new Magnesium.WGLImageDescriptorEntrypoint();
+let desciptorPool = new Magnesium.WGLDescriptorPoolEntrypoint(imageDescriptor);
+let descriptorSet = new Magnesium.WGLDescriptorSetEntrypoint();
+let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
+  deviceMemory
+  , deviceImage
+  , compiler
+  , programs
+  , sampler
+  , desciptorPool
+  , descriptorSet);
 let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint);
 
 let entrypoint = new Magnesium.WGLEntrypoint(device);

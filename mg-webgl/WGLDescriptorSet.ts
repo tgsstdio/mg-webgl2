@@ -43,5 +43,15 @@ namespace Magnesium {
       this.mResources = null;
       this.mIsValidDescriptorSet = false;
     }
+
+		isDifferent(other: IWGLDescriptorSet|null): boolean	{
+			if (other == null)
+				return true;
+
+			if (this.mParent === other.parent)
+				return false;
+
+			return this.mKey != other.key;
+		}    
   }
 }

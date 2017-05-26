@@ -4,12 +4,12 @@
 
 namespace Magnesium {
   export class GLCmdCommandRecording {
-    compute: GLCmdComputeRecording;
+    compute: WGLCmdComputeRecording;
     graphics: GLCmdGraphicsRecording;
     blit: GLCmdBlitRecording;
 
     constructor(
-      compute: GLCmdComputeRecording
+      compute: WGLCmdComputeRecording
       , graphics: GLCmdGraphicsRecording
       , blit: GLCmdBlitRecording
       ) {

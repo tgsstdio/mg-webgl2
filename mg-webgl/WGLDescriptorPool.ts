@@ -13,7 +13,7 @@ namespace Magnesium {
 
     constructor(
       createInfo: MgDescriptorPoolCreateInfo
-      , entrypoint: IGLImageDescriptorEntrypoint
+      , entrypoint: IWGLImageDescriptorEntrypoint
     ) {
       this.mMaxSets = createInfo.maxSets;
       this.mAvailableSets = new Array<IWGLDescriptorSet>();
@@ -84,7 +84,7 @@ namespace Magnesium {
 
     private mCombinedImageSamplers: WGLDescriptorPoolResource<GLImageDescriptor>;
     private setupCombinedImageSamplers(
-      entrypoint: IGLImageDescriptorEntrypoint
+      entrypoint: IWGLImageDescriptorEntrypoint
       , noOfCombinedImageSamplers: number
     ) : void {
       let cis = new Array<GLImageDescriptor>(noOfCombinedImageSamplers);

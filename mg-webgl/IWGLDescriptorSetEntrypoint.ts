@@ -11,8 +11,8 @@ namespace Magnesium {
     ) : MgResult;
 
     update(
-      pDescriptorWrites: Array<MgWriteDescriptorSet>
-      , pDescriptorCopies: Array<MgCopyDescriptorSet>
+      pDescriptorWrites: Array<MgWriteDescriptorSet>|null
+      , pDescriptorCopies: Array<MgCopyDescriptorSet>|null
     ) : void;
   }
 }

@@ -30,13 +30,21 @@ namespace Magnesium {
   }
 
 
-  export class WGLGraphicsEncoder implements IWGLGraphicsEncoder {
-
+  export class WGLCmdGraphicsEncoder implements IWGLGraphicsEncoder {
     private mBag: WGLGraphicsBag;
     private mCurrentPipeline : IWGLGraphicsPipeline;
     private mInstructions: WGLCmdEncoderContextSorter;
     private mBoundRenderPass: WGLCmdBeginRenderpassRecord;
     private mBoundIndexBuffer: GLCmdIndexBufferParameter;
+
+    constructor(
+      sorter: WGLCmdEncoderContextSorter
+      , bag: WGLCmdGraphicsBag
+      , vbo: IWGLCmdVertexArrayEntrypoint
+      , dsBinder: IWGLDescriptorSetBinder
+    ) {
+
+    }
 
     clear(): void {
       

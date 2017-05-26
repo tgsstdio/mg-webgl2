@@ -9,6 +9,8 @@ namespace Magnesium {
     readonly graphicsCompiler: IWGLGraphicsPipelineCompiler;
     readonly graphicsPipeline: IWGLGraphicsPipelineEntrypoint;
     readonly sampler: IWGLSamplerEntrypoint;
-    readonly descriptorPool: IWGLDescriptorSetEntrypoint;
+    readonly descriptorPool: IWGLDescriptorPoolEntrypoint;
+    readonly descriptorSet: IWGLDescriptorSetEntrypoint;
+    readonly vbo: IWGLCmdVBOEntrypoint;
   }
 }

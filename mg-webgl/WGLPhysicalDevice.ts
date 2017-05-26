@@ -25,6 +25,11 @@ namespace Magnesium {
       out.pProperties = new MgPhysicalDeviceProperties();
       let limits = new MgPhysicalDeviceLimits();
       limits.maxBoundDescriptorSets = 1;
+      // WEBGL ONLY ALLOWS ONE VERTEX
+      limits.maxVertexInputBindings = 1;
+      // MAX NO OF VIEWPORTS === MAX NO OF SCISSORS
+      limits.maxViewports = 1;      
+      limits.maxVertexInputBindingStride = 255;
       out.pProperties.limits = limits; 
     }
 
@@ -46,7 +51,7 @@ namespace Magnesium {
 			out.pMemoryProperties = new MgPhysicalDeviceMemoryProperties();
 
       const MAX_SLOTS = 8;
-			var slots = new MgMemoryType[MAX_SLOTS];
+			var slots = new Array<MgMemoryType>(MAX_SLOTS);
 
 			const ALL_ON : number = (MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT |
 			                       MgMemoryPropertyFlagBits.HOST_CACHED_BIT |
@@ -66,7 +71,9 @@ namespace Magnesium {
 		getPhysicalDeviceFeatures(
       out: { pFeatures: MgPhysicalDeviceFeatures }
     ) : void {
-      out.pFeatures = new MgPhysicalDeviceFeatures();
+      let features = new MgPhysicalDeviceFeatures();
+      features.multiViewport = false;      
+      out.pFeatures = features;
     }
 
 		getPhysicalDeviceFormatProperties(format: MgFormat

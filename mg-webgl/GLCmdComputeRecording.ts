@@ -1,14 +1,14 @@
 /// <reference path="GLCmdComputeEncoder.ts" />
-/// <reference path="GLCmdComputeGrid.ts" />
+/// <reference path="WGLCmdComputeGrid.ts" />
 
 namespace Magnesium {
-  export class GLCmdComputeRecording {
-    grid: GLCmdComputeGrid;
-    encoder: IGLCmdComputeEncoder;
+  export class WGLCmdComputeRecording {
+    grid: WGLCmdComputeGrid;
+    encoder: IWGLCmdComputeEncoder;
 
     constructor(
-      grid: GLCmdComputeGrid
-      , encoder: IGLCmdComputeEncoder
+      grid: WGLCmdComputeGrid
+      , encoder: IWGLCmdComputeEncoder
     ) {
       this.grid = grid;
       this.encoder = encoder;

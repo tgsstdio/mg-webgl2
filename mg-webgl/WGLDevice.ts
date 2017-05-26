@@ -274,30 +274,91 @@ namespace Magnesium {
       return MgResult.SUCCESS;
     }
 
-		// allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
-    //   , out: { pDescriptorSets: Array<IMgDescriptorSet> } ) : MgResult;
+		allocateDescriptorSets(
+      pAllocateInfo: MgDescriptorSetAllocateInfo
+      , out: { pDescriptorSets: Array<IMgDescriptorSet> }
+    ) : MgResult {
+      return this.mEntrypoint.descriptorSet.allocate(pAllocateInfo, out);
+    }
 
-		// freeDescriptorSets(descriptorPool: IMgDescriptorPool
-    //   , pDescriptorSets: Array<IMgDescriptorSet>) : MgResult;
+		freeDescriptorSets(
+      descriptorPool: IMgDescriptorPool
+      , pDescriptorSets: Array<IMgDescriptorSet>
+    ) : MgResult {
+      return this.mEntrypoint.descriptorSet.free(descriptorPool, pDescriptorSets);
+    }
 
-		// updateDescriptorSets(
-    //   pDescriptorWrites: Array<MgWriteDescriptorSet>
-    //   , pDescriptorCopies: Array<MgCopyDescriptorSet>) : void;
+		updateDescriptorSets(
+      pDescriptorWrites: Array<MgWriteDescriptorSet>|null
+      , pDescriptorCopies: Array<MgCopyDescriptorSet>|null
+    ) : void {
+      this.mEntrypoint.descriptorSet.update(pDescriptorWrites, pDescriptorCopies);
+    }
 
-		// createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pFramebuffer: IMgFramebuffer }) : MgResult;
+		createFramebuffer(
+      pCreateInfo: MgFramebufferCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pFramebuffer: IMgFramebuffer|null
+      }) : MgResult {
+        out.pFramebuffer = new WGLFramebuffer();
+        return MgResult.SUCCESS;
+      }
 
-		// createRenderPass(pCreateInfo: MgRenderPassCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pRenderPass: IMgRenderPass }) : MgResult;
+		createRenderPass(
+      pCreateInfo: MgRenderPassCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pRenderPass: IMgRenderPass|null }
+    ) : MgResult {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
 
-		// createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pCommandPool: IMgCommandPool }) : MgResult;
+      out.pRenderPass = new WGLRenderPass(pCreateInfo.attachments);
+      return MgResult.SUCCESS; 
+    }
 
-		// allocateCommandBuffers(pAllocateInfo: MgCommandBufferAllocateInfo
-    //   , pCommandBuffers: Array<IMgCommandBuffer>) : MgResult;
+		createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { pCommandPool: IMgCommandPool|null }
+    ) : MgResult {
+      if (pCreateInfo == null) {
+        throw new Error('ERROR: pCreateInfo is null');
+      }
+
+      out.pCommandPool = new WGLCommandPool (pCreateInfo.flags);
+			return MgResult.SUCCESS;
+    }
+
+		allocateCommandBuffers(
+      pAllocateInfo: MgCommandBufferAllocateInfo
+      , pCommandBuffers: Array<IMgCommandBuffer>
+    ) : MgResult {
+      if (pAllocateInfo == null) {
+        throw new Error('ERROR: pAllocateInfo is null');
+      } 
+
+			if (pAllocateInfo.commandPool == null) {
+				throw new Error ("pAllocateInfo.commandPool is null");
+			}
+
+      let cmdPool = pAllocateInfo.commandPool as IWGLCommandPool;
+
+      for (let i = 0; i < pAllocateInfo.commandBufferCount; i += 1)	{
+        let sorter = new WGLCmdEncoderContextSorter();
+        let dsBinder = new WGLDescriptorSetBinder();
+        let graphics = new WGLCmdGraphicsEncoder(
+          sorter, new WGLCmdGraphicsBag(), this.mEntrypoint.vertexArrays, dsBinder);
+        let compute = new WGLCmdComputeEncoder();
+        let blit = new GLCmdBlitEncoder(sorter, new WGLCmdBlitBag(), this.mEntrypoint.imageFormat);
+        let encoder = new WGLCmdCommandEncoder(sorter, graphics, compute, blit);
+
+				let buffer : IGLCommandBuffer = new WGLCmdCommandBuffer(true, encoder);
+				cmdPool.buffers.push (buffer);
+				pCommandBuffers [i] = buffer;
+      }
+
+      return MgResult.SUCCESS;
+    }
 
 		// freeCommandBuffers(commandPool: IMgCommandPool
     //   , pCommandBuffers: Array<IMgCommandBuffer>) : void;

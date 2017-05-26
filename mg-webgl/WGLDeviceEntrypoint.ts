@@ -5,18 +5,24 @@ namespace Magnesium {
     private mGraphicsCompiler: IWGLGraphicsPipelineCompiler;
     private mGraphicsPipeline: IWGLGraphicsPipelineEntrypoint;
     private mSampler: IWGLSamplerEntrypoint;
+    private mDescriptorPool: IWGLDescriptorPoolEntrypoint;
+    private mDescriptorSet: IWGLDescriptorSetEntrypoint;
     constructor(
       deviceMemory: IWGLDeviceMemoryEntrypoint
       , image: IWGLDeviceImageEntrypoint
       , graphicsCompiler: IWGLGraphicsPipelineCompiler
       , graphicsPipeline: IWGLGraphicsPipelineEntrypoint
       , sampler: IWGLSamplerEntrypoint
+      , descriptorPool: IWGLDescriptorPoolEntrypoint
+      , descriptorSet: IWGLDescriptorSetEntrypoint
     ) {
       this.mDeviceMemory = deviceMemory;
       this.mImage = image;
       this.mGraphicsCompiler = graphicsCompiler;
       this.mGraphicsPipeline = graphicsPipeline;
       this.mSampler = sampler;
+      this.mDescriptorPool = descriptorPool;
+      this.mDescriptorSet = descriptorSet;
     }
 
 
@@ -38,6 +44,14 @@ namespace Magnesium {
 
     get sampler(): IWGLSamplerEntrypoint {
       return this.mSampler;
+    }
+
+    get descriptorPool(): IWGLDescriptorPoolEntrypoint {
+      return this.mDescriptorPool;
+    }
+
+    get descriptorSet(): IWGLDescriptorSetEntrypoint {
+      return this.mDescriptorSet;
     }
   }
 }

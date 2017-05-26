@@ -1,7 +1,7 @@
-/// <reference path="IGLCmdComputeEncoder.ts" />
+/// <reference path="IWGLCmdComputeEncoder.ts" />
 
 namespace Magnesium {
-  export class GLCmdComputeEncoder implements IGLCmdComputeEncoder {
+  export class WGLCmdComputeEncoder implements IWGLCmdComputeEncoder {
     dispatch(x: number, y: number, z: number) : never {
       throw new Error('Not implemented');
     }
@@ -17,8 +17,8 @@ namespace Magnesium {
 
     }
 
-    asGrid() : GLCmdComputeGrid {
-      return new GLCmdComputeGrid();
+    asGrid() : WGLCmdComputeGrid {
+      return new WGLCmdComputeGrid();
     }
 
     endEncoding(): void {
