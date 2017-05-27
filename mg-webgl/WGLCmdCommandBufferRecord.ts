@@ -1,14 +1,14 @@
-/// <reference path="GLCmdGraphicsGrid.ts" />
-/// <reference path="./WGLCmdComputeGrid.ts" />
-/// <reference path="GLCmdBlitGrid.ts" />
+/// <reference path="WGLCmdGraphicsGrid.ts" />
+/// <reference path="WGLCmdComputeGrid.ts" />
+/// <reference path="WGLCmdBlitGrid.ts" />
 /// <reference path="GLCmdRecordInstruction.ts" />
 
 namespace Magnesium {
   export class WGLCmdCommandBufferRecord {
     contexts: Array<WGLCmdEncoderContext>;
     instructions: Array<GLCmdRecordInstruction>;
-    graphicsGrid: GLCmdGraphicsGrid;
+    graphicsGrid: WGLCmdGraphicsGrid;
     computeGrid: WGLCmdComputeGrid;
-    blitGrid: GLCmdBlitGrid;
+    blitGrid: WGLCmdBlitGrid;
   }
 }

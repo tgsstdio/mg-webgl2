@@ -4,15 +4,15 @@
 /// <reference path="GLCmdScissorParameter.ts" />
 /// <reference path="GLCmdStencilFunctionInfo.ts" />
 /// <reference path="GLCmdDepthBoundsParameter.ts" />
-/// <reference path="GLCmdViewportParameter.ts" />
+/// <reference path="WGLCmdViewportParameter.ts" />
 
 namespace Magnesium {
   export class GLCmdBoundPipelineRecordInfo {
     pipeline: IWGLGraphicsPipeline;
     blendConstants: MgColor4f;
     depthBias: GLCmdDepthBiasParameter;
-    depthBounds: GLCmdDepthBoundsParameter;
-    lineWidth: number;
+  // depthBounds: GLCmdDepthBoundsParameter;
+  //  lineWidth: number;
     scissors: WGLCmdScissorParameter;
     viewports: WGLCmdViewportParameter;
     backStencilInfo: GLCmdStencilFunctionInfo;

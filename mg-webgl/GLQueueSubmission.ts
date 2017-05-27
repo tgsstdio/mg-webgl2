@@ -3,7 +3,7 @@ namespace Magnesium {
     key : number;
     waits: Array<IWGLSemaphore>;
     signals: Array<IWGLSemaphore>;
-    commandBuffers: Array<IGLCommandBuffer>;
+    commandBuffers: Array<IWGLCommandBuffer>;
     orderFence: IWGLSemaphore;
     
     constructor(key: number, submit: MgSubmitInfo) {

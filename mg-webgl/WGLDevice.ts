@@ -338,7 +338,7 @@ namespace Magnesium {
       } 
 
 			if (pAllocateInfo.commandPool == null) {
-				throw new Error ("pAllocateInfo.commandPool is null");
+				throw new Error ("ERROR: pAllocateInfo.commandPool is null");
 			}
 
       let cmdPool = pAllocateInfo.commandPool as IWGLCommandPool;
@@ -347,12 +347,18 @@ namespace Magnesium {
         let sorter = new WGLCmdEncoderContextSorter();
         let dsBinder = new WGLDescriptorSetBinder();
         let graphics = new WGLCmdGraphicsEncoder(
-          sorter, new WGLCmdGraphicsBag(), this.mEntrypoint.vertexArrays, dsBinder);
+          sorter
+          , new WGLCmdGraphicsBag()
+          , this.mEntrypoint.vertexArrays
+          , dsBinder);
         let compute = new WGLCmdComputeEncoder();
-        let blit = new GLCmdBlitEncoder(sorter, new WGLCmdBlitBag(), this.mEntrypoint.imageFormat);
+        let blit = new WGLCmdBlitEncoder(
+          sorter
+          , new WGLCmdBlitBag()
+          , this.mEntrypoint.imageFormat);
         let encoder = new WGLCmdCommandEncoder(sorter, graphics, compute, blit);
 
-				let buffer : IGLCommandBuffer = new WGLCmdCommandBuffer(true, encoder);
+				let buffer : IWGLCommandBuffer = new WGLCmdCommandBuffer(true, encoder);
 				cmdPool.buffers.push (buffer);
 				pCommandBuffers [i] = buffer;
       }
@@ -360,36 +366,90 @@ namespace Magnesium {
       return MgResult.SUCCESS;
     }
 
-		// freeCommandBuffers(commandPool: IMgCommandPool
-    //   , pCommandBuffers: Array<IMgCommandBuffer>) : void;
+		freeCommandBuffers(
+      commandPool: IMgCommandPool
+      , pCommandBuffers: Array<IMgCommandBuffer>
+    ) : void {
+      if (pCommandBuffers != null) {
+        for (let item of pCommandBuffers)	{
+          let cmdBuf = item as IWGLCommandBuffer;
+          cmdBuf.resetAllData ();
+        }
+      }
+    }
 
-		// createSwapchainKHR(pCreateInfo: MgSwapchainCreateInfoKHR
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { pSwapchain : IMgSwapchainKHR }) : MgResult;
+		createSwapchainKHR(
+      pCreateInfo: MgSwapchainCreateInfoKHR
+      , allocator: IMgAllocationCallbacks
+      , out: { pSwapchain : IMgSwapchainKHR }
+    ) : never {
+      throw new Error("ERROR: not implemented");
+    }
 
-		// getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
-    //   , out: { pSwapchainImages: Array<IMgImage>} ) : MgResult;
+		getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
+      , out: { pSwapchainImages: Array<IMgImage>}
+    ) : never {
+      throw new Error("ERROR: not implemented");
+    }
 
     // // WARN: timeout requires UInt64
-		// acquireNextImageKHR(swapchain: IMgSwapchainKHR
-    //   , timeout: number, semaphore: IMgSemaphore, fence: IMgFence
-    //   , out: { pImageIndex: number}) : MgResult;
+		acquireNextImageKHR(
+      swapchain: IMgSwapchainKHR
+      , timeout: number
+      , semaphore: IMgSemaphore
+      , fence: IMgFence
+      , out: { pImageIndex: number}
+    ) : MgResult {
+			if (swapchain == null)
+			{
+				throw new Error ("swapchain is null");
+			}
 
-		// createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
-    //    , allocator: IMgAllocationCallbacks
-    //    , out: { pSemaphore: IMgSemaphore }) : MgResult;     
+			let sc = swapchain as IGLSwapchainKHR;
+			out.pImageIndex = sc.getNextImage ();
+			// TODO : fence stuff
+			return MgResult.SUCCESS;
+		}
 
-		// createFence(pCreateInfo: MgFenceCreateInfo
-    //   , allocator: IMgAllocationCallbacks
-    //   , out: { fence: IMgFence})  : MgResult;
+		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
+       , allocator: IMgAllocationCallbacks
+       , out: { pSemaphore: IMgSemaphore|null }) : MgResult {
+      out.pSemaphore = this.mEntrypoint.semaphores.createSemaphore();
+			return MgResult.SUCCESS;
+    }
 
-		// resetFences(pFences: Array<IMgFence>) : MgResult;
+		createFence(pCreateInfo: MgFenceCreateInfo
+      , allocator: IMgAllocationCallbacks
+      , out: { fence: IMgFence|null}
+    )  : MgResult {
+      out.fence = this.mEntrypoint.fences.createFence();
+      return MgResult.SUCCESS;        
+    }       
 
-		// getFenceStatus(fence: IMgFence) : MgResult;
+		resetFences(pFences: Array<IMgFence>) : MgResult {
+      for (let fence of pFences) {
+          let bFence = fence as IGLFence;
+          bFence.reset();
+      }
+      return MgResult.SUCCESS; 
+    }
+
+		getFenceStatus(
+      fence: IMgFence
+    ) : MgResult{
+        let bFence = fence as IGLFence;
+        return (bFence.isSignalled) 
+          ? MgResult.SUCCESS 
+          : MgResult.NOT_READY;
+    }
 
     // // WARN: timeout requires UInt64
-		// waitForFences(pFences: Array<IMgFence>
-    //   , waitAll: boolean
-    //   , timeout: number) : MgResult;
+		waitForFences(pFences: Array<IMgFence>
+      , waitAll: boolean
+      , timeout: number
+      //) : MgResult {
+    ) : never {
+      throw new Error("ERROR: not implemented");
+    }
   }
 }

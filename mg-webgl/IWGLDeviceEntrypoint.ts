@@ -11,6 +11,9 @@ namespace Magnesium {
     readonly sampler: IWGLSamplerEntrypoint;
     readonly descriptorPool: IWGLDescriptorPoolEntrypoint;
     readonly descriptorSet: IWGLDescriptorSetEntrypoint;
-    readonly vbo: IWGLCmdVBOEntrypoint;
+    readonly vertexArrays: IWGLCmdVertexArrayEntrypoint;
+    readonly imageFormat: IWGLImageFormatEntrypoint;
+    readonly semaphores: IWGLSemaphoreEntrypoint;
+    readonly fences: IWGLFenceEntrypoint;
   }
 }

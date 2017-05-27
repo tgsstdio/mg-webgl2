@@ -4,7 +4,7 @@
 /// <reference path="WGLCmdEncoderContext.ts" />
 /// <reference path="GLCmdComputeRecording.ts" />
 /// <reference path="../mg/MgSubmitInfoWaitSemaphoreInfo.ts" />
-/// <reference path="IGLCommandBuffer.ts" />
+/// <reference path="IWGLCommandBuffer.ts" />
 /// <reference path="GLQueueSubmission.ts" />
 /// <reference path="IWGLSemaphoreEntrypoint.ts" />
 /// <reference path="IGLCmdStateRenderer.ts" />
@@ -83,16 +83,16 @@ namespace Magnesium {
     }
 
     generateRecording(
-      buffer: IGLCommandBuffer
+      buffer: IWGLCommandBuffer
       , renderer: IGLCmdStateRenderer
     ) : GLCmdCommandRecording {
         return new GLCmdCommandRecording(
-          new GLCmdComputeRecording(buffer.record.computeGrid, new GLCmdComputeEncoder())
+          new WGLCmdComputeRecording(buffer.record.computeGrid, new WGLCmdComputeEncoder())
           , new GLCmdGraphicsRecording(buffer.record.graphicsGrid, renderer)
           , new GLCmdBlitRecording(buffer.record.blitGrid, this.mBlit));
     }
 
-    render(buffer : IGLCommandBuffer) : void {
+    render(buffer : IWGLCommandBuffer) : void {
       if (buffer.isQueueReady) {
         let recording = this.generateRecording(buffer, this.mRenderer);
 

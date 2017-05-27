@@ -7,6 +7,9 @@ namespace Magnesium {
     private mSampler: IWGLSamplerEntrypoint;
     private mDescriptorPool: IWGLDescriptorPoolEntrypoint;
     private mDescriptorSet: IWGLDescriptorSetEntrypoint;
+    private mVertexArrays: IWGLCmdVertexArrayEntrypoint;
+    private mImageFormat: IWGLImageFormatEntrypoint;
+
     constructor(
       deviceMemory: IWGLDeviceMemoryEntrypoint
       , image: IWGLDeviceImageEntrypoint
@@ -15,6 +18,8 @@ namespace Magnesium {
       , sampler: IWGLSamplerEntrypoint
       , descriptorPool: IWGLDescriptorPoolEntrypoint
       , descriptorSet: IWGLDescriptorSetEntrypoint
+      , vertexArray: IWGLCmdVertexArrayEntrypoint
+      , imageFormat: IWGLImageFormatEntrypoint
     ) {
       this.mDeviceMemory = deviceMemory;
       this.mImage = image;
@@ -23,8 +28,17 @@ namespace Magnesium {
       this.mSampler = sampler;
       this.mDescriptorPool = descriptorPool;
       this.mDescriptorSet = descriptorSet;
+      this.mVertexArrays = vertexArray;
+      this.mImageFormat = imageFormat;
     }
 
+    get imageFormat(): IWGLImageFormatEntrypoint {
+      return this.mImageFormat;
+    }
+
+    get vertexArrays() : IWGLCmdVertexArrayEntrypoint {
+      return this.mVertexArrays;
+    }
 
     get deviceMemory() : IWGLDeviceMemoryEntrypoint {
       return this.mDeviceMemory;

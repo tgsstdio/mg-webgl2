@@ -5,8 +5,8 @@ namespace Magnesium {
       return this.mFlags;
     }
 
-    private mBuffers: Array<IGLCommandBuffer>;
-    get buffers(): Array<IGLCommandBuffer> {
+    private mBuffers: Array<IWGLCommandBuffer>;
+    get buffers(): Array<IWGLCommandBuffer> {
       return this.mBuffers;
     }
 
@@ -14,7 +14,7 @@ namespace Magnesium {
       flags: MgCommandPoolCreateFlagBits
     ) {
       this.mFlags = flags;
-      this.mBuffers = new Array<IGLCommandBuffer>();
+      this.mBuffers = new Array<IWGLCommandBuffer>();
     }
 
     private mIsDisposed: boolean = false;

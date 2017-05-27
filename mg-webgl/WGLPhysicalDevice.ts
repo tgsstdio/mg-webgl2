@@ -26,7 +26,7 @@ namespace Magnesium {
       let limits = new MgPhysicalDeviceLimits();
       limits.maxBoundDescriptorSets = 1;
       // WEBGL ONLY ALLOWS ONE VERTEX
-      limits.maxVertexInputBindings = 1;
+      limits.maxVertexInputBindings = 1;      
       // MAX NO OF VIEWPORTS === MAX NO OF SCISSORS
       limits.maxViewports = 1;      
       limits.maxVertexInputBindingStride = 255;
@@ -73,6 +73,7 @@ namespace Magnesium {
     ) : void {
       let features = new MgPhysicalDeviceFeatures();
       features.multiViewport = false;      
+      features.wideLines = false;
       out.pFeatures = features;
     }
 

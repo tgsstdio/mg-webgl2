@@ -8,7 +8,7 @@ namespace Magnesium {
 
   }
 
-  export class GLCmdBlitGrid {
+  export class WGLCmdBlitGrid {
     copyBuffers : Array<GLCmdCopyBufferRecord>;
     loadImageOps: Array<GLCmdImageInstructionSet>;
   }
