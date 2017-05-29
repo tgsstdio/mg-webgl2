@@ -9,9 +9,11 @@ namespace Magnesium {
     private mBoundRenderPass: WGLCmdBeginRenderpassRecord|null;
     private mBoundIndexBuffer: GLCmdIndexBufferParameter;
 
-    private mDepthBias: WGLCmdDepthBiasSection;
-    private mBlendConstants: WGLCmdBlendConstantsSection;
+    private mDepthBias: WGLCmdDepthBiasEncodingSection;
+    private mBlendConstants: WGLCmdBlendConstantsEncodingSection;
     private mScissors: WGLCmdScissorEncodingSection;
+    private mViewports: WGLCmdViewportEncodingSection;
+    private mStencil: WGLCmdStencilSection;
 
     constructor(
       sorter: WGLCmdEncoderContextSorter
@@ -24,19 +26,21 @@ namespace Magnesium {
       this.mVertexArray = vertexArray;
       this.mDSBinder = dsBinder;
 
-      this.mDepthBias = new WGLCmdDepthBiasSection();
-      this.mBlendConstants = new WGLCmdBlendConstantsSection();
+      this.mDepthBias = new WGLCmdDepthBiasEncodingSection();
+      this.mBlendConstants = new WGLCmdBlendConstantsEncodingSection();
       this.mScissors = new WGLCmdScissorEncodingSection();
+      this.mViewports = new WGLCmdViewportEncodingSection();
+      this.mStencil = new WGLCmdStencilSection();
     }
 
 
     clear(): void {
       this.mDepthBias.clear();
       this.mBlendConstants.clear();
-      this.mDepthBounds.clear();
+      this.mScissors.clear();
+      this.mViewports.clear();
+      this.mStencil.clear();
 
-      this.invalidateBackStencil();
-      this.invalidateFrontStencil();
       this.invalidateDescriptorSets();
       this.mDSBinder.clear();
     }
@@ -73,7 +77,11 @@ namespace Magnesium {
 
       this.pushVertexArrayIfRequired();
 
-      this.pushStencilValuesIfRequired();
+      this.mStencil.pushStencilValuesIfRequired(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+      );
 
       // if descriptor sets is missing, generate new one
       this.pushBackDescriptorSetIfRequired();      
@@ -84,10 +92,6 @@ namespace Magnesium {
     private pushVertexArrayIfRequired() : void {
 
     }
-
-    private pushStencilValuesIfRequired() : void {
-      
-    }    
 
     private pushBackDescriptorSetIfRequired() : void {
       
@@ -130,8 +134,8 @@ namespace Magnesium {
         )
         == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE
       ) {
-        frontReference = this.mFrontReference;
-        backReference = this.mBackReference;
+        frontReference = this.mStencil.front.referenceMask;
+        backReference = this.mStencil.back.referenceMask;
       }
 
       let backCompare = pipeline.back.compareMask;
@@ -143,8 +147,8 @@ namespace Magnesium {
         )
         == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
       ) {
-        backCompare = this.mBackCompare;
-        frontCompare = this.mFrontCompare;
+        backCompare = this.mStencil.back.compareMask;
+        frontCompare = this.mStencil.front.compareMask;
       }
 
       let backWriteMask = pipeline.back.writeMask;
@@ -156,20 +160,20 @@ namespace Magnesium {
         )
         == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
       ) {
-        backWriteMask = this.mBackWrite;
-        frontWriteMask = this.mFrontWrite;
+        backWriteMask = this.mStencil.back.writeMask;
+        frontWriteMask = this.mStencil.front.writeMask;
       }
 
       let info = new GLCmdBoundPipelineRecordInfo();        
       info.pipeline = pipeline;
       //info.lineWidth = FetchLineWidth(),
       info.blendConstants = this.mBlendConstants.fetch(pipeline);
-      info.backStencilInfo = new GLCmdStencilFunctionInfo();
+      info.backStencilInfo = new WGLCmdStencilFunctionInfo();
       info.backStencilInfo.referenceMask = backReference;
       info.backStencilInfo.compareMask = backReference;
       info.backStencilInfo.stencilFunction = pipeline.stencilState.backStencilFunction;      
 
-      info.frontStencilInfo = new GLCmdStencilFunctionInfo(); 
+      info.frontStencilInfo = new WGLCmdStencilFunctionInfo(); 
       info.frontStencilInfo.referenceMask = frontReference;
       info.frontStencilInfo.compareMask = frontCompare;
       info.frontStencilInfo.stencilFunction = pipeline.stencilState.frontStencilFunction;
@@ -177,10 +181,48 @@ namespace Magnesium {
       info.depthBias = this.mDepthBias.fetch(pipeline);
      // info.depthBounds = this.mDepthBounds.fetch(pipeline);
       info.scissors = this.mScissors.fetch(pipeline);
-      info.viewports = this.mViewports.fetch();
+      info.viewports = this.mViewports.fetch(pipeline);
       info.backStencilWriteMask = backWriteMask;
       info.frontStencilWriteMask = frontWriteMask;  
       return info;      
+    }
+
+		setStencilCompareMask(
+      faceMask: MgStencilFaceFlagBits
+      , compareMask: number
+    ) : void {
+      this.mStencil.setStencilCompareMask(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+        , faceMask
+        , compareMask
+      );
+    }
+		setStencilWriteMask(
+      faceMask: MgStencilFaceFlagBits
+      , writeMask: number
+    ) : void {
+      this.mStencil.setStencilWriteMask(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+        , faceMask
+        , writeMask
+      );
+    }
+
+		setStencilReference(
+      faceMask: MgStencilFaceFlagBits
+      , reference: number
+    ) : void {
+      this.mStencil.setStencilReference(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+        , faceMask
+        , reference
+      );
     }
 
     setDepthBias(
@@ -206,6 +248,19 @@ namespace Magnesium {
         , this.mBag
         , this.mInstructions
         , blendConstants
+      );
+    }
+
+		setScissor(
+      firstScissor: number
+      , pScissors: Array<MgRect2D>
+    ) : void {
+      this.mScissors.set(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+        , firstScissor
+        , pScissors
       );
     }
 

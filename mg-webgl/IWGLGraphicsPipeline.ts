@@ -5,7 +5,7 @@
 /// <reference path="GLGraphicsPipelineDynamicStateFlagBits.ts" />
 /// <reference path="GLGraphicsPipelineBlendColorState.ts" />
 /// <reference path="WGLCmdViewportParameter.ts" />
-/// <reference path="GLCmdScissorParameter.ts" />
+/// <reference path="WGLCmdScissorParameter.ts" />
 /// <reference path="GLGraphicsPipelineFlagBits.ts" />
 /// <reference path="GLGraphicsPipelineStencilMasks.ts" />
 /// <reference path="GLGraphicsPipelineDepthState.ts" />
@@ -19,8 +19,8 @@ namespace Magnesium {
     // readonly layout : IGLPipelineLayout;
 		readonly dynamicsStates : GLGraphicsPipelineDynamicStateFlagBits;
 		// readonly colorBlendEnums : GLGraphicsPipelineBlendColorState;
-		// readonly viewports : GLCmdViewportParameter;
-		// readonly scissors : GLCmdScissorParameter;
+		readonly viewports : WGLCmdViewportParameter;
+		readonly scissors : WGLCmdScissorParameter;
 		// readonly Flags : GLGraphicsPipelineFlagBits;
 		// readonly polygonMode : MgPolygonMode;
 		readonly front : GLGraphicsPipelineStencilMasks;

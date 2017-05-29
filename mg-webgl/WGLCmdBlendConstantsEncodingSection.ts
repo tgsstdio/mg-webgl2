@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class WGLCmdBlendConstantsSection {
+  export class WGLCmdBlendConstantsEncodingSection {
     private mBlendConstants: MgColor4f;
     clear() {
       this.mBlendConstants = new MgColor4f(0,0,0,0);
@@ -83,5 +83,6 @@ namespace Magnesium {
         return;       
 
       renderer.updateBlendConstants(blends);
-    }  
+    } 
+  }
 }

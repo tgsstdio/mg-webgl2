@@ -1,12 +1,12 @@
 /// <reference path="../mg/MgCompareOp.ts" />
 
 namespace Magnesium {
-  export class GLCmdStencilFunctionInfo {
+  export class WGLCmdStencilFunctionInfo {
     referenceMask: number;
     stencilFunction: MgCompareOp;
     compareMask: number;
 
-    equals(other: GLCmdStencilFunctionInfo) : boolean
+    equals(other: WGLCmdStencilFunctionInfo) : boolean
     {
         if (this.stencilFunction != other.stencilFunction)
             return false;

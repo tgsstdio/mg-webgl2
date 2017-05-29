@@ -5,15 +5,15 @@
 /// <reference path="GLCmdStencilFunctionInfo.ts" />
 
 namespace Magnesium {
-  export interface IGLCmdStateRenderer {
+  export interface IWGLCmdStateRenderer {
       // TODO : hide these implementation details
       // initialize() : void;
       // beginRenderpass(record: GLCmdBeginRenderpassRecord) : void;
       // endRenderpass() : void;
       bindPipeline(pipelineInfo: GLCmdBoundPipelineRecordInfo) : void;
-      // updateStencilWriteMask(write: GLCmdPipelineStencilWriteInfo) : void;
-      // updateViewports(viewports: GLCmdViewportParameter) : void;
-      // updateScissors(scissors: GLCmdScissorParameter) : void;
+      updateStencilWriteMask(write: WGLCmdPipelineStencilWriteInfo) : void;
+      updateViewports(viewports: WGLCmdViewportParameter) : void;
+      updateScissors(scissors: WGLCmdScissorParameter) : void;
       // updateDepthBounds(bounds: GLCmdDepthBoundsParameter) : void;
       updateBlendConstants(blendConstants: MgColor4f) : void;
       updateDepthBias(nextDepthBias: GLCmdDepthBiasParameter) : void;

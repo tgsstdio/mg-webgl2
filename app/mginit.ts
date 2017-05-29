@@ -22,7 +22,7 @@ if (gl == null)
   throw new Error();
 
 let semaphores: Magnesium.IWGLSemaphoreEntrypoint = new Magnesium.WGLSemaphoreEntrypoint();
-let renderer: Magnesium.IGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer();
+let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer();
 let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
 let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();

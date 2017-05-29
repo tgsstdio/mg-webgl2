@@ -90,7 +90,7 @@ namespace Magnesium {
 						sci.x = first.offset.x;
 						sci.y = first.offset.y;
 						sci.width = first.extent.width;
-						sci.heigth = first.extent.height;
+						sci.height = first.extent.height;
 					}		 
 				}
 			}

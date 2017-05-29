@@ -6,6 +6,10 @@ namespace Magnesium {
     pipelines: WGLCmdEncoderCollection<GLCmdBoundPipelineRecordInfo>;
     depthBias: WGLCmdEncoderCollection<GLCmdDepthBiasParameter>;
     blendConstants: WGLCmdEncoderCollection<MgColor4f>;
+    scissors: WGLCmdEncoderCollection<WGLCmdScissorParameter>;
+    viewports: WGLCmdEncoderCollection<WGLCmdViewportParameter>;
+    stencilWrites: WGLCmdEncoderCollection<WGLCmdPipelineStencilWriteInfo>;
+    stencilFunctions: WGLCmdEncoderCollection<WGLCmdStencilFunctionInfo>;
 
     constructor() {
       this.draws = new WGLCmdEncoderCollection<WGLCmdInternalDraw>();
@@ -15,8 +19,18 @@ namespace Magnesium {
         = new WGLCmdEncoderCollection<GLCmdInternalDrawIndexed>();
       this.pipelines
         = new WGLCmdEncoderCollection<GLCmdBoundPipelineRecordInfo>();
-      this.depthBias = new WGLCmdEncoderCollection<GLCmdDepthBiasParameter>();
-      this.blendConstants = new WGLCmdEncoderCollection<MgColor4f>(); 
+      this.depthBias
+        = new WGLCmdEncoderCollection<GLCmdDepthBiasParameter>();
+      this.blendConstants
+        = new WGLCmdEncoderCollection<MgColor4f>(); 
+      this.scissors
+        = new WGLCmdEncoderCollection<WGLCmdScissorParameter>();
+      this.viewports
+        = new WGLCmdEncoderCollection<WGLCmdViewportParameter>();
+      this.stencilWrites
+        = new WGLCmdEncoderCollection<WGLCmdPipelineStencilWriteInfo>();
+      this.stencilFunctions
+        = new WGLCmdEncoderCollection<WGLCmdStencilFunctionInfo>();
     }
 
     clear() : void {
@@ -26,6 +40,10 @@ namespace Magnesium {
       this.pipelines.clear();
       this.depthBias.clear();
       this.blendConstants.clear();
+      this.scissors.clear();
+      this.viewports.clear();
+      this.stencilWrites.clear();
+      this.stencilFunctions.clear();
     }
   }
 }

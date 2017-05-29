@@ -7,7 +7,7 @@
 /// <reference path="IWGLCommandBuffer.ts" />
 /// <reference path="GLQueueSubmission.ts" />
 /// <reference path="IWGLSemaphoreEntrypoint.ts" />
-/// <reference path="IGLCmdStateRenderer.ts" />
+/// <reference path="IWGLCmdStateRenderer.ts" />
 /// <reference path="IWGLBlitOperationEntrypoint.ts" />
 /// <reference path="IGLSwapchainKHR.ts" />
 /// <reference path="GLCmdCommandRecording.ts" />
@@ -22,11 +22,11 @@ namespace Magnesium {
     private mOrderKey: number;
 
     private mSemaphores : IWGLSemaphoreEntrypoint;
-    private mRenderer: IGLCmdStateRenderer;
+    private mRenderer: IWGLCmdStateRenderer;
     private mBlit : IWGLBlitOperationEntrypoint;
 
     constructor(semaphores: IWGLSemaphoreEntrypoint
-      , renderer: IGLCmdStateRenderer
+      , renderer: IWGLCmdStateRenderer
       , blit: IWGLBlitOperationEntrypoint
     ) {
       this.mSemaphores = semaphores;
@@ -84,7 +84,7 @@ namespace Magnesium {
 
     generateRecording(
       buffer: IWGLCommandBuffer
-      , renderer: IGLCmdStateRenderer
+      , renderer: IWGLCmdStateRenderer
     ) : GLCmdCommandRecording {
         return new GLCmdCommandRecording(
           new WGLCmdComputeRecording(buffer.record.computeGrid, new WGLCmdComputeEncoder())

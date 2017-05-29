@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class WGLCmdStateRenderer implements IGLCmdStateRenderer {
+  export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
     initialize() : void {
       
     }

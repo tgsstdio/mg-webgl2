@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class WGLCmdDepthBiasSection {    
+  export class WGLCmdDepthBiasEncodingSection {    
     private mDepthBiasConstantFactor: number;
     private mDepthBiasClamp: number;
     private mDepthBiasSlopeFactor: number;

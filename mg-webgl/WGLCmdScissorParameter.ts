@@ -1,12 +1,10 @@
 namespace Magnesium {
-  export class WGLCmdViewportParameter {
+  export class WGLCmdScissorParameter {
 		first: number;
 		x: number;
 		y: number;
 		width: number;
 		height: number;
-		zNear: number;
-		zFar: number;
 
 		constructor() {
 			this.clear();
@@ -18,8 +16,6 @@ namespace Magnesium {
 			this.y = 0;
 			this.width = 0;
 			this.height = 0;
-			this.zNear = 0;
-			this.zFar = 0;
 		}
   }
 }
