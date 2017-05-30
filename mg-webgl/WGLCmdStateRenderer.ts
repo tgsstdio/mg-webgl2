@@ -7,6 +7,9 @@ namespace Magnesium {
     private mPastStencilInfo: WGLQueueRendererStencilState;    
     private mStencil: IWGLCmdStencilEntrypoint;
 
+    private mPastFrontStencilInfo: WGLCmdStencilFunctionInfo;
+    private mPastBackStencilInfo: WGLCmdStencilFunctionInfo;
+
     private mDepth: IWGLCmdDepthEntrypoint;
     private mPastDepthState: WGLCmdDepthStatePipelineItem;
 
@@ -20,6 +23,8 @@ namespace Magnesium {
     private mPastViewport: WGLCmdViewportParameter|null;
     private mPastScissors: WGLCmdScissorParameter|null;
 
+    private mPastBlendConstants: MgColor4f;
+
     initialize() : void {
       const FLAGS = 0;      
       const NO_OF_COLOR_ATTACHMENTS = 4;
@@ -29,7 +34,25 @@ namespace Magnesium {
 			this.mPastStencilInfo = initialStencilValue;
 
       // mPastFrontWriteMask = initialStencilValue.Front.WriteMask;
-      // mPastBackWriteMask = initialStencilValue.Back.WriteMask;      
+      // mPastBackWriteMask = initialStencilValue.Back.WriteMask;  
+
+      let frontStencil = new WGLCmdStencilFunctionInfo(); 
+      frontStencil.compareMask
+         = initialStencilValue.front.compareMask;
+      frontStencil.referenceMask
+         = initialStencilValue.front.reference;
+      frontStencil.stencilFunction 
+        = initialStencilValue.settings.frontStencilFunction;
+      this.mPastFrontStencilInfo = frontStencil;   
+
+      let backStencil = new WGLCmdStencilFunctionInfo(); 
+      backStencil.compareMask
+         = initialStencilValue.back.compareMask;
+      backStencil.referenceMask
+         = initialStencilValue.back.reference;
+      backStencil.stencilFunction 
+        = initialStencilValue.settings.backStencilFunction;
+      this.mPastBackStencilInfo = backStencil;         
 
       let depthBufFunc = this.mDepth.initialize();
       this.mPastDepthState = new WGLCmdDepthStatePipelineItem();    
@@ -42,6 +65,8 @@ namespace Magnesium {
 
       this.mPastViewport = null;
       this.mPastScissors = null;
+
+      this.mPastBlendConstants = new MgColor4f(0,0,0,0);
     }
 
     beginRenderpass(
@@ -446,6 +471,48 @@ namespace Magnesium {
         backWrite.writeMask = pipelineInfo.backStencilWriteMask;        
         this.updateStencilWriteMask(backWrite);
       }      
+    }
+
+    updateBothStencils(
+      item: WGLCmdStencilFunctionInfo
+    ) :void {
+      let isRequired: boolean = false;
+
+      let faceInfo = this.mPastFrontStencilInfo;
+      if (!faceInfo.equals(item)) {
+        this.extractStencilMasks(faceInfo, item);
+        isRequired = true;
+      }
+
+      faceInfo = this.mPastBackStencilInfo;
+      if (!faceInfo.equals(item)) {
+        this.extractStencilMasks(faceInfo, item);
+        isRequired = true;
+      }
+
+      if (isRequired) {
+        this.mStencil.setBothStencilCullStencilFunction(
+          item.stencilFunction
+          , item.referenceMask
+          , item.compareMask);
+      }      
+    }
+
+    private extractStencilMasks(
+       dst: WGLCmdStencilFunctionInfo
+      , src: WGLCmdStencilFunctionInfo
+    ) : void {
+      dst.referenceMask = src.referenceMask;
+      dst.stencilFunction = src.stencilFunction;
+      dst.compareMask = src.compareMask;
+    }    
+
+    updateBlendConstants(blendConstants: MgColor4f): void {
+      if (!this.mPastBlendConstants.equals(blendConstants))
+      {
+          this.mBlend.setBlendConstants(blendConstants);
+          this.mPastBlendConstants = blendConstants;
+      }
     }
 
     updateViewports(

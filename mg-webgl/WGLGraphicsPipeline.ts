@@ -21,22 +21,22 @@ namespace Magnesium {
       , internalCache: WGLInternalBlockCache
       , layout: IWGLPipelineLayout
     ) {
-      if (info == null) {
-        throw new Error('info is null');
-      }
+	if (info == null) {
+	throw new Error('info is null');
+	}
 
-      if (info.vertexInputState == null) {
-        throw new Error('info.vertexInputState is null');
-      } 
+	if (info.vertexInputState == null) {
+	throw new Error('info.vertexInputState is null');
+	} 
 
-      if (info.inputAssemblyState == null) {
-        throw new Error('info.inputAssemblyState is null');
-      }      
+	if (info.inputAssemblyState == null) {
+	throw new Error('info.inputAssemblyState is null');
+	}      
 
-			if (info.rasterizationState == null)
-			{
-				throw new Error('info.rasterizationState is null');
-			}      
+	if (info.rasterizationState == null)
+	{
+		throw new Error('info.rasterizationState is null');
+	}      
 
       this.mEntrypoint = entrypoint;
       this.mProgram = program;
