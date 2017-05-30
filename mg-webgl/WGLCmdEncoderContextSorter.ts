@@ -2,7 +2,7 @@ namespace Magnesium {
   export class WGLCmdEncoderContextSorter {
     private mCurrentContext: WGLCmdEncoderContext | null;
     private mContexts: Array<WGLCmdEncoderContext>;
-    private mInstructions: Array<GLCmdRecordInstruction>;
+    private mInstructions: Array<WGLCmdRecordInstruction>;
     constructor()
     {
         this.clear();
@@ -10,7 +10,7 @@ namespace Magnesium {
 
     clear(): void {
       this.mContexts = new Array<WGLCmdEncoderContext>();
-      this.mInstructions = new Array<GLCmdRecordInstruction>();
+      this.mInstructions = new Array<WGLCmdRecordInstruction>();
       this.mCurrentContext = null;
     }
 

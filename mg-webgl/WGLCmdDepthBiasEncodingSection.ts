@@ -12,17 +12,17 @@ namespace Magnesium {
 
     fetch(
       pipeline: IWGLGraphicsPipeline
-      ) : GLCmdDepthBiasParameter {    
-      let depthBias = new GLCmdDepthBiasParameter();
+      ) : WGLCmdDepthBiasParameter {    
+      let depthBias = new WGLCmdDepthBiasParameter();
       depthBias.depthBiasClamp = pipeline.depthBiasClamp;
       depthBias.depthBiasConstantFactor = pipeline.depthBiasConstantFactor;
       depthBias.depthBiasSlopeFactor = pipeline.depthBiasSlopeFactor;
       
       if (
         (
-          pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
+          pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
         )
-        == GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
+        == WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
       ) {
         depthBias.depthBiasClamp = this.mDepthBiasClamp;
         depthBias.depthBiasConstantFactor = this.mDepthBiasConstantFactor;
@@ -54,15 +54,15 @@ namespace Magnesium {
             &&
             (
                 (
-                  pipeline.dynamicsStates
-                  & GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
+                  pipeline.dynamicStates
+                  & WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
                 )
-                == GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
+                == WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS
             )
           )
       )
       {
-          let bias = new GLCmdDepthBiasParameter();
+          let bias = new WGLCmdDepthBiasParameter();
           bias.depthBiasClamp = this.mDepthBiasClamp;
           bias.depthBiasConstantFactor = this.mDepthBiasConstantFactor;
           bias.depthBiasSlopeFactor = this.mDepthBiasSlopeFactor;            
@@ -81,7 +81,7 @@ namespace Magnesium {
 
   class WGLCmdSetDepthBias implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
 

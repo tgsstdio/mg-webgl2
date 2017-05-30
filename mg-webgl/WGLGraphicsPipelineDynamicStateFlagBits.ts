@@ -1,5 +1,5 @@
 namespace Magnesium {	
-	export enum GLGraphicsPipelineDynamicStateFlagBits {
+	export enum WGLGraphicsPipelineDynamicStateFlagBits {
 		VIEWPORT = 1 << 0,
 		SCISSOR = 1 << 1,
 		LINE_WIDTH = 1 << 2,

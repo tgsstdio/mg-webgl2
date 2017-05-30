@@ -53,7 +53,7 @@ namespace Magnesium {
     sparseResidency8Samples : boolean;
     sparseResidency16Samples : boolean;
     sparseResidencyAliased : boolean;
-    variableMultisampleRate : boolean;
+    letiableMultisampleRate : boolean;
     inheritedQueries : boolean;
   }
 }

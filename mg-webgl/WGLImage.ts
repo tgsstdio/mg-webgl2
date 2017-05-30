@@ -156,7 +156,7 @@ namespace Magnesium {
             : WGLImage.roundPixelUp(depth);
 				
 
-					var mipLevelData = new GLImageLevelSubresource ();
+					let mipLevelData = new GLImageLevelSubresource ();
 					mipLevelData.width = width;
 					mipLevelData.height = height;
 					mipLevelData.depth = depth;

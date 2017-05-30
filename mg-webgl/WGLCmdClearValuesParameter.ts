@@ -1,10 +1,10 @@
-/// <reference path="GLCmdClearValueArrayItem.ts" />
+/// <reference path="WGLCmdClearValueArrayItem.ts" />
 
 namespace Magnesium {
-  export class GLCmdClearValuesParameter {
-    attachments: Array<GLCmdClearValueArrayItem>;
+  export class WGLCmdClearValuesParameter {
+    attachments: Array<WGLCmdClearValueArrayItem>;
 
-		equals (other: GLCmdClearValuesParameter) : boolean
+		equals (other: WGLCmdClearValuesParameter) : boolean
 		{
 			if (this.attachments == null && other.attachments != null)
 			{
@@ -21,7 +21,7 @@ namespace Magnesium {
 				return false;
 			}
 
-			var noOfAttachments = this.attachments.length;
+			let noOfAttachments = this.attachments.length;
 			for (let i = 0; i < noOfAttachments; i += 1)
 			{
 				if (!this.attachments [i].equals (other.attachments [i]))

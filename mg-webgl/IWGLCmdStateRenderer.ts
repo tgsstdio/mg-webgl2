@@ -1,8 +1,8 @@
 /// <reference path="WGLCmdBeginRenderpassRecord.ts" />
-/// <reference path="GLCmdPipelineStencilWriteInfo.ts" />
+/// <reference path="WGLCmdPipelineStencilWriteInfo.ts" />
 /// <reference path="WGLCmdViewportParameter.ts" />
 /// <reference path="../mg/MgColor4f.ts" />
-/// <reference path="GLCmdStencilFunctionInfo.ts" />
+/// <reference path="WGLCmdStencilFunctionInfo.ts" />
 
 namespace Magnesium {
   export interface IWGLCmdStateRenderer {
@@ -10,23 +10,23 @@ namespace Magnesium {
       // initialize() : void;
       // beginRenderpass(record: GLCmdBeginRenderpassRecord) : void;
       // endRenderpass() : void;
-      bindPipeline(pipelineInfo: GLCmdBoundPipelineRecordInfo) : void;
+      bindPipeline(pipelineInfo: WGLCmdBoundPipelineRecordInfo) : void;
       updateStencilWriteMask(write: WGLCmdPipelineStencilWriteInfo) : void;
       updateViewports(viewports: WGLCmdViewportParameter) : void;
       updateScissors(scissors: WGLCmdScissorParameter) : void;
       // updateDepthBounds(bounds: GLCmdDepthBoundsParameter) : void;
       updateBlendConstants(blendConstants: MgColor4f) : void;
-      updateDepthBias(nextDepthBias: GLCmdDepthBiasParameter) : void;
+      updateDepthBias(nextDepthBias: WGLCmdDepthBiasParameter) : void;
       // updateLineWidth(lineWidth: number) : void;
-      // updateFrontStencil(stencilInfo: GLCmdStencilFunctionInfo) : void;
-      // updateBackStencil(stencilInfo: GLCmdStencilFunctionInfo) : void;
+      updateFrontStencil(stencilInfo: WGLCmdStencilFunctionInfo) : void;
+      updateBackStencil(stencilInfo: WGLCmdStencilFunctionInfo) : void;
 
       draw(drawItem: WGLCmdInternalDraw) : void;
       // drawIndexed(drawItem: GLCmdInternalDrawIndexed) : void;
       // drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
       // drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
       // bindVertexArrays(vao: GLCmdVertexBufferObject) : void;
-      // bindDescriptorSets(ds: GLCmdDescriptorSetParameter) : void;
-      // updateBothStencils(item: GLCmdStencilFunctionInfo) : void;
+      bindDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void;
+      updateBothStencils(item: WGLCmdStencilFunctionInfo) : void;
   }
 }

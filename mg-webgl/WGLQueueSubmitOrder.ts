@@ -1,7 +1,7 @@
-/// <reference path="IGLSemaphore.ts" />
+/// <reference path="IWGLSemaphore.ts" />
 
 namespace Magnesium {
-  export class GLQueueSubmitOrder {
+  export class WGLQueueSubmitOrder {
     key : number;
     fence : IGLFence;
     submissions: Map<number, IWGLSemaphore>;

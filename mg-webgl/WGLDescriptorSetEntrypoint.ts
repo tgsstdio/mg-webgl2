@@ -124,17 +124,17 @@ namespace Magnesium {
 				throw new Error('pAllocateInfo is null');
       }      
 
-      let parentPool = descriptorPool as IGLNextDescriptorPool
+      let parentPool = descriptorPool as IWGLDescriptorPool
 
 			for (let descSet of pDescriptorSets) {
 				let bDescSet = descSet as IWGLDescriptorSet;
 				if (bDescSet != null && parentPool === bDescSet.parent)	{
 					if (bDescSet.isValidDescriptorSet) {
-						for (var resource of bDescSet.resources) {
+						for (let resource of bDescSet.resources) {
 							parentPool.resetResource(resource);
 						}
 						bDescSet.invalidate();
-						parentPool.allocatedSets.remove(bDescSet.key);
+						parentPool.allocatedSets.delete(bDescSet.key);
 					}
 				}
 			}

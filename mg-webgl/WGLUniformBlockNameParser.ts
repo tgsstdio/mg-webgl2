@@ -5,8 +5,8 @@ namespace Magnesium {
     implements IWGLUniformBlockNameParser {
 		parse(name: string) : WGLUniformBlockNameInfo
 		{
-			var tokens = name.split(/\[|\]|\s/).filter(x => x.length > 0);
-			var prefix = "";
+			let tokens = name.split(/\[|\]|\s/).filter(x => x.length > 0);
+			let prefix = "";
 
 			if (tokens.length >= 1)
 			{

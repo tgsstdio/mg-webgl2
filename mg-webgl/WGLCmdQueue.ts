@@ -1,8 +1,8 @@
 /// <reference path="IWGLQueue.ts" />
 /// <reference path="WGLCmdEncoderCategory.ts" />
-/// <reference path="GLQueueSubmitOrder.ts" />
+/// <reference path="WGLQueueSubmitOrder.ts" />
 /// <reference path="WGLCmdEncoderContext.ts" />
-/// <reference path="GLCmdComputeRecording.ts" />
+/// <reference path="WGLCmdComputeRecording.ts" />
 /// <reference path="../mg/MgSubmitInfoWaitSemaphoreInfo.ts" />
 /// <reference path="IWGLCommandBuffer.ts" />
 /// <reference path="GLQueueSubmission.ts" />
@@ -10,14 +10,14 @@
 /// <reference path="IWGLCmdStateRenderer.ts" />
 /// <reference path="IWGLBlitOperationEntrypoint.ts" />
 /// <reference path="IGLSwapchainKHR.ts" />
-/// <reference path="GLCmdCommandRecording.ts" />
+/// <reference path="WGLCmdCommandRecording.ts" />
 /// <reference path="IGLFence.ts" />
 /// <reference path="IGLQueueFence.ts" />
 
 namespace Magnesium {
   export class WGLCmdQueue implements IWGLQueue {
     private mSubmissions : Map<number, GLQueueSubmission>;
-    private mOrders : Map<number, GLQueueSubmitOrder>;
+    private mOrders : Map<number, WGLQueueSubmitOrder>;
     private mSubmissionKey: number;
     private mOrderKey: number;
 
@@ -34,7 +34,7 @@ namespace Magnesium {
       this.mBlit = blit;
 
       this.mSubmissions = new Map<number, GLQueueSubmission>();
-      this.mOrders = new Map<number, GLQueueSubmitOrder>();
+      this.mOrders = new Map<number, WGLQueueSubmitOrder>();
       this.mSubmissionKey = 0;
       this.mOrderKey = 0;
     }
@@ -52,7 +52,7 @@ namespace Magnesium {
 				return MgResult.SUCCESS;
 			}
 
-			var signalInfos = new Array<MgSubmitInfoWaitSemaphoreInfo>(0);
+			let signalInfos = new Array<MgSubmitInfoWaitSemaphoreInfo>(0);
 			if (pPresentInfo.waitSemaphores != null) {
 				for (let signal of pPresentInfo.waitSemaphores) {
 					if (signal != null)	{
@@ -85,8 +85,8 @@ namespace Magnesium {
     generateRecording(
       buffer: IWGLCommandBuffer
       , renderer: IWGLCmdStateRenderer
-    ) : GLCmdCommandRecording {
-        return new GLCmdCommandRecording(
+    ) : WGLCmdCommandRecording {
+        return new WGLCmdCommandRecording(
           new WGLCmdComputeRecording(buffer.record.computeGrid, new WGLCmdComputeEncoder())
           , new GLCmdGraphicsRecording(buffer.record.graphicsGrid, renderer)
           , new GLCmdBlitRecording(buffer.record.blitGrid, this.mBlit));
@@ -164,7 +164,7 @@ namespace Magnesium {
 				for (let orderKey of orderKeys)	{
 					
 					if (this.mOrders.has(orderKey)) {
-            let order: GLQueueSubmitOrder = this.mOrders.get(orderKey) as GLQueueSubmitOrder;
+            let order: WGLQueueSubmitOrder = this.mOrders.get(orderKey) as WGLQueueSubmitOrder;
 
             // Copy keys across to temp array
 						let submissionKeys = new Array<number>(order.submissions.size);            
@@ -199,9 +199,9 @@ namespace Magnesium {
 
 		completeAllPreviousSubmissions (fence: IMgFence) : MgResult
 		{
-			var internalFence = fence as IGLQueueFence;
+			let internalFence = fence as IGLQueueFence;
 			if (internalFence) {
-				var result = this.queueWaitIdle ();
+				let result = this.queueWaitIdle ();
 				internalFence.signal ();
 				return result;
 			}
@@ -211,7 +211,7 @@ namespace Magnesium {
 		}
 
 		enqueueSubmission (sub: MgSubmitInfo) : GLQueueSubmission {
-			var submit = new GLQueueSubmission (this.mSubmissionKey, sub);
+			let submit = new GLQueueSubmission (this.mSubmissionKey, sub);
 			// JUST LOOP AROUND
       const MAX_VALUE = 1024;
 			this.mSubmissionKey = (this.mSubmissionKey >= MAX_VALUE) ? 0 : this.mSubmissionKey + 1;
@@ -227,7 +227,7 @@ namespace Magnesium {
         let children = new Array<GLQueueSubmission> ();
 
         for (let sub of pSubmits) {
-          var submit = this.enqueueSubmission (sub);
+          let submit = this.enqueueSubmission (sub);
           if (fence != null) {
             submit.orderFence = this.mSemaphores.createSemaphore ();
           }
@@ -236,7 +236,7 @@ namespace Magnesium {
 
         if (fence != null) {
 
-          var order = new GLQueueSubmitOrder (this.mOrderKey);
+          let order = new WGLQueueSubmitOrder (this.mOrderKey);
           order.fence = fence as IGLFence;
           for (let sub of children)
           {

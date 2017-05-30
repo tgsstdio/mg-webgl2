@@ -3,7 +3,6 @@ namespace Magnesium {
     private mInstructions: WGLCmdEncoderContextSorter;
     private mBag: WGLCmdGraphicsBag;
     private mVertexArray: IWGLCmdVertexArrayEntrypoint;
-    private mDSBinder: IWGLDescriptorSetBinder;
 
     private mCurrentPipeline : IWGLGraphicsPipeline|null;
     private mBoundRenderPass: WGLCmdBeginRenderpassRecord|null;
@@ -13,7 +12,8 @@ namespace Magnesium {
     private mBlendConstants: WGLCmdBlendConstantsEncodingSection;
     private mScissors: WGLCmdScissorEncodingSection;
     private mViewports: WGLCmdViewportEncodingSection;
-    private mStencil: WGLCmdStencilSection;
+    private mStencil: WGLCmdStencilEncodingSection;
+    private mDescriptorSets: WGLCmdDescriptorSetEncodingSection;
 
     constructor(
       sorter: WGLCmdEncoderContextSorter
@@ -24,13 +24,13 @@ namespace Magnesium {
       this.mInstructions = sorter;
       this.mBag = bag;
       this.mVertexArray = vertexArray;
-      this.mDSBinder = dsBinder;
 
       this.mDepthBias = new WGLCmdDepthBiasEncodingSection();
       this.mBlendConstants = new WGLCmdBlendConstantsEncodingSection();
       this.mScissors = new WGLCmdScissorEncodingSection();
       this.mViewports = new WGLCmdViewportEncodingSection();
-      this.mStencil = new WGLCmdStencilSection();
+      this.mStencil = new WGLCmdStencilEncodingSection();
+      this.mDescriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);
     }
 
 
@@ -41,8 +41,9 @@ namespace Magnesium {
       this.mViewports.clear();
       this.mStencil.clear();
 
-      this.invalidateDescriptorSets();
-      this.mDSBinder.clear();
+      this.mBoundRenderPass = null;
+
+      this.mDescriptorSets.clear();
     }
 
     asGrid() : WGLCmdGraphicsGrid {
@@ -84,7 +85,11 @@ namespace Magnesium {
       );
 
       // if descriptor sets is missing, generate new one
-      this.pushBackDescriptorSetIfRequired();      
+      this.mDescriptorSets.push(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions        
+      ); // pushBackDescriptorSetIfRequired();      
 
       return true;
     }
@@ -93,12 +98,8 @@ namespace Magnesium {
 
     }
 
-    private pushBackDescriptorSetIfRequired() : void {
-      
-    } 
-
     bindPipeline(
-      pipeline: IMgPipeline
+      pipeline: IMgPipeline|null
     ) : void {
       this.mCurrentPipeline = pipeline as IWGLGraphicsPipeline|null;
 
@@ -120,7 +121,23 @@ namespace Magnesium {
       }
     }
 
-    private initializePipelineInfo() : GLCmdBoundPipelineRecordInfo
+		bindDescriptorSets(
+      layout: IMgPipelineLayout
+      , firstSet: number
+      , descriptorSetCount: number
+      , pDescriptorSets: Array<IMgDescriptorSet>
+      , pDynamicOffsets: Array<number>|null
+    ) : void {
+      this.mDescriptorSets.bind(
+        layout
+        , firstSet
+        , descriptorSetCount
+        , pDescriptorSets
+        , pDynamicOffsets
+      );
+    }
+
+    private initializePipelineInfo() : WGLCmdBoundPipelineRecordInfo
     {
       let pipeline = this.mCurrentPipeline as IWGLGraphicsPipeline;
 
@@ -130,9 +147,9 @@ namespace Magnesium {
 
       if (
         (
-          pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE
+          pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE
         )
-        == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE
+        == WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE
       ) {
         frontReference = this.mStencil.front.referenceMask;
         backReference = this.mStencil.back.referenceMask;
@@ -143,9 +160,9 @@ namespace Magnesium {
 
       if (
         (
-          pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
+          pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
         )
-        == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
+        == WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
       ) {
         backCompare = this.mStencil.back.compareMask;
         frontCompare = this.mStencil.front.compareMask;
@@ -156,15 +173,15 @@ namespace Magnesium {
 
       if (
         (
-          pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
+          pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
         )
-        == GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
+        == WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK
       ) {
         backWriteMask = this.mStencil.back.writeMask;
         frontWriteMask = this.mStencil.front.writeMask;
       }
 
-      let info = new GLCmdBoundPipelineRecordInfo();        
+      let info = new WGLCmdBoundPipelineRecordInfo();        
       info.pipeline = pipeline;
       //info.lineWidth = FetchLineWidth(),
       info.blendConstants = this.mBlendConstants.fetch(pipeline);
@@ -264,6 +281,19 @@ namespace Magnesium {
       );
     }
 
+		setViewport(
+      firstViewport: number
+      , pViewports: Array<MgViewport>
+    ) : void {
+      this.mViewports.set(
+        this.mCurrentPipeline
+        , this.mBag
+        , this.mInstructions
+        , firstViewport
+        , pViewports
+      );
+    }    
+
     draw(vertexCount: number
       , instanceCount: number
       , firstVertex: number
@@ -325,7 +355,7 @@ namespace Magnesium {
 
   class WGLCmdBindPipeline implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
       let context = arg1.graphics;
@@ -354,7 +384,7 @@ namespace Magnesium {
 
   class WGLCmdDraw implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
 

@@ -3,7 +3,7 @@
 /// <reference path="GLCmdBlitRecording.ts" />
 
 namespace Magnesium {
-  export class GLCmdCommandRecording {
+  export class WGLCmdCommandRecording {
     compute: WGLCmdComputeRecording;
     graphics: GLCmdGraphicsRecording;
     blit: GLCmdBlitRecording;

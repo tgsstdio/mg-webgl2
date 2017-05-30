@@ -14,8 +14,8 @@ namespace Magnesium {
     ) : WGLCmdViewportParameter {
         let viewports = pipeline.viewports;
         if (
-            (pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.VIEWPORT)
-                == GLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
+            (pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.VIEWPORT)
+                == WGLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
         )
         {
             viewports = this.mPastViewports;
@@ -53,15 +53,15 @@ namespace Magnesium {
           &&
           (
             (
-              pipeline.dynamicsStates 
-              & GLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
+              pipeline.dynamicStates 
+              & WGLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
             )
-            == GLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
+            == WGLGraphicsPipelineDynamicStateFlagBits.VIEWPORT
           )
         )
       )
       {
-        var nextIndex = bag.viewports.push(this.mPastViewports);
+        let nextIndex = bag.viewports.push(this.mPastViewports);
 
         let instruction = new WGLCmdEncodingInstruction();           
         instruction.category = WGLCmdEncoderCategory.GRAPHICS;
@@ -75,7 +75,7 @@ namespace Magnesium {
 
   class WGLCmdSetViewport implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
 

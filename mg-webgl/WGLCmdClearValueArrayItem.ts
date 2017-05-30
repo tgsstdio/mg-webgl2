@@ -4,12 +4,12 @@
 /// <reference path="../mg/MgClearValue.ts" />
 
 namespace Magnesium {
-  export class GLCmdClearValueArrayItem {
+  export class WGLCmdClearValueArrayItem {
     attachment: GLClearAttachmentInfo;
     value: MgClearValue;
     color: MgColor4f;
 
-    equals(other: GLCmdClearValueArrayItem ): boolean
+    equals(other: WGLCmdClearValueArrayItem ): boolean
 		{
 			if (!this.attachment.equals(other.attachment))
 			{
@@ -28,7 +28,7 @@ namespace Magnesium {
 			case GLClearAttachmentType.COLOR_UINT:
 				return this.value.color.uint32.equals (other.value.color.uint32);
 			case GLClearAttachmentType.DEPTH_STENCIL:				
-				return this.value.depth.equals(other.value.depth);
+				return this.value.depthStencil.equals(other.value.depthStencil);
 			default:
 				throw new Error('Not supported');
 			}

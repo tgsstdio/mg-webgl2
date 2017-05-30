@@ -2,14 +2,23 @@ namespace Magnesium {
   export class WGLGraphicsPipeline implements IWGLGraphicsPipeline {    
     private mEntrypoint: IWGLGraphicsPipelineEntrypoint;
     private mProgram: WebGLProgram;
-    private mInternalCache: GLInternalCache;
-    private mLayout: IWGLPipelineLayout;    
+		get programID(): WebGLProgram {
+			return this.mProgram;
+		}
+    private mInternalCache: WGLInternalBlockCache;
+		get internalCache(): WGLInternalBlockCache {
+			return this.mInternalCache;
+		}
+    private mLayout: IWGLPipelineLayout;   
+		get layout():  IWGLPipelineLayout {
+			return this.mLayout;
+		}
 
     constructor(
       entrypoint: IWGLGraphicsPipelineEntrypoint
       , program: WebGLProgram
       , info: MgGraphicsPipelineCreateInfo
-      , internalCache: GLInternalCache
+      , internalCache: WGLInternalBlockCache
       , layout: IWGLPipelineLayout
     ) {
       if (info == null) {
@@ -64,7 +73,15 @@ namespace Magnesium {
     }
 
 		private mViewports: WGLCmdViewportParameter;
+		get viewports(): WGLCmdViewportParameter {
+			return this.mViewports;
+		}
+
 		private mScissors: WGLCmdScissorParameter;
+		get scissors(): WGLCmdScissorParameter {
+			return this.mScissors;
+		}
+
 		populateViewports (
 			viewportState: MgPipelineViewportStateCreateInfo
 		) : void {
@@ -75,10 +92,11 @@ namespace Magnesium {
 				if (viewportState.viewports) {
 					if (viewportState.viewports.length >= 1) {
 						let firstVp = viewportState.viewports[0];
+						vp.first = 0;
 						vp.x = firstVp.x;
 						vp.y = firstVp.y;
 						vp.width = firstVp.width;
-						vp.heigth = firstVp.height;
+						vp.height = firstVp.height;
 						vp.zNear = firstVp.minDepth;
 						vp.zFar = firstVp.maxDepth;
 					}
@@ -87,6 +105,7 @@ namespace Magnesium {
 				if (viewportState.scissors) {
 					if (viewportState.scissors.length >= 1) {
 						let first = viewportState.scissors[0];
+						sci.first = 0;
 						sci.x = first.offset.x;
 						sci.y = first.offset.y;
 						sci.width = first.extent.width;
@@ -98,13 +117,21 @@ namespace Magnesium {
 			this.mScissors = sci;					
 		}		
 
-		private mColorBlendEnums: GLGraphicsPipelineBlendColorState;
+		private mColorBlendEnums: WGLGraphicsPipelineBlendColorState;
+		get colorBlendEnums(): WGLGraphicsPipelineBlendColorState {
+			return this.mColorBlendEnums;
+		}
+
 		private mBlendConstants: MgColor4f;
+		get blendConstants(): MgColor4f {
+			return this.mBlendConstants;
+		}
+
 		private populateColorBlend(
 			colorBlend: MgPipelineColorBlendStateCreateInfo
 		) : void {
 
-			this.mColorBlendEnums = new GLGraphicsPipelineBlendColorState ();
+			this.mColorBlendEnums = new WGLGraphicsPipelineBlendColorState ();
 			if (colorBlend != null)	{
 				this.mBlendConstants = colorBlend.blendConstants;
 
@@ -144,79 +171,98 @@ namespace Magnesium {
 			}
 		}
 
-		private mDynamicsStates: GLGraphicsPipelineDynamicStateFlagBits;
+		private mDynamicStates: WGLGraphicsPipelineDynamicStateFlagBits;
+		get dynamicStates(): WGLGraphicsPipelineDynamicStateFlagBits {
+			return this.mDynamicStates;
+		}
+
 		private populateDynamicStates(
 			dynamicStates: MgPipelineDynamicStateCreateInfo
 		) : void {
-			let flags : GLGraphicsPipelineDynamicStateFlagBits = 0;
+			let flags : WGLGraphicsPipelineDynamicStateFlagBits = 0;
 
 			if (dynamicStates != null) {
 				for (let state of dynamicStates.dynamicStates) {
 					switch (state)
 					{
 					case MgDynamicState.VIEWPORT:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.VIEWPORT;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.VIEWPORT;
 						break;
 					case MgDynamicState.SCISSOR:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.SCISSOR;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.SCISSOR;
 						break;
 					case MgDynamicState.BLEND_CONSTANTS:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS;
 						break;
 					case MgDynamicState.STENCIL_COMPARE_MASK:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_COMPARE_MASK;
 						break;
 					case MgDynamicState.STENCIL_REFERENCE:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_REFERENCE;
 						break;
 					case MgDynamicState.STENCIL_WRITE_MASK:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.STENCIL_WRITE_MASK;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.STENCIL_WRITE_MASK;
 						break;
 					case MgDynamicState.LINE_WIDTH:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.LINE_WIDTH;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.LINE_WIDTH;
 						break;
 					case MgDynamicState.DEPTH_BIAS:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BIAS;
 						break;
 					case MgDynamicState.DEPTH_BOUNDS:
-						flags |= GLGraphicsPipelineDynamicStateFlagBits.DEPTH_BOUNDS;
+						flags |= WGLGraphicsPipelineDynamicStateFlagBits.DEPTH_BOUNDS;
 						break;					
 					}
 				}
-				this.mDynamicsStates = flags;
+				this.mDynamicStates = flags;
 			}
 		}
 
 		private mFront: GLGraphicsPipelineStencilMasks;
+		get front(): GLGraphicsPipelineStencilMasks {
+			return this.mFront;
+		}
+
 		private mBack: GLGraphicsPipelineStencilMasks;
+		get back(): GLGraphicsPipelineStencilMasks {
+			return this.mBack;
+		}
+
 		private mMaxDepthBounds: number;
 		private mMinDepthBounds: number;
-		private mDepthBufferFunction: MgCompareOp;
+		private mDepthBufferFunction: MgCompareOp;		
+		get depthBufferFunction(): MgCompareOp {
+			return this.mDepthBufferFunction;
+		}
+
 		private mStencilState: GLGraphicsPipelineStencilState;
+		get stencilState(): GLGraphicsPipelineStencilState {
+			return this.mStencilState;
+		}
 
 		private populateDepthStencilState (
 			depthStencilState: MgPipelineDepthStencilStateCreateInfo
 		) : void {
-			let flags: GLGraphicsPipelineFlagBits = 0;
+			let flags: WGLGraphicsPipelineFlagBits = 0;
 
 			// VULKAN DOC : The scissor test is always performed.
 			//  Applications can effectively disable the scissor test by specifying a
 			//  scissor rectangle that encompasses the entire framebuffer.
-			flags |= GLGraphicsPipelineFlagBits.ScissorTestEnabled;
+			flags |= WGLGraphicsPipelineFlagBits.SCISSOR_TEST_ENABLED;
 
 			if (depthStencilState != null)
 			{
 				flags |= (depthStencilState.depthTestEnable) 
-					? GLGraphicsPipelineFlagBits.DepthBufferEnabled
+					? WGLGraphicsPipelineFlagBits.DEPTH_BUFFER_ENABLED
 					: 0;
 				flags |= (depthStencilState.stencilTestEnable)
-					? GLGraphicsPipelineFlagBits.StencilEnabled
+					? WGLGraphicsPipelineFlagBits.StencilEnabled
 					: 0;
 				flags |= (depthStencilState.depthWriteEnable)
-					? GLGraphicsPipelineFlagBits.DepthBufferWriteEnabled
+					? WGLGraphicsPipelineFlagBits.DEPTH_BUFFER_WRITE_ENABLED
 					: 0;
 
-				flags |= GLGraphicsPipelineFlagBits.TwoSidedStencilMode;
+				flags |= WGLGraphicsPipelineFlagBits.TwoSidedStencilMode;
 
 				// SAME STENCIL MODE USED FOR FRONT AND BACK
 				let front = new GLGraphicsPipelineStencilMasks();				
@@ -254,8 +300,8 @@ namespace Magnesium {
 			} 
 			else
 			{
-				flags |= GLGraphicsPipelineFlagBits.DepthBufferEnabled;
-				flags |= GLGraphicsPipelineFlagBits.DepthBufferWriteEnabled;
+				flags |= WGLGraphicsPipelineFlagBits.DEPTH_BUFFER_ENABLED;
+				flags |= WGLGraphicsPipelineFlagBits.DEPTH_BUFFER_WRITE_ENABLED;
 
 				let front = new GLGraphicsPipelineStencilMasks();				
 				front.compareMask = 0x7FFFFFFF;
@@ -295,23 +341,27 @@ namespace Magnesium {
 
 		private mPolygonMode : MgPolygonMode;
 		private mRasterizerDiscardEnable: boolean;
-		private mFlags: GLGraphicsPipelineFlagBits;
+		private mFlags: WGLGraphicsPipelineFlagBits;
+		get flags(): WGLGraphicsPipelineFlagBits {
+			return this.mFlags;
+		}
+
 		private mDepthClampEnable: boolean;
 
 		private populatePipelineConstants (
 			 rasterization: MgPipelineRasterizationStateCreateInfo
 		) : void {
-			let flags : GLGraphicsPipelineFlagBits = 0;
+			let flags : WGLGraphicsPipelineFlagBits = 0;
 
-			flags |= ((rasterization.cullMode & MgCullModeFlagBits.FRONT_AND_BACK) > 0) ? GLGraphicsPipelineFlagBits.CullingEnabled : 0;
-			flags |= ((rasterization.cullMode & MgCullModeFlagBits.FRONT_BIT) > 0) ? GLGraphicsPipelineFlagBits.CullFrontFaces : 0;
-			flags |= ((rasterization.cullMode & MgCullModeFlagBits.BACK_BIT) > 0) ? GLGraphicsPipelineFlagBits.CullBackFaces : 0;
-			flags |= (rasterization.frontFace == MgFrontFace.COUNTER_CLOCKWISE) ? GLGraphicsPipelineFlagBits.UseCounterClockwiseWindings : 0;
+			flags |= ((rasterization.cullMode & MgCullModeFlagBits.FRONT_AND_BACK) > 0) ? WGLGraphicsPipelineFlagBits.CULLING_ENABLED : 0;
+			flags |= ((rasterization.cullMode & MgCullModeFlagBits.FRONT_BIT) > 0) ? WGLGraphicsPipelineFlagBits.CULL_FRONT_FACES : 0;
+			flags |= ((rasterization.cullMode & MgCullModeFlagBits.BACK_BIT) > 0) ? WGLGraphicsPipelineFlagBits.CULL_BACK_FACES : 0;
+			flags |= (rasterization.frontFace == MgFrontFace.COUNTER_CLOCKWISE) ? WGLGraphicsPipelineFlagBits.USE_COUNTER_CLOCKWISE_WINDINGS : 0;
 
 			this.mPolygonMode = rasterization.polygonMode;
 			this.mRasterizerDiscardEnable = rasterization.rasterizerDiscardEnable;
 
-			flags |= (rasterization.depthBiasEnable) ? GLGraphicsPipelineFlagBits.DepthBiasEnabled : 0;
+			flags |= (rasterization.depthBiasEnable) ? WGLGraphicsPipelineFlagBits.DepthBiasEnabled : 0;
 
 			this.mDepthClampEnable = rasterization.depthClampEnable;
 
@@ -319,8 +369,20 @@ namespace Magnesium {
 		}
 
 		private mDepthBiasConstantFactor: number;
+		get depthBiasConstantFactor() : number {
+			return this.mDepthBiasConstantFactor;
+		}
+
 		private mDepthBiasClamp: number;
+		get depthBiasClamp(): number {
+			return this.mDepthBiasClamp;
+		}
+
 		private mDepthBiasSlopeFactor: number;
+		get depthBiasSlopeFactor(): number {
+			return this.mDepthBiasSlopeFactor;
+		}
+
 		private mLineWidth: number;
 		private populateCmdFallbacks(
 			rasterization: MgPipelineRasterizationStateCreateInfo

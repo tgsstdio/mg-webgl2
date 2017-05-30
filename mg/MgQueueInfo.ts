@@ -45,7 +45,7 @@ namespace Magnesium {
 			cmdPoolCreateInfo.flags = flags;		
 
       let out_0 :{ pCommandPool: IMgCommandPool | null} = { pCommandPool: null };
-			var errCode = this.mDevice.createCommandPool (cmdPoolCreateInfo, null, out_0);
+			let errCode = this.mDevice.createCommandPool (cmdPoolCreateInfo, null, out_0);
 			if (errCode != MgResult.SUCCESS) {
         throw new Error('createPartition - command pool error')
       }

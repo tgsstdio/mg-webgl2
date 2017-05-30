@@ -1,7 +1,7 @@
 namespace Magnesium {
 	export enum MgImageLayout	{
 		/// <summary>
-		/// Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
+		/// Implicit layout an image is when its contents are undefined due to letious reasons (e.g. right after creation)
 		/// </summary>
 		UNDEFINED = 0,
 		/// <summary>

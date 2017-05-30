@@ -302,7 +302,7 @@ namespace Magnesium {
       , dstImageLayout: MgImageLayout
       , pRegions: Array<MgImageCopy>
     ) : void {
-      this.mCommandEncoder.blit.cmdCopyImage(
+      this.mCommandEncoder.blit.copyImage(
         srcImage
         , srcImageLayout
         , dstImage

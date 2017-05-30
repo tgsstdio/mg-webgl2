@@ -3,13 +3,14 @@ namespace Magnesium {
     draws: WGLCmdEncoderCollection<WGLCmdInternalDraw>;
     drawIndirects: WGLCmdEncoderCollection<GLCmdInternalDrawIndirect>;
     drawIndexeds: WGLCmdEncoderCollection<GLCmdInternalDrawIndexed>;
-    pipelines: WGLCmdEncoderCollection<GLCmdBoundPipelineRecordInfo>;
-    depthBias: WGLCmdEncoderCollection<GLCmdDepthBiasParameter>;
+    pipelines: WGLCmdEncoderCollection<WGLCmdBoundPipelineRecordInfo>;
+    depthBias: WGLCmdEncoderCollection<WGLCmdDepthBiasParameter>;
     blendConstants: WGLCmdEncoderCollection<MgColor4f>;
     scissors: WGLCmdEncoderCollection<WGLCmdScissorParameter>;
     viewports: WGLCmdEncoderCollection<WGLCmdViewportParameter>;
     stencilWrites: WGLCmdEncoderCollection<WGLCmdPipelineStencilWriteInfo>;
     stencilFunctions: WGLCmdEncoderCollection<WGLCmdStencilFunctionInfo>;
+    descriptorSets: WGLCmdEncoderCollection<WGLCmdDescriptorSetParameter>;
 
     constructor() {
       this.draws = new WGLCmdEncoderCollection<WGLCmdInternalDraw>();
@@ -18,9 +19,9 @@ namespace Magnesium {
       this.drawIndexeds
         = new WGLCmdEncoderCollection<GLCmdInternalDrawIndexed>();
       this.pipelines
-        = new WGLCmdEncoderCollection<GLCmdBoundPipelineRecordInfo>();
+        = new WGLCmdEncoderCollection<WGLCmdBoundPipelineRecordInfo>();
       this.depthBias
-        = new WGLCmdEncoderCollection<GLCmdDepthBiasParameter>();
+        = new WGLCmdEncoderCollection<WGLCmdDepthBiasParameter>();
       this.blendConstants
         = new WGLCmdEncoderCollection<MgColor4f>(); 
       this.scissors
@@ -31,6 +32,8 @@ namespace Magnesium {
         = new WGLCmdEncoderCollection<WGLCmdPipelineStencilWriteInfo>();
       this.stencilFunctions
         = new WGLCmdEncoderCollection<WGLCmdStencilFunctionInfo>();
+      this.descriptorSets
+        = new WGLCmdEncoderCollection<WGLCmdDescriptorSetParameter>();
     }
 
     clear() : void {
@@ -44,6 +47,7 @@ namespace Magnesium {
       this.viewports.clear();
       this.stencilWrites.clear();
       this.stencilFunctions.clear();
+      this.descriptorSets.clear();
     }
   }
 }

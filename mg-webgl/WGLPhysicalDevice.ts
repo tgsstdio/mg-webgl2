@@ -51,7 +51,7 @@ namespace Magnesium {
 			out.pMemoryProperties = new MgPhysicalDeviceMemoryProperties();
 
       const MAX_SLOTS = 8;
-			var slots = new Array<MgMemoryType>(MAX_SLOTS);
+			let slots = new Array<MgMemoryType>(MAX_SLOTS);
 
 			const ALL_ON : number = (MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT |
 			                       MgMemoryPropertyFlagBits.HOST_CACHED_BIT |

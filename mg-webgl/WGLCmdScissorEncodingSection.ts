@@ -14,8 +14,8 @@ namespace Magnesium {
     ) : WGLCmdScissorParameter {
       let scissors = pipeline.scissors;
         if (
-            (pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.SCISSOR)
-                == GLGraphicsPipelineDynamicStateFlagBits.SCISSOR
+            (pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.SCISSOR)
+                == WGLGraphicsPipelineDynamicStateFlagBits.SCISSOR
         )
         {
             scissors = this.mPastScissors;
@@ -52,13 +52,13 @@ namespace Magnesium {
             (pipeline != null
                 &&
                 (
-                    (pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.SCISSOR)
-                        == GLGraphicsPipelineDynamicStateFlagBits.SCISSOR
+                    (pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.SCISSOR)
+                        == WGLGraphicsPipelineDynamicStateFlagBits.SCISSOR
                 )
             )
         )
         {
-            var nextIndex = bag.scissors.push(this.mPastScissors);
+            let nextIndex = bag.scissors.push(this.mPastScissors);
 
             let instruction = new WGLCmdEncodingInstruction();           
             instruction.category = WGLCmdEncoderCategory.GRAPHICS;
@@ -72,7 +72,7 @@ namespace Magnesium {
 
   class WGLCmdSetScissor implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
 

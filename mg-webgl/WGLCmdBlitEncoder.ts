@@ -24,5 +24,45 @@ namespace Magnesium {
       grid.loadImageOps = this.mBag.loadImageOps.toArray();
       return grid;
     }
+
+    loadImageData(
+      barriers: Array<MgImageMemoryBarrier>
+    ) : never {
+      throw new Error('not implemented');
+    }
+
+		copyImageToBuffer(
+      srcImage: IMgImage
+      , srcImageLayout: MgImageLayout
+      , dstBuffer: IMgBuffer
+      , pRegions: Array<MgBufferImageCopy>
+    ) : never {
+      throw new Error('not implemented');
+    }
+
+		copyBufferToImage(srcBuffer: IMgBuffer
+      , dstImage: IMgImage
+      , dstImageLayout: MgImageLayout
+      , pRegions: Array<MgBufferImageCopy>
+    ) : never {
+      throw new Error('not implemented');
+    }
+
+		copyImage(srcImage: IMgImage
+      , srcImageLayout: MgImageLayout
+      , dstImage: IMgImage
+      , dstImageLayout: MgImageLayout
+      , pRegions: Array<MgImageCopy>
+    ) : never {
+      throw new Error('not implemented');
+    }
+
+		copyBuffer(
+      srcBuffer: IMgBuffer
+      , dstBuffer: IMgBuffer
+      , pRegions: Array<MgBufferCopy>
+    ) : never {
+      throw new Error('not implemented');
+    }   
   }
 }

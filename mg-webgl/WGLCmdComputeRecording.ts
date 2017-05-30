@@ -1,4 +1,4 @@
-/// <reference path="GLCmdComputeEncoder.ts" />
+/// <reference path="WGLCmdComputeEncoder.ts" />
 /// <reference path="WGLCmdComputeGrid.ts" />
 
 namespace Magnesium {

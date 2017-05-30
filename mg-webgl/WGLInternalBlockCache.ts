@@ -4,7 +4,7 @@
 /// <reference path="WGLInternalCacheBlockBinding.ts" />
 
 namespace Magnesium {
-  export class GLInternalCache {
+  export class WGLInternalBlockCache {
     private mBlockBindings: Array<WGLInternalCacheBlockBinding>;
 
     private mArrayMapper: WGLInternalCacheArrayMapper;

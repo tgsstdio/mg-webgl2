@@ -7,7 +7,7 @@ namespace Magnesium {
       , firstSet: number
       , descriptorSetCount: number
       , pDescriptorSets: Array<IMgDescriptorSet>
-      , pDynamicOffsets: Array<number>) : void;
+      , pDynamicOffsets: Array<number>|null) : void;
     readonly isInvalid: boolean;
 		readonly boundPipelineLayout: IWGLPipelineLayout|null;
 		readonly boundDynamicOffsets: Array<number>|null;

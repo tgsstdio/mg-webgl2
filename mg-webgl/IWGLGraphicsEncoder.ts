@@ -3,7 +3,7 @@ namespace Magnesium {
     asGrid(): WGLCmdGraphicsGrid;
     clear(): void;
 
-		bindPipeline(pipeline: IMgPipeline) : void;
+		bindPipeline(pipeline: IMgPipeline|null) : void;
 		setViewport(
       firstViewport: number
       , pViewports: Array<MgViewport>
@@ -62,7 +62,7 @@ namespace Magnesium {
       , firstSet: number
       , descriptorSetCount: number
       , pDescriptorSets: Array<IMgDescriptorSet>
-      , pDynamicOffsets: Array<number>) : void;
+      , pDynamicOffsets: Array<number>|null) : void;
 		setDepthBounds(minDepthBounds: number, maxDepthBounds: number) : void;
     // MODERN BROWSERS DON'T USE THIS
 		// setLineWidth(lineWidth: number) : void;

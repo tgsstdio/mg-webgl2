@@ -192,7 +192,7 @@ namespace Magnesium {
 
         let arrayMapper = new WGLInternalCacheArrayMapper(bLayout, blocks);
 
-        let internalCache = new GLInternalCache(bLayout, blocks, arrayMapper);
+        let internalCache = new WGLInternalBlockCache(bLayout, blocks, arrayMapper);
 
         let pipeline = new WGLGraphicsPipeline(
           this.mEntrypoint.graphicsPipeline

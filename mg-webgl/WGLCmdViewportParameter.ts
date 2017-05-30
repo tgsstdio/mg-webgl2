@@ -21,5 +21,33 @@ namespace Magnesium {
 			this.zNear = 0;
 			this.zFar = 0;
 		}
+
+		equals(other: WGLCmdViewportParameter) : boolean {
+			if (Math.abs(this.first - other.first) > Number.EPSILON) {
+				return false;
+			}
+
+			if (Math.abs(this.x - other.x) > Number.EPSILON) {
+				return false;
+			}
+
+			if (Math.abs(this.y - other.y) > Number.EPSILON) {
+				return false;
+			}
+
+			if (Math.abs(this.width - other.width) > Number.EPSILON) {
+				return false;							
+			}
+
+			if (Math.abs(this.height - other.height) > Number.EPSILON) {
+				return false;							
+			}
+
+			if (Math.abs(this.zNear - other.zNear) > Number.EPSILON) {
+				return false;							
+			}				
+
+			return Math.abs(this.zFar - other.zFar) <= Number.EPSILON;				
+		}
   }
 }

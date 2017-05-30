@@ -16,11 +16,11 @@ namespace Magnesium {
       this.mValue = value;
     }
 
-    get depth() : MgClearDepthStencilValue {
+    get depthStencil() : MgClearDepthStencilValue {
       return this.mValue as MgClearDepthStencilValue;
     }
 
-    set depth(value : MgClearDepthStencilValue) {
+    set depthStencil(value : MgClearDepthStencilValue) {
       this.mValue = value;
     }    
 

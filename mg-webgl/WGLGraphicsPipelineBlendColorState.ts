@@ -2,7 +2,7 @@
 /// <reference path="GLGraphicsPipelineBlendColorAttachmentState.ts" />
 
 namespace Magnesium {
-  export class GLGraphicsPipelineBlendColorState {
+  export class WGLGraphicsPipelineBlendColorState {
     logicOpEnable: boolean;
     logicOp: MgLogicOp;
     attachments: Array<GLGraphicsPipelineBlendColorAttachmentState>;

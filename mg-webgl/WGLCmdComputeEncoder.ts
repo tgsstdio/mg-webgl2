@@ -6,7 +6,8 @@ namespace Magnesium {
       throw new Error('Not implemented');
     }
 
-    dispatchIndirect(x: number, y: number, z: number) : never {
+    // WARN: offset requires UInt64
+    dispatchIndirect(buffer: WebGLBuffer, offset: number) : never {
       throw new Error('Not implemented');
     }
 

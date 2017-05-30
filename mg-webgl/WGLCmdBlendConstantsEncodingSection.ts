@@ -10,8 +10,8 @@ namespace Magnesium {
     ) : MgColor4f {
       let blendConstants = pipeline.blendConstants;
       if (
-          (pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS)
-              == GLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS
+          (pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS)
+              == WGLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS
           )
       {
           blendConstants = this.mBlendConstants;
@@ -37,8 +37,8 @@ namespace Magnesium {
             (pipeline != null
                 &&
                 (
-                    (pipeline.dynamicsStates & GLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS)
-                        == GLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS
+                    (pipeline.dynamicStates & WGLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS)
+                        == WGLGraphicsPipelineDynamicStateFlagBits.BLEND_CONSTANTS
                 )
             )
         )
@@ -58,7 +58,7 @@ namespace Magnesium {
 
   class WGLCmdSetBlendConstants implements WGLCmdAction {
     action(
-      arg1: GLCmdCommandRecording
+      arg1: WGLCmdCommandRecording
       , arg2: number
     ) : void {
 

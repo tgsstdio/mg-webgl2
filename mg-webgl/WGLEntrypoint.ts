@@ -6,7 +6,7 @@ namespace Magnesium {
     private mDevice: IWGLDevice;
 
     constructor(device : IWGLDevice) {
-      this.mDevice = gl;
+      this.mDevice = device;
     }
 
     createInstance(createInfo : MgInstanceCreateInfo

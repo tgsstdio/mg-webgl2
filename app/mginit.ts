@@ -44,6 +44,7 @@ let desciptorPool = new Magnesium.WGLDescriptorPoolEntrypoint(imageDescriptor);
 let descriptorSet = new Magnesium.WGLDescriptorSetEntrypoint();
 let vertexArrays = new Magnesium.WGLCmdVertexArrayEntrypoint(gl, errorHandler);
 let imageFormat = new Magnesium.WGLImageFormatEntrypoint();
+let fences = new Magnesium.WGLFenceEntrypoint();
 let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
   deviceMemory
   , deviceImage
@@ -53,7 +54,9 @@ let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
   , desciptorPool
   , descriptorSet
   , vertexArrays
-  , imageFormat);
+  , imageFormat
+  , semaphores
+  , fences);
 let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint);
 
 let entrypoint = new Magnesium.WGLEntrypoint(device);

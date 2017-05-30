@@ -1,32 +1,31 @@
 /// <reference path="../mg/IMgPipeline.ts" />
 /// <reference path="../mg/MgPolygonMode.ts" />
-/// <reference path="GLInternalCache.ts" />
+/// <reference path="WGLInternalBlockCache.ts" />
 /// <reference path="IWGLPipelineLayout.ts" />
-/// <reference path="GLGraphicsPipelineDynamicStateFlagBits.ts" />
-/// <reference path="GLGraphicsPipelineBlendColorState.ts" />
+/// <reference path="WGLGraphicsPipelineDynamicStateFlagBits.ts" />
+/// <reference path="WGLGraphicsPipelineBlendColorState.ts" />
 /// <reference path="WGLCmdViewportParameter.ts" />
 /// <reference path="WGLCmdScissorParameter.ts" />
-/// <reference path="GLGraphicsPipelineFlagBits.ts" />
+/// <reference path="WGLGraphicsPipelineFlagBits.ts" />
 /// <reference path="GLGraphicsPipelineStencilMasks.ts" />
-/// <reference path="GLGraphicsPipelineDepthState.ts" />
 /// <reference path="WGLVertexBufferBinder.ts" />
 /// <reference path="GLGraphicsPipelineStencilState.ts" />
 
 namespace Magnesium {
 	export interface IWGLGraphicsPipeline extends IMgPipeline {
-    // readonly programID : number;
-    // readonly internalCache : GLInternalCache;
-    // readonly layout : IGLPipelineLayout;
-		readonly dynamicsStates : GLGraphicsPipelineDynamicStateFlagBits;
-		// readonly colorBlendEnums : GLGraphicsPipelineBlendColorState;
+    readonly programID : WebGLProgram;
+    readonly internalCache : WGLInternalBlockCache;
+    readonly layout : IWGLPipelineLayout;
+		readonly dynamicStates : WGLGraphicsPipelineDynamicStateFlagBits;
+		readonly colorBlendEnums : WGLGraphicsPipelineBlendColorState;
 		readonly viewports : WGLCmdViewportParameter;
 		readonly scissors : WGLCmdScissorParameter;
-		// readonly Flags : GLGraphicsPipelineFlagBits;
+		readonly flags : WGLGraphicsPipelineFlagBits;
 		// readonly polygonMode : MgPolygonMode;
 		readonly front : GLGraphicsPipelineStencilMasks;
 		readonly back : GLGraphicsPipelineStencilMasks;
 		readonly topology : MgPrimitiveTopology;
-		//readonly depthState : GLGraphicsPipelineDepthState;
+		readonly depthBufferFunction : MgCompareOp;
 		//readonly vertexInput : GLVertexBufferBinder;
 		readonly blendConstants : MgColor4f;
 		// readonly minDepthBounds : number;
