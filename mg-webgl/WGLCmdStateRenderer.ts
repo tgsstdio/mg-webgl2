@@ -498,6 +498,88 @@ namespace Magnesium {
       }      
     }
 
+    updateFrontStencil(
+      stencilInfo: WGLCmdStencilFunctionInfo
+    ): void {
+      if (
+        this.mPastFrontStencilInfo.stencilFunction != stencilInfo.stencilFunction 
+        ||
+        this.mPastFrontStencilInfo.referenceMask != stencilInfo.referenceMask
+        ||
+        this.mPastFrontStencilInfo.compareMask != stencilInfo.compareMask
+      ) {
+        this.mStencil.setFrontFaceCullStencilFunction(
+          stencilInfo.stencilFunction
+          , stencilInfo.referenceMask
+          , stencilInfo.compareMask);
+
+        this.mPastFrontStencilInfo.referenceMask = stencilInfo.referenceMask;
+        this.mPastFrontStencilInfo.stencilFunction = stencilInfo.stencilFunction;
+        this.mPastFrontStencilInfo.compareMask = stencilInfo.compareMask;
+      }
+    }    
+
+    updateBackStencil(
+      stencilInfo: WGLCmdStencilFunctionInfo
+    ): void {
+      if (
+        this.mPastBackStencilInfo.stencilFunction != stencilInfo.stencilFunction
+        ||
+        this.mPastBackStencilInfo.referenceMask != stencilInfo.referenceMask
+        ||
+        this.mPastBackStencilInfo.compareMask != stencilInfo.compareMask
+      ) {
+        this.mStencil.setBackFaceCullStencilFunction(
+          stencilInfo.stencilFunction
+          , stencilInfo.referenceMask
+          , stencilInfo.compareMask);
+
+          this.mPastBackStencilInfo.compareMask = stencilInfo.compareMask;
+          this.mPastBackStencilInfo.referenceMask = stencilInfo.referenceMask;
+          this.mPastBackStencilInfo.stencilFunction = stencilInfo.stencilFunction;
+      }            
+    }
+
+    private mPastFrontWriteMask: number;
+    private mPastBackWriteMask: number;
+    updateStencilWriteMask(
+      write: WGLCmdPipelineStencilWriteInfo
+    ): void {
+      if (
+        (write.face & MgStencilFaceFlagBits.FRONT_AND_BACK)
+          == MgStencilFaceFlagBits.FRONT_AND_BACK
+      ) {
+        if (
+          this.mPastFrontWriteMask != write.writeMask
+           || this.mPastBackWriteMask != write.writeMask
+        ) {
+          this.mStencil.setStencilWriteMask(
+            MgStencilFaceFlagBits.FRONT_AND_BACK
+            , write.writeMask);
+
+          this.mPastFrontWriteMask = write.writeMask;
+          this.mPastBackWriteMask = write.writeMask;
+        }
+      }
+      else if ((write.face & MgStencilFaceFlagBits.FRONT_BIT) != 0) {
+        if (this.mPastFrontWriteMask != write.writeMask) {
+          this.mStencil.setStencilWriteMask(
+            MgStencilFaceFlagBits.FRONT_BIT
+            , write.writeMask);
+
+          this.mPastFrontWriteMask = write.writeMask;
+        }
+      }
+      else if ((write.face & MgStencilFaceFlagBits.BACK_BIT) != 0) {
+        if (this.mPastBackWriteMask != write.writeMask) {
+          this.mStencil.setStencilWriteMask(
+            MgStencilFaceFlagBits.BACK_BIT
+            , write.writeMask);
+          this.mPastBackWriteMask = write.writeMask;
+        }
+      }
+    }
+
     private extractStencilMasks(
        dst: WGLCmdStencilFunctionInfo
       , src: WGLCmdStencilFunctionInfo
@@ -566,6 +648,12 @@ namespace Magnesium {
       let next = pastScissors as WGLCmdScissorParameter;
 
       return !prev.equals(next);
+    }
+
+    bindDescriptorSets(
+      ds: WGLCmdDescriptorSetParameter
+    ) : void {
+      this.mCache.setDescriptorSets(ds);
     }
 
     updateDepthBias(
@@ -650,11 +738,6 @@ namespace Magnesium {
     }
 
     // endRenderpass() : void;
-    // updateStencilWriteMask(write: GLCmdPipelineStencilWriteInfo) : void;
-    // updateBlendConstants(blendConstants: MgColor4f) : void;
-    // updateDepthBias(nextDepthBias: GLCmdDepthBiasParameter) : void;
-    // updateFrontStencil(stencilInfo: GLCmdStencilFunctionInfo) : void;
-    // updateBackStencil(stencilInfo: GLCmdStencilFunctionInfo) : void;
     private mGL : WebGL2RenderingContext;
     draw(drawItem: WGLCmdInternalDraw) : void {
       this.mGL.drawArraysInstanced(
@@ -694,8 +777,8 @@ namespace Magnesium {
     // }
     // drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
     // drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
-    // bindVertexArrays(vao: GLCmdVertexBufferObject) : void;
-    // bindDescriptorSets(ds: GLCmdDescriptorSetParameter) : void;
-    // updateBothStencils(item: GLCmdStencilFunctionInfo) : void;
+    bindVertexArrays(vao: GLCmdVertexBufferObject) : void {
+      this.mCache.setVAO(vao.vbo);
+    }
   }
 }

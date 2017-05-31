@@ -7,9 +7,9 @@
 namespace Magnesium {
   export interface IWGLCmdStateRenderer {
       // TODO : hide these implementation details
-      // initialize() : void;
-      // beginRenderpass(record: GLCmdBeginRenderpassRecord) : void;
-      // endRenderpass() : void;
+      initialize() : void;
+      beginRenderpass(record: WGLCmdBeginRenderpassRecord) : void;
+      endRenderpass() : void;
       bindPipeline(pipelineInfo: WGLCmdBoundPipelineRecordInfo) : void;
       updateStencilWriteMask(write: WGLCmdPipelineStencilWriteInfo) : void;
       updateViewports(viewports: WGLCmdViewportParameter) : void;
@@ -25,7 +25,7 @@ namespace Magnesium {
       // drawIndexed(drawItem: GLCmdInternalDrawIndexed) : void;
       // drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
       // drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
-      // bindVertexArrays(vao: GLCmdVertexBufferObject) : void;
+      bindVertexArrays(vao: GLCmdVertexBufferObject) : void;
       bindDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void;
       updateBothStencils(item: WGLCmdStencilFunctionInfo) : void;
   }
