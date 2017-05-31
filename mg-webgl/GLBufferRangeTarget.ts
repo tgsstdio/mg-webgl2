@@ -1,6 +1,6 @@
 namespace Magnesium {
 	export enum GLBufferRangeTarget {
-		STORAGE_BUFFER,
+		STORAGE_BUFFER, // WEBGL DOESNT HAVE SSBOs
 		UNIFORM_BUFFER,
 	}
 }

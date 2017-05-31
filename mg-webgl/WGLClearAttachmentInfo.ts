@@ -1,16 +1,16 @@
-/// <reference path="GLClearAttachmentType.ts" />
+/// <reference path="WGLClearAttachmentType.ts" />
 /// <reference path="../mg/MgAttachmentLoadOp.ts" />
 /// <reference path="../mg/MgFormat.ts" />
 
 namespace Magnesium {
-  export class GLClearAttachmentInfo {
+  export class WGLClearAttachmentInfo {
     format: MgFormat;
     loadOp: MgAttachmentLoadOp;
     stencilLoadOp: MgAttachmentLoadOp;
-    attachmentType: GLClearAttachmentType;
+    attachmentType: WGLClearAttachmentType;
     divisor: number;
 
-		equals (other: GLClearAttachmentInfo ) : boolean
+		equals (other: WGLClearAttachmentInfo ) : boolean
 		{
 			if (this.format != other.format)
 				return false;

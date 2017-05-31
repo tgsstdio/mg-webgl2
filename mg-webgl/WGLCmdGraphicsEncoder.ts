@@ -5,7 +5,6 @@ namespace Magnesium {
     private mVertexArray: IWGLCmdVertexArrayEntrypoint;
 
     private mCurrentPipeline : IWGLGraphicsPipeline|null;
-    private mBoundRenderPass: WGLCmdBeginRenderpassRecord|null;
     private mBoundIndexBuffer: GLCmdIndexBufferParameter;
 
     private mDepthBias: WGLCmdDepthBiasEncodingSection;
@@ -14,6 +13,7 @@ namespace Magnesium {
     private mViewports: WGLCmdViewportEncodingSection;
     private mStencil: WGLCmdStencilEncodingSection;
     private mDescriptorSets: WGLCmdDescriptorSetEncodingSection;
+    private mRenderPasses: WGLCmdRenderpassEncodingSection;
 
     constructor(
       sorter: WGLCmdEncoderContextSorter
@@ -31,8 +31,8 @@ namespace Magnesium {
       this.mViewports = new WGLCmdViewportEncodingSection();
       this.mStencil = new WGLCmdStencilEncodingSection();
       this.mDescriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);
+      this.mRenderPasses = new WGLCmdRenderpassEncodingSection();
     }
-
 
     clear(): void {
       this.mDepthBias.clear();
@@ -41,14 +41,14 @@ namespace Magnesium {
       this.mViewports.clear();
       this.mStencil.clear();
 
-      this.mBoundRenderPass = null;
+      this.mRenderPasses.clear();
 
       this.mDescriptorSets.clear();
     }
 
     asGrid() : WGLCmdGraphicsGrid {
       let result = new WGLCmdGraphicsGrid();
-      result.renderpasses = this.mBag.renderpasses.toArray();
+      result.renderPasses = this.mBag.renderPasses.toArray();
       result.pipelines = this.mBag.pipelines.toArray();
       result.stencilWrites = this.mBag.stencilWrites.toArray();
       result.viewports = this.mBag.viewports.toArray();
@@ -72,7 +72,7 @@ namespace Magnesium {
           return false;
       }
 
-      if (this.mBoundRenderPass == null) {
+      if (!this.mRenderPasses.isBound()) {
           throw new Error("Command must be made inside a Renderpass. ");
       }      
 
@@ -98,6 +98,43 @@ namespace Magnesium {
 
     }
 
+		bindIndexBuffer(
+      buffer: IMgBuffer
+      , offset: number
+      , indexType: MgIndexType
+    ) : void {
+      if (buffer == null)
+        throw new Error("buffer is null");
+
+      let temp = new GLCmdIndexBufferParameter();
+      temp.buffer = buffer as IWGLBuffer;
+      temp.offset = offset;
+      temp.indexType = indexType;
+      this.mBoundIndexBuffer = temp;
+    }
+
+		beginRenderPass(
+      pRenderPassBegin: MgRenderPassBeginInfo
+      , contents: MgSubpassContents
+    ) : void {
+      this.mRenderPasses.begin(
+        this.mBag
+        , this.mInstructions
+        , pRenderPassBegin
+        , contents
+      );
+    }
+
+    nextSubpass(
+      contents:MgSubpassContents
+    ): void {
+      // TODO : figure this out
+    }
+
+    endRenderPass() : void {
+      this.mRenderPasses.clear();
+    }
+
     bindPipeline(
       pipeline: IMgPipeline|null
     ) : void {
@@ -116,7 +153,7 @@ namespace Magnesium {
       instruction.index = nextIndex;
       instruction.operation = new WGLCmdBindPipeline();
 
-      if (this.mBoundRenderPass != null) {
+      if (this.mRenderPasses.isBound()) {
           this.mInstructions.add(instruction);
       }
     }

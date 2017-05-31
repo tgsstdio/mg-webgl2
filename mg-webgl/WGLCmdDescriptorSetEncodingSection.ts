@@ -73,25 +73,25 @@ namespace Magnesium {
       , arg2: number
     ): void {
     
-        let context = arg1.graphics;
-        if(context == null)
-          return;
-        
-        let grid = context.grid;
-        if (grid != null)
-          return;
+      let context = arg1.graphics;
+      if (context == null)
+        return;
 
-        let items = grid.descriptorSets;
-        if(items == null)
-          return;
+      let grid = context.grid;
+      if (grid == null)
+        return;
 
-        let ds = items[arg2];
+      let items = grid.descriptorSets;
+      if (items == null)
+        return; 
 
-        let renderer = context.stateRenderer;
-        if (renderer == null)
-          return;
+      let ds = items[arg2];
 
-        renderer.bindDescriptorSets(ds);
+      let renderer = context.stateRenderer;
+      if (renderer == null)
+        return;
+
+      renderer.bindDescriptorSets(ds);
     }  
   }
 }

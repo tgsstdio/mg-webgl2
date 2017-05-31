@@ -701,9 +701,9 @@ namespace Magnesium {
         // TODO : use clear buffers 
         for (let state of clearState.attachments) {
           if (state.attachment.loadOp == MgAttachmentLoadOp.CLEAR) {
-            if (state.attachment.attachmentType == GLClearAttachmentType.COLOR_INT
-                || state.attachment.attachmentType == GLClearAttachmentType.COLOR_FLOAT
-                || state.attachment.attachmentType == GLClearAttachmentType.COLOR_UINT)
+            if (state.attachment.attachmentType == WGLClearAttachmentType.COLOR_INT
+                || state.attachment.attachmentType == WGLClearAttachmentType.COLOR_FLOAT
+                || state.attachment.attachmentType == WGLClearAttachmentType.COLOR_UINT)
             {   
               let clearValue = state.color;
               if (!this.mPastClearValues.clearColor.equals(clearValue)) {
@@ -711,7 +711,7 @@ namespace Magnesium {
                 this.mPastClearValues.clearColor = clearValue;
               }
             }
-            else if (state.attachment.attachmentType == GLClearAttachmentType.DEPTH_STENCIL) {
+            else if (state.attachment.attachmentType == WGLClearAttachmentType.DEPTH_STENCIL) {
               let clearValue = state.value.depthStencil;
               if (
                 Math.abs(this.mPastClearValues.depthValue - clearValue.depth)
@@ -724,7 +724,7 @@ namespace Magnesium {
           }
 
           if (state.attachment.stencilLoadOp == MgAttachmentLoadOp.CLEAR) {
-            if (state.attachment.attachmentType == GLClearAttachmentType.DEPTH_STENCIL) {
+            if (state.attachment.attachmentType == WGLClearAttachmentType.DEPTH_STENCIL) {
               let clearValue = state.value.depthStencil.stencil;  
               if (this.mPastClearValues.stencilValue != clearValue) {
                   this.mClear.setClearStencilValue(clearValue);

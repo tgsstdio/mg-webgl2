@@ -15,7 +15,7 @@
 
 namespace Magnesium {
   export class WGLCmdGraphicsGrid {
-    renderpasses: Array<WGLCmdBeginRenderpassRecord>;
+    renderPasses: Array<WGLCmdBeginRenderpassRecord>;
     pipelines: Array<WGLCmdBoundPipelineRecordInfo>;
     stencilWrites: Array<WGLCmdPipelineStencilWriteInfo>;
     viewports: Array<WGLCmdViewportParameter>;
