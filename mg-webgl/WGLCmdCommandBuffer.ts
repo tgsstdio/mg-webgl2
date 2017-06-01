@@ -130,10 +130,8 @@ namespace Magnesium {
 		cmdSetDepthBounds(
       minDepthBounds: number
       , maxDepthBounds: number
-    ) : void {
-      this.mCommandEncoder.graphics.setDepthBounds(
-        minDepthBounds
-        , maxDepthBounds);
+    ) : never {
+      throw new Error('ERROR: not implemented');  
 		}
 
 		cmdSetStencilCompareMask(

@@ -15,7 +15,7 @@ namespace Magnesium {
       this.front.invalidate();
     }
 
-    pushStencilValuesIfRequired(
+    pushIfRequired(
        pipeline: IWGLGraphicsPipeline| null
       , bag: WGLCmdGraphicsBag
       , instructions: WGLCmdEncoderContextSorter          

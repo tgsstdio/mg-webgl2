@@ -10,11 +10,17 @@ namespace Magnesium {
       this.mErrHandler = errHandler;
     }
 
-		bindIndexBuffer(
-      vbo: WebGLVertexArrayObject
-      , buffer: WebGLBuffer
-    ) : void {
+    bindVertexArray(vbo: WebGLVertexArrayObject|null) : void {
       this.mGL.bindVertexArray(vbo);
+    }
+
+    unbindVertexArray() : void {
+      this.mGL.bindVertexArray(null);
+    }    
+
+		bindIndexBuffer(
+      buffer: WebGLBuffer
+    ) : void {
       this.mGL.bindBuffer(this.mGL.ELEMENT_ARRAY_BUFFER, buffer);
       this.mErrHandler.logGLError("bindIndexBuffer");
 		}
@@ -27,14 +33,12 @@ namespace Magnesium {
     //     }
 
 	  bindIntVertexAttribute (
-      vbo: WebGLVertexArrayObject
-      , location: number
+      location: number
       , size: number
       , pointerType: WGLVertexAttributeType
       , stride: number
       , offset: number
     ): void {
-      this.mGL.bindVertexArray(vbo);
 			this.mGL.enableVertexAttribArray(location);
       /**
       https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/vertexAttribIPointer
@@ -91,15 +95,13 @@ namespace Magnesium {
 		}
 
 		bindFloatVertexAttribute(
-      vbo: WebGLVertexArrayObject
-      , location: number
+        location: number
       , size: number
       , pointerType: WGLVertexAttributeType
       , isNormalized: boolean
       , stride: number
       , offset: number) : void
 		{
-      this.mGL.bindVertexArray(vbo);
 			this.mGL.enableVertexAttribArray(location);
       this.mErrHandler.logGLError(
         "bindFloatVertexAttribute.EnableVertexArrayAttrib");
@@ -120,11 +122,9 @@ namespace Magnesium {
 		}
 
 		setupVertexAttributeDivisor(
-      vbo: WebGLVertexArrayObject
-      , location: number
+        location: number
       , divisor: number) : void
 		{
-      this.mGL.bindVertexArray(vbo);
 			this.mGL.vertexAttribDivisor(location, divisor);
       this.mErrHandler.logGLError("setupVertexAttributeDivisor");
 		}
@@ -143,6 +143,14 @@ namespace Magnesium {
 			this.mGL.deleteVertexArray(vbo);
       this.mErrHandler.logGLError("deleteVBO");
     }
+    // WARN : offsets must be long
+		bindVertexBuffer(
+       bufferId: WebGLBuffer|null
+    ) : void {
+      this.mGL.bindBuffer(this.mGL.ARRAY_BUFFER, bufferId);
+      this.mErrHandler.logGLError("bindVertexBuffer");
+    }
+
 
 		// public void AssociateBufferToLocation (uint vbo, uint location, uint bufferId, long offsets, uint stride)
 		// {

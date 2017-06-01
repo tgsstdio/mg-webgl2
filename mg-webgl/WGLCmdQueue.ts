@@ -88,7 +88,7 @@ namespace Magnesium {
     ) : WGLCmdCommandRecording {
         return new WGLCmdCommandRecording(
           new WGLCmdComputeRecording(buffer.record.computeGrid, new WGLCmdComputeEncoder())
-          , new GLCmdGraphicsRecording(buffer.record.graphicsGrid, renderer)
+          , new WGLCmdGraphicsRecording(buffer.record.graphicsGrid, renderer)
           , new GLCmdBlitRecording(buffer.record.blitGrid, this.mBlit));
     }
 

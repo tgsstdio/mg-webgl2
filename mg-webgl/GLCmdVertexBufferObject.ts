@@ -1,12 +1,28 @@
-/// <reference path="IGLCmdVBOEntrypoint.ts" />
-
 namespace Magnesium {
-    export class GLCmdVertexBufferObject {
-      vbo : number;
-		  private mFactory: IGLCmdVBOEntrypoint
-
-      constructor(factory : IGLCmdVBOEntrypoint) {
-        this.mFactory = factory;
-      }
+  export class WGLCmdVertexBufferObject implements IMgDisposable {
+    private mVertexArray : WebGLVertexArrayObject;
+    get vertexArray(): WebGLVertexArrayObject {
+      return this.mVertexArray;
     }
+
+    private mFactory: IWGLCmdVertexArrayEntrypoint;
+    constructor(
+      vbo: WebGLVertexArrayObject
+      , factory : IWGLCmdVertexArrayEntrypoint
+    ) {
+      this.mVertexArray = vbo;
+      this.mFactory = factory;
+    }
+
+		private mDisposed: boolean = false;
+    dispose(): void {
+			if (this.mDisposed)
+				return;
+
+			if (this.mFactory != null && this.mVertexArray != null)
+				this.mFactory.deleteVBO(this.mVertexArray);
+
+			this.mDisposed = true;
+		}    
+  }
 }

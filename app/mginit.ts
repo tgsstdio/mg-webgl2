@@ -22,7 +22,7 @@ if (gl == null)
   throw new Error();
 
 let semaphores: Magnesium.IWGLSemaphoreEntrypoint = new Magnesium.WGLSemaphoreEntrypoint();
-let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer();
+let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer(gl);
 let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
 let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();
@@ -41,7 +41,7 @@ let compiler = new Magnesium.WGLGraphicsPipelineCompiler(
 let sampler = new Magnesium.WGLSamplerEntrypoint(gl, errorHandler);
 let imageDescriptor = new Magnesium.WGLImageDescriptorEntrypoint();
 let desciptorPool = new Magnesium.WGLDescriptorPoolEntrypoint(imageDescriptor);
-let descriptorSet = new Magnesium.WGLDescriptorSetEntrypoint();
+let descriptorSets = new Magnesium.WGLDescriptorSetEntrypoint();
 let vertexArrays = new Magnesium.WGLCmdVertexArrayEntrypoint(gl, errorHandler);
 let imageFormat = new Magnesium.WGLImageFormatEntrypoint();
 let fences = new Magnesium.WGLFenceEntrypoint();
@@ -52,7 +52,7 @@ let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
   , programs
   , sampler
   , desciptorPool
-  , descriptorSet
+  , descriptorSets
   , vertexArrays
   , imageFormat
   , semaphores

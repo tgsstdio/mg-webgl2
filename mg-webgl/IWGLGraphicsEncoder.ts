@@ -63,7 +63,8 @@ namespace Magnesium {
       , descriptorSetCount: number
       , pDescriptorSets: Array<IMgDescriptorSet>
       , pDynamicOffsets: Array<number>|null) : void;
-		setDepthBounds(minDepthBounds: number, maxDepthBounds: number) : void;
+    // DON'T HAVE THIS IN WEBGL2
+		// setDepthBounds(minDepthBounds: number, maxDepthBounds: number) : void;
     // MODERN BROWSERS DON'T USE THIS
 		// setLineWidth(lineWidth: number) : void;
   }

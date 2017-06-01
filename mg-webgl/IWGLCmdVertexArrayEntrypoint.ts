@@ -1,21 +1,18 @@
 namespace Magnesium {
   export interface IWGLCmdVertexArrayEntrypoint {
 		bindIndexBuffer (
-      vbo: WebGLVertexArrayObject
-      , bufferId: number
+      bufferId: number
     ): void;
 
 		bindIntVertexAttribute(
-      vbo: WebGLVertexArrayObject
-      , location: number
+      location: number
       , size: number
       , pointerType: WGLVertexAttributeType
       , stride: number
       , offset: number): void;
 
 		bindFloatVertexAttribute(
-      vbo: WebGLVertexArrayObject
-      , location: number
+      location: number
       , size: number
       , pointerType: WGLVertexAttributeType
       , isNormalized: boolean
@@ -23,20 +20,18 @@ namespace Magnesium {
       , offset: number): void;
 
 		setupVertexAttributeDivisor(
-      vbo: WebGLVertexArrayObject
-      , location: number
+      location: number
       , divisor: number) : void;
 
 		generateVBO (): WebGLVertexArrayObject;
+    bindVertexArray(vbo:WebGLVertexArrayObject|null) : void;
 
 		deleteVBO(vbo: WebGLVertexArrayObject): void;
+    unbindVertexArray() : void;    
 
     // WARN : offsets must be long
-		// associateBufferToLocation(
-    //   vbo: WebGLVertexArrayObject
-    //   , location: number
-    //   , bufferId: number
-    //   , offsets: number
-    //   , stride: number): void;
+		bindVertexBuffer(
+      bufferId: WebGLBuffer|null
+      ) : void;
   }
 }

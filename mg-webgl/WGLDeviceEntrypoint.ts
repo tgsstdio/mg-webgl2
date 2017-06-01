@@ -20,7 +20,7 @@ namespace Magnesium {
       , sampler: IWGLSamplerEntrypoint
       , descriptorPool: IWGLDescriptorPoolEntrypoint
       , descriptorSet: IWGLDescriptorSetEntrypoint
-      , vertexArray: IWGLCmdVertexArrayEntrypoint
+      , vertexArrays: IWGLCmdVertexArrayEntrypoint
       , imageFormat: IWGLImageFormatEntrypoint
       , semaphores: IWGLSemaphoreEntrypoint
       , fences: IWGLFenceEntrypoint
@@ -32,7 +32,7 @@ namespace Magnesium {
       this.mSampler = sampler;
       this.mDescriptorPool = descriptorPool;
       this.mDescriptorSet = descriptorSet;
-      this.mVertexArrays = vertexArray;
+      this.mVertexArrays = vertexArrays;
       this.mImageFormat = imageFormat;
       this.mSemaphores = semaphores;
       this.mFences = fences;

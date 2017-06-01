@@ -12,6 +12,8 @@ namespace Magnesium {
     stencilFunctions: WGLCmdEncoderCollection<WGLCmdStencilFunctionInfo>;
     descriptorSets: WGLCmdEncoderCollection<WGLCmdDescriptorSetParameter>;
     renderPasses: WGLCmdEncoderCollection<WGLCmdBeginRenderpassRecord>;
+    vertexArrays: WGLCmdEncoderCollection<WGLCmdVertexBufferObject>;
+    drawIndexedIndirects: WGLCmdEncoderCollection<GLCmdInternalDrawIndexedIndirect>;
 
     constructor() {
       this.draws = new WGLCmdEncoderCollection<WGLCmdInternalDraw>();
@@ -37,6 +39,10 @@ namespace Magnesium {
         = new WGLCmdEncoderCollection<WGLCmdDescriptorSetParameter>();
       this.renderPasses
         = new WGLCmdEncoderCollection<WGLCmdBeginRenderpassRecord>();
+      this.vertexArrays
+        = new WGLCmdEncoderCollection<WGLCmdVertexBufferObject>();
+      this.drawIndexedIndirects
+        = new WGLCmdEncoderCollection<GLCmdInternalDrawIndexedIndirect>();
     }
 
     clear() : void {
@@ -52,6 +58,8 @@ namespace Magnesium {
       this.stencilFunctions.clear();
       this.descriptorSets.clear();
       this.renderPasses.clear();
+      this.vertexArrays.clear();
+      this.drawIndexedIndirects.clear();
     }
   }
 }

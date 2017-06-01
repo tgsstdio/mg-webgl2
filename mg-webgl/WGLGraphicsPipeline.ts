@@ -407,12 +407,15 @@ namespace Magnesium {
     }
 
 		private mVertexInput: WGLVertexBufferBinder;
+		get vertexInput(): WGLVertexBufferBinder {
+			return this.mVertexInput;
+		}
 		private populateVertexDefinition(
-      vertexInput: MgPipelineVertexInputStateCreateInfo
+      input: MgPipelineVertexInputStateCreateInfo
     ): void {
 			let perInstance = new Map<number, WGLVertexBufferBinding>();
 
-			for (let vbuf of vertexInput.vertexBindingDescriptions) {
+			for (let vbuf of input.vertexBindingDescriptions) {
 				let def = new WGLVertexBufferBinding ();
         def.binding = vbuf.binding;
         def.inputRate = vbuf.inputRate;
@@ -434,7 +437,7 @@ namespace Magnesium {
       }
 
 			let attributes = new Array<WGLVertexInputAttribute> ();
-			for (let vertAttrDesc of vertexInput.vertexAttributeDescriptions)
+			for (let vertAttrDesc of input.vertexAttributeDescriptions)
 			{
 				let binding = bindings[vertAttrDesc.binding];
 

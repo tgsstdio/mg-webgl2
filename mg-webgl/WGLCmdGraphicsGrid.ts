@@ -24,7 +24,7 @@ namespace Magnesium {
     //lineWidths: Array<number>;
     //depthBounds: Array<GLCmdDepthBoundsParameter>;
     blendConstants: Array<MgColor4f>;
-    vertexArrays: Array<GLCmdVertexBufferObject>;
+    vertexArrays: Array<WGLCmdVertexBufferObject>;
     stencilFunctions: Array<WGLCmdStencilFunctionInfo>;
     draws: Array<WGLCmdInternalDraw>;
     drawIndexeds: Array<GLCmdInternalDrawIndexed>;

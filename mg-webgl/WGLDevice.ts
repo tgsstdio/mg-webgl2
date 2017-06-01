@@ -104,7 +104,7 @@ namespace Magnesium {
       , out: { pLayout: MgSubresourceLayout }
     ) : void
 		{
-			var internalImage : IWGLImage = image as IWGLImage;
+			let internalImage : IWGLImage = image as IWGLImage;
 
 			if (internalImage != null
 				&& pSubresource.arrayLayer < internalImage.arrayLayers.length 
@@ -344,19 +344,21 @@ namespace Magnesium {
       let cmdPool = pAllocateInfo.commandPool as IWGLCommandPool;
 
       for (let i = 0; i < pAllocateInfo.commandBufferCount; i += 1)	{
-        let sorter = new WGLCmdEncoderContextSorter();
+        let instructions = new WGLCmdEncoderContextSorter();
         let dsBinder = new WGLDescriptorSetBinder();
+        let descriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);        
+        let vertexArrays = new WGLCmdVertexArrayEncodingSection(this.mEntrypoint.vertexArrays);
         let graphics = new WGLCmdGraphicsEncoder(
-          sorter
-          , new WGLCmdGraphicsBag()
-          , this.mEntrypoint.vertexArrays
-          , dsBinder);
+          instructions
+          , new WGLCmdGraphicsBag()          
+          , descriptorSets
+          , vertexArrays);
         let compute = new WGLCmdComputeEncoder();
         let blit = new WGLCmdBlitEncoder(
-          sorter
+          instructions
           , new WGLCmdBlitBag()
           , this.mEntrypoint.imageFormat);
-        let encoder = new WGLCmdCommandEncoder(sorter, graphics, compute, blit);
+        let encoder = new WGLCmdCommandEncoder(instructions, graphics, compute, blit);
 
 				let buffer : IWGLCommandBuffer = new WGLCmdCommandBuffer(true, encoder);
 				cmdPool.buffers.push (buffer);

@@ -1,5 +1,6 @@
 namespace Magnesium {
-  export class WGLCmdDescriptorSetEncodingSection {
+  export class WGLCmdDescriptorSetEncodingSection
+      implements IWGLCmdDescriptorSetEncodingSection {
     private mDSBinder: IWGLDescriptorSetBinder;
     constructor(dsBinder: IWGLDescriptorSetBinder) {
       this.mDSBinder = dsBinder;
@@ -15,7 +16,7 @@ namespace Magnesium {
       this.mPastDescriptorSet = null;
     }
 
-    push(
+    pushIfRequired(
       pipeline: IWGLGraphicsPipeline|null
       , bag: WGLCmdGraphicsBag
       , instructions: WGLCmdEncoderContextSorter 

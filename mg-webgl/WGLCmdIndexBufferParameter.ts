@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class GLCmdIndexBufferParameter {
+  export class WGLCmdIndexBufferParameter {
 		indexType: MgIndexType;
     // WARN: offset requires ulong
 		offset: number;

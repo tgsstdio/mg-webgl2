@@ -7,6 +7,9 @@ namespace Magnesium {
     private mPastStencilInfo: WGLQueueRendererStencilState;    
     private mStencil: IWGLCmdStencilEntrypoint;
 
+    private mPastFrontWriteMask: number;
+    private mPastBackWriteMask: number;
+
     private mPastFrontStencilInfo: WGLCmdStencilFunctionInfo;
     private mPastBackStencilInfo: WGLCmdStencilFunctionInfo;
 
@@ -25,6 +28,11 @@ namespace Magnesium {
 
     private mPastBlendConstants: MgColor4f;
 
+    private mGL : WebGL2RenderingContext;
+    constructor(gl: WebGL2RenderingContext) {
+      this.mGL = gl;
+    }
+
     initialize() : void {
       const FLAGS = 0;      
       const NO_OF_COLOR_ATTACHMENTS = 4;
@@ -33,8 +41,8 @@ namespace Magnesium {
 			let initialStencilValue = this.mStencil.initialize ();
 			this.mPastStencilInfo = initialStencilValue;
 
-      // mPastFrontWriteMask = initialStencilValue.Front.WriteMask;
-      // mPastBackWriteMask = initialStencilValue.Back.WriteMask;  
+      this.mPastFrontWriteMask = initialStencilValue.front.writeMask;
+      this.mPastBackWriteMask = initialStencilValue.back.writeMask;  
 
       let frontStencil = new WGLCmdStencilFunctionInfo(); 
       frontStencil.compareMask
@@ -540,8 +548,6 @@ namespace Magnesium {
       }            
     }
 
-    private mPastFrontWriteMask: number;
-    private mPastBackWriteMask: number;
     updateStencilWriteMask(
       write: WGLCmdPipelineStencilWriteInfo
     ): void {
@@ -737,8 +743,10 @@ namespace Magnesium {
       }
     }
 
-    // endRenderpass() : void;
-    private mGL : WebGL2RenderingContext;
+    endRenderpass() : void {
+
+    }
+
     draw(drawItem: WGLCmdInternalDraw) : void {
       this.mGL.drawArraysInstanced(
         this.getPrimitiveType(drawItem.topology)
@@ -777,8 +785,8 @@ namespace Magnesium {
     // }
     // drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
     // drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
-    bindVertexArrays(vao: GLCmdVertexBufferObject) : void {
-      this.mCache.setVAO(vao.vbo);
+    bindVertexArrays(vao: WGLCmdVertexBufferObject) : void {
+      this.mCache.setVAO(vao.vertexArray);
     }
   }
 }

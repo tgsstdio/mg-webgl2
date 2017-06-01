@@ -44,6 +44,16 @@ namespace Magnesium {
         return ((info.usage & IS_BUFFER_TYPE) != 0);
     } 
 
+    // WARN: memoryOffset requires UInt64
+		bindBufferMemory(
+        device: IMgDevice
+      , memory: IMgDeviceMemory
+      , memoryOffset: number
+    ) : MgResult {
+      // TODO : figure this out
+      return MgResult.SUCCESS;
+    }
+
     private mIsDisposed: boolean = false;
 		destroyBuffer(
       device: IMgDevice

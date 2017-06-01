@@ -2,7 +2,7 @@
 /// <reference path="WGLCmdGraphicsGrid.ts" />
 
 namespace Magnesium {
-  export class GLCmdGraphicsRecording {
+  export class WGLCmdGraphicsRecording {
     grid: WGLCmdGraphicsGrid;
     stateRenderer: IWGLCmdStateRenderer;
 

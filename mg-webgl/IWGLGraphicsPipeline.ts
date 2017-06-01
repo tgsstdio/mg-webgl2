@@ -26,7 +26,7 @@ namespace Magnesium {
 		readonly back : GLGraphicsPipelineStencilMasks;
 		readonly topology : MgPrimitiveTopology;
 		readonly depthBufferFunction : MgCompareOp;
-		//readonly vertexInput : GLVertexBufferBinder;
+		readonly vertexInput : WGLVertexBufferBinder;
 		readonly blendConstants : MgColor4f;
 		// readonly minDepthBounds : number;
 		// readonly maxDepthBounds : number;
