@@ -1,9 +1,9 @@
 /// <reference path="GLCmdVertexBufferObject.ts" />
-/// <reference path="GLCmdInternalDrawIndexed.ts" />
+/// <reference path="WGLCmdInternalDrawIndexed.ts" />
 /// <reference path="WGLCmdScissorParameter.ts" />
 /// <reference path="WGLCmdBeginRenderpassRecord.ts" />
 /// <reference path="WGLCmdDescriptorSetParameter.ts" />
-/// <reference path="GLCmdInternalDrawIndirect.ts" />
+/// <reference path="WGLCmdInternalDrawIndirect.ts" />
 /// <reference path="WGLCmdViewportParameter.ts" />
 /// <reference path="../mg/MgColor4f.ts" />
 /// <reference path="WGLCmdStencilFunctionInfo.ts" />
@@ -11,7 +11,7 @@
 /// <reference path="WGLCmdInternalDraw.ts" />
 /// <reference path="WGLCmdDepthBiasParameter.ts" />
 /// <reference path="WGLCmdBoundPipelineRecordInfo.ts" />
-/// <reference path="GLCmdInternalDrawIndexedIndirect.ts" />
+/// <reference path="WGLCmdInternalDrawIndexedIndirect.ts" />
 
 namespace Magnesium {
   export class WGLCmdGraphicsGrid {
@@ -27,9 +27,9 @@ namespace Magnesium {
     vertexArrays: Array<WGLCmdVertexBufferObject>;
     stencilFunctions: Array<WGLCmdStencilFunctionInfo>;
     draws: Array<WGLCmdInternalDraw>;
-    drawIndexeds: Array<GLCmdInternalDrawIndexed>;
-    drawIndirects: Array<GLCmdInternalDrawIndirect>;
-    drawIndexedIndirects: Array<GLCmdInternalDrawIndexedIndirect>;
+    drawIndexeds: Array<WGLCmdInternalDrawIndexed>;
+    drawIndirects: Array<WGLCmdInternalDrawIndirect>;
+    drawIndexedIndirects: Array<WGLCmdInternalDrawIndexedIndirect>;
     descriptorSets: Array<WGLCmdDescriptorSetParameter>;
   }
 }

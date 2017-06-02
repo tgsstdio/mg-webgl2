@@ -2,9 +2,9 @@
 
 namespace Magnesium {
   export class WGLCmdInternalDraw {
-    topology: MgPrimitiveTopology;
+    mode: MgPrimitiveTopology;
     firstVertex: number;
+    indicesCount: number;
     instanceCount: number;
-    vertexCount: number;
   }
 }

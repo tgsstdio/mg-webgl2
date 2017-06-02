@@ -13,12 +13,14 @@ namespace Magnesium {
     private mDescriptorSets: IWGLCmdDescriptorSetEncodingSection;
     private mRenderPasses: WGLCmdRenderpassEncodingSection;
     private mVertexArrays: IWGLCmdVertexArrayEncodingSection;
+    private mDraws: IWGLCmdDrawEncodingSection;
 
     constructor(
       instructions: WGLCmdEncoderContextSorter
       , bag: WGLCmdGraphicsBag
       , descriptorSets: IWGLCmdDescriptorSetEncodingSection
       , vertexArrays: IWGLCmdVertexArrayEncodingSection
+      , draws: IWGLCmdDrawEncodingSection
     ) {
       this.mInstructions = instructions;
       this.mBag = bag;
@@ -31,6 +33,7 @@ namespace Magnesium {
       this.mViewports = new WGLCmdViewportEncodingSection();
       this.mStencil = new WGLCmdStencilEncodingSection();
       this.mRenderPasses = new WGLCmdRenderpassEncodingSection();
+      this.mDraws = draws;
     }
 
     clear(): void {
@@ -351,24 +354,18 @@ namespace Magnesium {
       }
 
       if (this.storeDrawCommand()) {
-        let draw = new WGLCmdInternalDraw();
-
         let pipeline = this.mCurrentPipeline as IWGLGraphicsPipeline;
-        draw.topology = pipeline.topology;
-        draw.vertexCount = vertexCount;
-        draw.instanceCount = instanceCount;
-        draw.firstVertex = firstVertex;
-        // ALWAYS draw.firstInstance = 0;
 
-        let nextIndex = this.mBag.draws.push(draw);
-
-        let encoding = new WGLCmdEncodingInstruction();
-        encoding.category = WGLCmdEncoderCategory.GRAPHICS;
-        encoding.index = nextIndex;
-        encoding.operation = new WGLCmdDraw();
-
-        this.mInstructions.add(encoding);
-      }
+        this.mDraws.draw(
+          pipeline
+          , this.mBag
+          , this.mInstructions
+          , vertexCount
+          , instanceCount
+          , firstVertex
+          , firstInstance
+        );
+       }
     }
 
     drawIndexed(
@@ -386,26 +383,22 @@ namespace Magnesium {
         return;
 
       if (this.storeDrawCommand()) {
-        let draw = new GLCmdInternalDrawIndexed();
-
         let pipeline = this.mCurrentPipeline as IWGLGraphicsPipeline;
-        draw.topology = pipeline.topology;
-        draw.indexType = this.mVertexArrays.boundIndexBuffer.indexType;
-        draw.indexCount = indexCount;
-        draw.instanceCount = instanceCount;
-        draw.firstIndex = firstIndex;
-        draw.vertexOffset = vertexOffset;
-        draw.firstInstance = firstInstance;
-        // ALWAYS draw.firstInstance = 0;
 
-        let nextIndex = this.mBag.drawIndexeds.push(draw);
+        let indexBuffer
+         = this.mVertexArrays.boundIndexBuffer as WGLCmdIndexBufferParameter;
 
-        let encoding = new WGLCmdEncodingInstruction();
-        encoding.category = WGLCmdEncoderCategory.GRAPHICS;
-        encoding.index = nextIndex;
-        encoding.operation = new WGLCmdDrawIndexed();
-
-        this.mInstructions.add(encoding);
+        this.mDraws.drawIndexed(
+          pipeline
+          , indexBuffer
+          , this.mBag
+          , this.mInstructions
+          , indexCount
+          , instanceCount
+          , firstIndex
+          , vertexOffset
+          , firstInstance
+        );
       }
     }
 
@@ -426,27 +419,21 @@ namespace Magnesium {
         return;      
 
       if (this.storeDrawCommand()) {
-        let pipeline = this.mCurrentPipeline;
+        let pipeline = this.mCurrentPipeline as IWGLGraphicsPipeline;
 
-        let indirect = null;
+        let indexBuffer
+         = this.mVertexArrays.boundIndexBuffer as WGLCmdIndexBufferParameter;
 
-        let draw = new GLCmdInternalDrawIndexedIndirect();
-        draw.indirect = indirect;
-        draw.topology = pipeline.topology;
-        draw.indexType = this.mVertexArrays.boundIndexBuffer.indexType;
-        draw.drawCount = drawCount;
-        draw.stride = stride;
-
-        // ALWAYS draw.firstInstance = 0;
-
-        let nextIndex = this.mBag.drawIndexedIndirects.push(draw);
-
-        let encoding = new WGLCmdEncodingInstruction();
-        encoding.category = WGLCmdEncoderCategory.GRAPHICS;
-        encoding.index = nextIndex;
-        encoding.operation = new WGLCmdDrawIndexedIndirect();
-
-        this.mInstructions.add(encoding);
+        this.mDraws.drawIndexedIndirect(
+          pipeline
+          , indexBuffer
+          , this.mBag
+          , this.mInstructions
+          , buffer
+          , offset
+          , drawCount
+          , stride
+        );
       }
     }    
 
@@ -464,23 +451,17 @@ namespace Magnesium {
       }
 
       if (this.storeDrawCommand())  {
-        let indirect = null; //IntPtr.Add(glBuffer.Source, (int) offset);
+        let pipeline = this.mCurrentPipeline as IWGLGraphicsPipeline;
 
-        let draw = new GLCmdInternalDrawIndirect();
-          
-        draw.topology = this.mCurrentPipeline.topology,
-        draw.indirect = indirect;
-        draw.drawCount = drawCount;
-        draw.stride = stride;            
-
-        let nextIndex = this.mBag.drawIndirects.push(draw);
-
-        let encoding = new WGLCmdEncodingInstruction();
-        encoding.category = WGLCmdEncoderCategory.GRAPHICS;
-        encoding.index = nextIndex;
-        encoding.operation = new WGLCmdDrawIndirect();
-
-        this.mInstructions.add(encoding);
+        this.mDraws.drawIndirect(
+          pipeline
+          , this.mBag
+          , this.mInstructions
+          , buffer
+          , offset
+          , drawCount
+          , stride
+        );
       }
     }    
   }
@@ -513,124 +494,4 @@ namespace Magnesium {
       renderer.bindPipeline(pipelineInfo);
     }
   }
-
-  class WGLCmdDrawIndirect implements WGLCmdAction {
-    action(
-      arg1: WGLCmdCommandRecording
-      , arg2: number
-    ) : void {
-
-      let context = arg1.graphics;
-      if (context == null)
-        return;
-
-      let grid = context.grid;
-      if (grid == null)
-        return;
-
-      let items = grid.drawIndirects;
-      if (items == null)
-        return; 
-
-      let draw = items[arg2];
-      if (draw == null)
-        return; 
-
-      let renderer = context.stateRenderer;
-      if (renderer == null)
-        return;       
-
-      renderer.drawIndirect(draw);
-    }
-  }    
-
-  class WGLCmdDraw implements WGLCmdAction {
-    action(
-      arg1: WGLCmdCommandRecording
-      , arg2: number
-    ) : void {
-
-      let context = arg1.graphics;
-      if (context == null)
-        return;
-
-      let grid = context.grid;
-      if (grid == null)
-        return;
-
-      let items = grid.draws;
-      if (items == null)
-        return; 
-
-      let draw = items[arg2];
-      if (draw == null)
-        return; 
-
-      let renderer = context.stateRenderer;
-      if (renderer == null)
-        return;       
-
-      renderer.draw(draw);
-    }
-  }    
-
-  class WGLCmdDrawIndexed implements WGLCmdAction {
-    action(
-      arg1: WGLCmdCommandRecording
-      , arg2: number
-    ) : void {
-
-      let context = arg1.graphics;
-      if (context == null)
-        return;
-
-      let grid = context.grid;
-      if (grid == null)
-        return;
-
-      let items = grid.drawIndexeds;
-      if (items == null)
-        return; 
-
-      let draw = items[arg2];
-      if (draw == null)
-        return; 
-
-      let renderer = context.stateRenderer;
-      if (renderer == null)
-        return;       
-
-      renderer.drawIndexed(draw);
-    }
-  }   
-
-  class WGLCmdDrawIndexedIndirect implements WGLCmdAction {
-    action(
-      arg1: WGLCmdCommandRecording
-      , arg2: number
-    ) : void {
-
-      let context = arg1.graphics;
-      if (context == null)
-        return;
-
-      let grid = context.grid;
-      if (grid == null)
-        return;
-
-      let items = grid.drawIndexedIndirects;
-      if (items == null)
-        return; 
-
-      let drawIndexedIndirect = items[arg2];
-      if (drawIndexedIndirect == null)
-        return; 
-
-      let renderer = context.stateRenderer;
-      if (renderer == null)
-        return;       
-
-      renderer.drawIndexedIndirect(drawIndexedIndirect);
-    }
-  }    
 }

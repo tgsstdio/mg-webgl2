@@ -1,8 +1,8 @@
 namespace Magnesium {
   export class WGLCmdGraphicsBag {
     draws: WGLCmdEncoderCollection<WGLCmdInternalDraw>;
-    drawIndirects: WGLCmdEncoderCollection<GLCmdInternalDrawIndirect>;
-    drawIndexeds: WGLCmdEncoderCollection<GLCmdInternalDrawIndexed>;
+    drawIndirects: WGLCmdEncoderCollection<WGLCmdInternalDrawIndirect>;
+    drawIndexeds: WGLCmdEncoderCollection<WGLCmdInternalDrawIndexed>;
     pipelines: WGLCmdEncoderCollection<WGLCmdBoundPipelineRecordInfo>;
     depthBias: WGLCmdEncoderCollection<WGLCmdDepthBiasParameter>;
     blendConstants: WGLCmdEncoderCollection<MgColor4f>;
@@ -13,14 +13,14 @@ namespace Magnesium {
     descriptorSets: WGLCmdEncoderCollection<WGLCmdDescriptorSetParameter>;
     renderPasses: WGLCmdEncoderCollection<WGLCmdBeginRenderpassRecord>;
     vertexArrays: WGLCmdEncoderCollection<WGLCmdVertexBufferObject>;
-    drawIndexedIndirects: WGLCmdEncoderCollection<GLCmdInternalDrawIndexedIndirect>;
+    drawIndexedIndirects: WGLCmdEncoderCollection<WGLCmdInternalDrawIndexedIndirect>;
 
     constructor() {
       this.draws = new WGLCmdEncoderCollection<WGLCmdInternalDraw>();
       this.drawIndirects
-        = new WGLCmdEncoderCollection<GLCmdInternalDrawIndirect>();
+        = new WGLCmdEncoderCollection<WGLCmdInternalDrawIndirect>();
       this.drawIndexeds
-        = new WGLCmdEncoderCollection<GLCmdInternalDrawIndexed>();
+        = new WGLCmdEncoderCollection<WGLCmdInternalDrawIndexed>();
       this.pipelines
         = new WGLCmdEncoderCollection<WGLCmdBoundPipelineRecordInfo>();
       this.depthBias
@@ -42,7 +42,7 @@ namespace Magnesium {
       this.vertexArrays
         = new WGLCmdEncoderCollection<WGLCmdVertexBufferObject>();
       this.drawIndexedIndirects
-        = new WGLCmdEncoderCollection<GLCmdInternalDrawIndexedIndirect>();
+        = new WGLCmdEncoderCollection<WGLCmdInternalDrawIndexedIndirect>();
     }
 
     clear() : void {

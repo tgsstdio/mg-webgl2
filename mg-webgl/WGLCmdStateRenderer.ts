@@ -29,8 +29,13 @@ namespace Magnesium {
     private mPastBlendConstants: MgColor4f;
 
     private mGL : WebGL2RenderingContext;
-    constructor(gl: WebGL2RenderingContext) {
+    private mDraws: IWGLCmdDrawEntrypoint;
+    constructor(
+      gl: WebGL2RenderingContext
+      , draws: IWGLCmdDrawEntrypoint
+    ) {
       this.mGL = gl;
+      this.mDraws = draws;
     }
 
     initialize() : void {
@@ -748,11 +753,51 @@ namespace Magnesium {
     }
 
     draw(drawItem: WGLCmdInternalDraw) : void {
-      this.mGL.drawArraysInstanced(
-        this.getPrimitiveType(drawItem.topology)
+      this.mDraws.drawArrays(
+        drawItem.mode
         , drawItem.firstVertex
-        , drawItem.vertexCount        
-        , drawItem.instanceCount        
+        , drawItem.indicesCount
+        , drawItem.instanceCount
+      );
+    }
+
+    drawIndexed(
+      drawItem: WGLCmdInternalDrawIndexed
+    ) : void {
+      this.mDraws.drawIndexed(
+        drawItem.mode
+        , drawItem.elementCount
+        , drawItem.elementType
+        , drawItem.indexOffset
+        , drawItem.instanceCount
+      );
+    }
+
+    drawIndirect(
+      drawItem: WGLCmdInternalDrawIndirect
+    ) : void {
+      this.mDraws.drawArraysIndirect(
+        drawItem.mode
+        , drawItem.indirect 
+        , drawItem.drawCount
+        , drawItem.offset
+        , drawItem.stride
+      );
+    }
+
+    drawIndexedIndirect(
+      drawItem: WGLCmdInternalDrawIndexedIndirect
+    ) : void {
+      this.mDraws.drawIndexedIndirect(
+        drawItem.mode
+        , drawItem.topology
+        , drawItem.indexType
+        , drawItem.elementType
+        , drawItem.indexByteSize
+        , drawItem.indirect
+        , drawItem.drawCount
+        , drawItem.offset
+        , drawItem.stride
       );
     }
 
@@ -778,13 +823,6 @@ namespace Magnesium {
       }
 		}
 
-    // drawIndexed(drawItem: GLCmdInternalDrawIndexed) : void {
-    //   this.mGL.drawElementsInstanced(
-        
-    //     );
-    // }
-    // drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
-    // drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
     bindVertexArrays(vao: WGLCmdVertexBufferObject) : void {
       this.mCache.setVAO(vao.vertexArray);
     }

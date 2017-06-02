@@ -22,9 +22,9 @@ namespace Magnesium {
       updateBackStencil(stencilInfo: WGLCmdStencilFunctionInfo) : void;
 
       draw(drawItem: WGLCmdInternalDraw) : void;
-      drawIndexed(drawItem: GLCmdInternalDrawIndexed) : void;
-      drawIndexedIndirect(drawItem: GLCmdInternalDrawIndexedIndirect) : void;
-      drawIndirect(drawItem: GLCmdInternalDrawIndirect) : void;
+      drawIndexed(drawItem: WGLCmdInternalDrawIndexed) : void;
+      drawIndexedIndirect(drawItem: WGLCmdInternalDrawIndexedIndirect) : void;
+      drawIndirect(drawItem: WGLCmdInternalDrawIndirect) : void;
       bindVertexArrays(vao: WGLCmdVertexBufferObject) : void;
       bindDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void;
       updateBothStencils(item: WGLCmdStencilFunctionInfo) : void;
