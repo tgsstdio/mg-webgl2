@@ -11,6 +11,7 @@ class TSInterpreter:
     translatedTypes['UInt32[]'] = 'Array<number>'
     translatedTypes['int'] = 'number'
     translatedTypes['uint'] = 'number'
+    translatedTypes['ulong'] = 'number'   
     translatedTypes['uint[]'] = 'Array<number>'
     translatedTypes['Int32'] = 'number'
     translatedTypes['string'] = 'string'
@@ -70,7 +71,7 @@ class TSInterpreter:
     localType = tokens[typeIndex]
     comment = ''
 
-    for warningType in ['UInt64', 'IntPtr', 'UIntPtr']:    
+    for warningType in ['UInt64', 'IntPtr', 'UIntPtr', 'ulong']:    
       if localType == warningType:
         comment = '// WARN: ' + paramName + ' requires ' + warningType    
 
@@ -90,11 +91,10 @@ class TSInterpreter:
       self.references[localType] = localType
 
 textData = """
-        public uint First { get; set; }
-        public uint Last { get; set; }
-        public uint Count { get; set; }
-        public GLPoolResourceNode Next { get; set; }
+        public ulong Size { get; set; }
+        public ulong Alignment { get; set; }
+        public uint MemoryTypeBits { get; set; }
 	      """		
 
-tp = TSInterpreter('GLPoolResourceNode', False)
+tp = TSInterpreter('MgMemoryRequirements', False)
 tp.parse(textData)

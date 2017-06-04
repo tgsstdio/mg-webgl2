@@ -1,6 +1,7 @@
 /// <reference path="IWGLQueue.ts" />
 /// <reference path="IWGLDeviceEntrypoint.ts" />
 /// <reference path="WGLImage.ts" />
+/// <reference path="../mg/MgMemoryRequirements.ts" />
 
 namespace Magnesium {
   export class WGLDevice implements IWGLDevice {
@@ -20,6 +21,48 @@ namespace Magnesium {
 
     destroyDevice(allocator : IMgAllocationCallbacks) : void {
 
+    }
+
+    getBufferMemoryRequirements (
+      buffer: IMgBuffer
+      , out: { pMemoryRequirements: MgMemoryRequirements|null}
+    ) : void {
+      if (buffer == null) {
+				throw new Error ("pCreateInfo is null");
+			}
+
+      let internalBuffer = buffer as IWGLBuffer;
+
+      let result = new MgMemoryRequirements();
+      result.size = internalBuffer.requestedSize;
+      result.memoryTypeBits
+        = this.determineBufferMemoryType(internalBuffer.usage);    
+      out.pMemoryRequirements = result;
+    }
+
+    private determineBufferMemoryType(
+      usage: MgBufferUsageFlagBits
+    ): number {    
+      switch (usage) {
+        case GLMemoryBufferType.SSBO:
+            return 1 << 0;
+        case GLMemoryBufferType.INDIRECT:
+            return 1 << 1;
+        case GLMemoryBufferType.VERTEX:
+            return 1 << 2;
+        case GLMemoryBufferType.INDEX:
+            return 1 << 3;
+        case GLMemoryBufferType.IMAGE:
+            return 1 << 4;
+        case GLMemoryBufferType.TRANSFER_SRC:
+            return 1 << 5;
+        case GLMemoryBufferType.TRANSFER_DST:
+            return 1 << 6;
+        case GLMemoryBufferType.UNIFORM:
+            return 1 << 7;
+        default:
+            throw new Error("not supported");
+      }
     }
 
     getDeviceQueue(queueFamilyIndex : number
@@ -348,11 +391,13 @@ namespace Magnesium {
         let dsBinder = new WGLDescriptorSetBinder();
         let descriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);        
         let vertexArrays = new WGLCmdVertexArrayEncodingSection(this.mEntrypoint.vertexArrays);
+        let draws = new WGLCmdDrawEncodingSection(this.mGL);
         let graphics = new WGLCmdGraphicsEncoder(
           instructions
           , new WGLCmdGraphicsBag()          
           , descriptorSets
-          , vertexArrays);
+          , vertexArrays
+          , draws);
         let compute = new WGLCmdComputeEncoder();
         let blit = new WGLCmdBlitEncoder(
           instructions

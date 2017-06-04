@@ -2,7 +2,7 @@
 /// <reference path="../mg/IMgDeviceMemory.ts" />
 
 namespace Magnesium {
-  export interface IGLDeviceMemory extends IMgDeviceMemory {
+  export interface IWGLDeviceMemory extends IMgDeviceMemory {
     // bufferType: GLMemoryBufferType;
     // bufferSize: number;
     // bufferId: number;

@@ -1,5 +1,10 @@
 namespace Magnesium {
   export class WGLBuffer implements IWGLBuffer {
+    private mHosted: ArrayBuffer;
+    get hosted(): ArrayBuffer {
+      return this.mHosted;
+    }
+
     private mSource: WebGLBuffer|null;
     get source(): WebGLBuffer|null {
       return this.mSource;
