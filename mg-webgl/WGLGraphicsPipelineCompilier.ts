@@ -51,13 +51,15 @@ namespace Magnesium {
       let modules = new Array<WebGLShader>();
       if (info.stages != null) {
         for (let stage of info.stages) {
-          let module : WGLShaderModule = stage.module as WGLShaderModule;
-					let fileContents = ''
+          let sModule = stage.module as IWGLShaderModule;
+					let fileContents = sModule.code.substring(0, sModule.codeSize);
+					const FILE_PREFIX = ""
+
           let shaderId = WGLGraphicsPipelineCompiler.compileShader(
 						this.mShaders
 						, stage.stage
 						, fileContents
-						, ""
+						, FILE_PREFIX
 						, stage.name);
 					modules.push(shaderId);
         }
