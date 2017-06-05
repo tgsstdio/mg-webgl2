@@ -35,15 +35,15 @@ namespace Magnesium {
       out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties | null }
       ) : void;
 		getPhysicalDeviceFeatures(
-      out: { pFeatures: MgPhysicalDeviceFeatures }
+      out: { pFeatures: MgPhysicalDeviceFeatures| null }
       ) : void;
 		getPhysicalDeviceFormatProperties(format: MgFormat
-      , out: { pFormatProperties: MgFormatProperties }
+      , out: { pFormatProperties: MgFormatProperties| null }
       ) : void;
 		getPhysicalDeviceImageFormatProperties(format: MgFormat
       , type: MgImageType, tiling: MgImageTiling
       , usage: MgImageUsageFlagBits, flags: MgImageCreateFlagBits
-      , out: { pImageFormatProperties: MgImageFormatProperties }) : MgResult;		
+      , out: { pImageFormatProperties: MgImageFormatProperties|null }) : MgResult;		
     enumerateDeviceLayerProperties(
       out: { pProperties : Array<MgLayerProperties> }
       ) : MgResult;
@@ -54,43 +54,43 @@ namespace Magnesium {
       format: MgFormat
       , type: MgImageType, samples: MgSampleCountFlagBits
       , usage: MgImageUsageFlagBits,  tiling: MgImageTiling
-      , out: { pProperties: Array<MgSparseImageFormatProperties> }
+      , out: { pProperties: Array<MgSparseImageFormatProperties>|null }
       ) : void;
 		getPhysicalDeviceDisplayPropertiesKHR(
-      out: { pProperties: Array<MgDisplayPropertiesKHR> }
+      out: { pProperties: Array<MgDisplayPropertiesKHR>|null }
       ) : MgResult;
 		getPhysicalDeviceDisplayPlanePropertiesKHR(
-      out: { pProperties: Array<MgDisplayPlanePropertiesKHR> }
+      out: { pProperties: Array<MgDisplayPlanePropertiesKHR>|null }
       ) : MgResult;
 		getDisplayPlaneSupportedDisplaysKHR(planeIndex : number
-      , out: { pDisplays: Array<IMgDisplayKHR> }
+      , out: { pDisplays: Array<IMgDisplayKHR>|null }
       ) : MgResult;
 		getDisplayModePropertiesKHR(display: IMgDisplayKHR
-      , out: {pProperties: Array<MgDisplayModePropertiesKHR>}
+      , out: {pProperties: Array<MgDisplayModePropertiesKHR>| null}
       ) : MgResult;
 		createDisplayModeKHR(display: IMgDisplayKHR
       , pCreateInfo: MgDisplayModeCreateInfoKHR
       , allocator: IMgAllocationCallbacks|null
-      , out: { pMode: IMgDisplayModeKHR}) : MgResult;
+      , out: { pMode: IMgDisplayModeKHR|null}) : MgResult;
 		getDisplayPlaneCapabilitiesKHR(
       mode: IMgDisplayModeKHR
       , planeIndex: number
-      , out: { pCapabilities : MgDisplayPlaneCapabilitiesKHR}) : MgResult;
+      , out: { pCapabilities : MgDisplayPlaneCapabilitiesKHR| null}) : MgResult;
 		getPhysicalDeviceSurfaceSupportKHR(
       queueFamilyIndex: number
       , surface: IMgSurfaceKHR
       , ref: { pSupported: boolean}) : MgResult;
 		getPhysicalDeviceSurfaceCapabilitiesKHR(
       surface : IMgSurfaceKHR
-      , out: { pSurfaceCapabilities: MgSurfaceCapabilitiesKHR }
+      , out: { pSurfaceCapabilities: MgSurfaceCapabilitiesKHR|null }
       ) : MgResult;
 		getPhysicalDeviceSurfaceFormatsKHR(
       surface: IMgSurfaceKHR
-      , out: {pSurfaceFormats: Array<MgSurfaceFormatKHR> }
+      , out: {pSurfaceFormats: Array<MgSurfaceFormatKHR>|null }
       ) : MgResult;
 		getPhysicalDeviceSurfacePresentModesKHR(
       surface: IMgSurfaceKHR
-      , out: { pPresentModes: Array<MgPresentModeKHR> }
+      , out: { pPresentModes: Array<MgPresentModeKHR>|null }
       ) : MgResult;
 		getPhysicalDeviceWin32PresentationSupportKHR(
       queueFamilyIndex : number) : boolean;

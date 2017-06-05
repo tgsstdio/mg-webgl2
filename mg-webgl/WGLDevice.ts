@@ -8,18 +8,21 @@ namespace Magnesium {
     private mGL: WebGL2RenderingContext;
     private mQueue: IWGLQueue;
     private mEntrypoint: IWGLDeviceEntrypoint;
+    private mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
 
     constructor(
       gl: WebGL2RenderingContext
       ,queue: IWGLQueue
       , entrypoint: IWGLDeviceEntrypoint
+      , deviceMemoryMap: IWGLDeviceMemoryTypeMap
     ) {
       this.mGL = gl;
       this.mQueue = queue;
       this.mEntrypoint = entrypoint;
+      this.mDeviceMemoryMap = deviceMemoryMap;
     }
 
-    destroyDevice(allocator : IMgAllocationCallbacks) : void {
+    destroyDevice(allocator : IMgAllocationCallbacks|null) : void {
 
     }
 
@@ -36,33 +39,8 @@ namespace Magnesium {
       let result = new MgMemoryRequirements();
       result.size = internalBuffer.requestedSize;
       result.memoryTypeBits
-        = this.determineBufferMemoryType(internalBuffer.usage);    
-      out.pMemoryRequirements = result;
-    }
-
-    private determineBufferMemoryType(
-      usage: MgBufferUsageFlagBits
-    ): number {    
-      switch (usage) {
-        case GLMemoryBufferType.SSBO:
-            return 1 << 0;
-        case GLMemoryBufferType.INDIRECT:
-            return 1 << 1;
-        case GLMemoryBufferType.VERTEX:
-            return 1 << 2;
-        case GLMemoryBufferType.INDEX:
-            return 1 << 3;
-        case GLMemoryBufferType.IMAGE:
-            return 1 << 4;
-        case GLMemoryBufferType.TRANSFER_SRC:
-            return 1 << 5;
-        case GLMemoryBufferType.TRANSFER_DST:
-            return 1 << 6;
-        case GLMemoryBufferType.UNIFORM:
-            return 1 << 7;
-        default:
-            throw new Error("not supported");
-      }
+        = this.mDeviceMemoryMap.determineTypeIndex(internalBuffer.memoryType);    
+      out.pMemoryRequirements = result; 
     }
 
     getDeviceQueue(queueFamilyIndex : number
@@ -73,8 +51,8 @@ namespace Magnesium {
     }
 
     allocateMemory(pAllocateInfo : MgMemoryAllocateInfo
-      , allocator : IMgAllocationCallbacks
-      , out : { pMemory : IMgDeviceMemory }
+      , allocator : IMgAllocationCallbacks|null
+      , out : { pMemory : IMgDeviceMemory|null }
     ) : MgResult {
       out.pMemory = this.mEntrypoint.deviceMemory.createDeviceMemory(pAllocateInfo);
       return MgResult.SUCCESS;
@@ -165,7 +143,7 @@ namespace Magnesium {
 		}
 
 		createImageView(pCreateInfo: MgImageViewCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pView: IMgImageView|null }
     ) : MgResult {
 			if (pCreateInfo == null) {
@@ -202,7 +180,7 @@ namespace Magnesium {
 
 		createGraphicsPipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgGraphicsPipelineCreateInfo>
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelines: Array<IMgPipeline>|null }
     ) : MgResult {
       let output = new Array<IMgPipeline>();
@@ -252,14 +230,14 @@ namespace Magnesium {
 
 		createComputePipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgComputePipelineCreateInfo>
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelines: Array<IMgPipeline>|null }
     ) : never {
       throw new Error('ERROR: not implemented');
     }
 
 		createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pPipelineLayout: IMgPipelineLayout|null }
     ) : MgResult
     {
@@ -280,7 +258,7 @@ namespace Magnesium {
     }
 
 		createSampler(pCreateInfo: MgSamplerCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSampler: IMgSampler|null }
     ) : MgResult {
       if (pCreateInfo == null) {
@@ -294,7 +272,7 @@ namespace Magnesium {
     }
 
 		createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSetLayout: IMgDescriptorSetLayout|null }
     ) : MgResult {
       if (pCreateInfo == null) {
@@ -306,7 +284,7 @@ namespace Magnesium {
     }
 
 		createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pDescriptorPool: IMgDescriptorPool|null }
     ) : MgResult {
       if (pCreateInfo == null) {
@@ -340,7 +318,7 @@ namespace Magnesium {
 
 		createFramebuffer(
       pCreateInfo: MgFramebufferCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pFramebuffer: IMgFramebuffer|null
       }) : MgResult {
         out.pFramebuffer = new WGLFramebuffer();
@@ -349,7 +327,7 @@ namespace Magnesium {
 
 		createRenderPass(
       pCreateInfo: MgRenderPassCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pRenderPass: IMgRenderPass|null }
     ) : MgResult {
       if (pCreateInfo == null) {
@@ -361,7 +339,7 @@ namespace Magnesium {
     }
 
 		createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pCommandPool: IMgCommandPool|null }
     ) : MgResult {
       if (pCreateInfo == null) {
@@ -427,7 +405,7 @@ namespace Magnesium {
 
 		createSwapchainKHR(
       pCreateInfo: MgSwapchainCreateInfoKHR
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { pSwapchain : IMgSwapchainKHR }
     ) : never {
       throw new Error("ERROR: not implemented");
@@ -459,14 +437,14 @@ namespace Magnesium {
 		}
 
 		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
-       , allocator: IMgAllocationCallbacks
+       , allocator: IMgAllocationCallbacks|null
        , out: { pSemaphore: IMgSemaphore|null }) : MgResult {
       out.pSemaphore = this.mEntrypoint.semaphores.createSemaphore();
 			return MgResult.SUCCESS;
     }
 
 		createFence(pCreateInfo: MgFenceCreateInfo
-      , allocator: IMgAllocationCallbacks
+      , allocator: IMgAllocationCallbacks|null
       , out: { fence: IMgFence|null}
     )  : MgResult {
       out.fence = this.mEntrypoint.fences.createFence();

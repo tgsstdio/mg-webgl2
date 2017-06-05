@@ -1,6 +1,10 @@
 namespace Magnesium {
   export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
     private mGL: WebGL2RenderingContext;
+    constructor(gl: WebGL2RenderingContext) {
+      this.mGL = gl;
+    }
+
 	  drawIndexed (
       mode: number
       , elementCount: number

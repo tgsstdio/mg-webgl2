@@ -9,7 +9,8 @@ namespace Magnesium {
     private mBufferTarget: GLMemoryBufferType|null;
     constructor(
       gl: WebGL2RenderingContext
-      , pAllocateInfo: MgMemoryAllocateInfo            
+      , pAllocateInfo: MgMemoryAllocateInfo
+      , deviceMemoryMap: IWGLDeviceMemoryTypeMap            
     ) {
       this.mGL = gl;
       this.mBufferType = pAllocateInfo.memoryTypeIndex as GLMemoryBufferType;
@@ -22,7 +23,7 @@ namespace Magnesium {
 			}      
 
       if (pAllocateInfo.allocationSize < 0) {
-        throw new Error("pAllocateInfo.AllocationSize must be = 0");
+        throw new Error("pAllocateInfo.AllocationSize must be > 0");
       }
 
   		this.mBufferTarget = this.getBufferTarget(this.mBufferType);
@@ -37,29 +38,10 @@ namespace Magnesium {
 
         let target = this.mBufferTarget as number;
         this.mGL.bindBuffer(target, this.mBufferId);
-        let flags = 0;
 
-// TODO convert these rules into flags 
-// DEVICE_LOCAL_BIT
-// gl.STATIC_COPY: Contents of the buffer are likely to be used often and not change often. Contents are neither written or read by the user.
-// DEVICE_LOCAL_BIT | HOST_COHERENT_BIT | HOST_VISIBLE_BIT
-// gl.STATIC_DRAW: Contents of the buffer are likely to be used often and not change often. Contents are written to the buffer, but not read.
-// DEVICE_LOCAL_BIT | HOST_VISIBLE_BIT
-// gl.STATIC_READ: Contents of the buffer are likely to be used often and not change often. Contents are read from the buffer, but not written.
-
-// HOST_COHERENT_BIT | HOST_VISIBLE_BIT
-// gl.STREAM_DRAW: Contents of the buffer are likely to not be used often. Contents are written to the buffer, but not read.
-// HOST_VISIBLE_BIT
-// gl.STREAM_READ: Contents of the buffer are likely to not be used often. Contents are read from the buffer, but not written.
-// 0
-// gl.STREAM_COPY: Contents of the buffer are likely to be used often and not change often. Contents are neither written or read by the user.
-
-// HOST_CACHED_BIT | HOST_VISIBLE_BIT | HOST_COHERENT_BIT 
-// gl.DYNAMIC_READ: Contents of the buffer are likely to be used often and change often. Contents are read from the buffer, but not written.
-// HOST_CACHED_BIT
-// gl.DYNAMIC_COPY: Contents of the buffer are likely to be used often and change often. Contents are neither written or read by the user.
-// HOST_CACHED_BIT | HOST_COHERENT_BIT 
-// gl.DYNAMIC_DRAW: Contents of the buffer are likely to be used often and change often. Contents are written to the buffer, but not read.        
+        let typeIndex = pAllocateInfo.memoryTypeIndex;
+        let slotInfo = deviceMemoryMap.memoryTypes[typeIndex];
+        let flags = slotInfo.hint; 
 
         this.mGL.bufferData(target, this.mBufferSize, flags);
 
@@ -73,7 +55,6 @@ namespace Magnesium {
       return 0;
     }
     
-
 		private getBufferTarget(
       bufferType: GLMemoryBufferType
     ) : number|null {

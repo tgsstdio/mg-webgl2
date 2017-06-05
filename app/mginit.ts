@@ -22,10 +22,12 @@ if (gl == null)
   throw new Error();
 
 let semaphores: Magnesium.IWGLSemaphoreEntrypoint = new Magnesium.WGLSemaphoreEntrypoint();
-let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer(gl);
+let draws = new Magnesium.WGLCmdDrawEntrypoint(gl);
+let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer(gl, draws);
 let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
 let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
-let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint();
+let memoryTypeMap = new Magnesium.WGLDeviceMemoryTypeMap(gl);
+let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
 let deviceImage = new Magnesium.WGLDeviceImageEntrypoint(gl);
 let shaders = new Magnesium.WGLShaderModuleEntrypoint(gl);
 let programs = new Magnesium.WGLGraphicsPipelineEntrypoint(gl);
@@ -57,9 +59,11 @@ let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
   , imageFormat
   , semaphores
   , fences);
-let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint);
 
-let entrypoint = new Magnesium.WGLEntrypoint(device);
+let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint, memoryTypeMap);
+let physicalDevice: Magnesium.IMgPhysicalDevice = new Magnesium.WGLPhysicalDevice(device, memoryTypeMap);
+
+let entrypoint = new Magnesium.WGLEntrypoint(device, physicalDevice);
 let context = new Magnesium.MgDriverContext(entrypoint);
 context.initializeWithExtensions(
   appInfo

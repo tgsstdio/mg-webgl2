@@ -4,16 +4,20 @@
 namespace Magnesium {
   export class WGLEntrypoint implements IMgEntrypoint {
     private mDevice: IWGLDevice;
-
-    constructor(device : IWGLDevice) {
+    private mPhysicalDevice: IMgPhysicalDevice;
+    constructor(
+      device : IWGLDevice
+      , physicalDevice: IMgPhysicalDevice
+    ) {
       this.mDevice = device;
+      this.mPhysicalDevice = physicalDevice;
     }
 
     createInstance(createInfo : MgInstanceCreateInfo
       , allocator: IMgAllocationCallbacks|null
       , out: { instance: IMgInstance|null }) : MgResult
     {
-      out.instance = new WGLInstance(this.mDevice);
+      out.instance = new WGLInstance(this.mDevice, this.mPhysicalDevice);
       return MgResult.SUCCESS;
     }
 

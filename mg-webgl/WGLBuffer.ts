@@ -25,6 +25,11 @@ namespace Magnesium {
       return this.mIsBufferType;
     }
 
+    private mMemoryType: WGLDeviceMemoryTypeFlagBits;
+    get memoryType(): WGLDeviceMemoryTypeFlagBits {
+      return this.mMemoryType;
+    }
+
     private mGL: WebGL2RenderingContext;
     constructor(
       gl: WebGL2RenderingContext
@@ -32,9 +37,47 @@ namespace Magnesium {
     ) {
       this.mGL = gl;
       this.mIsBufferType = WGLBuffer.determineBufferType(info);
+      this.mMemoryType = WGLBuffer.determineMemoryType(info);
       this.mUsage = info.usage;
       this.mRequestedSize = info.size;
     }
+
+    private static determineMemoryType(
+      info: MgBufferCreateInfo
+    ) : WGLDeviceMemoryTypeFlagBits {
+      let flags : WGLDeviceMemoryTypeFlagBits = 0;
+
+      let references: Array<MgBufferUsageFlagBits> = [
+        MgBufferUsageFlagBits.INDEX_BUFFER_BIT
+        , MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
+        , MgBufferUsageFlagBits.INDIRECT_BUFFER_BIT
+        , MgBufferUsageFlagBits.UNIFORM_BUFFER_BIT
+        , MgBufferUsageFlagBits.TRANSFER_SRC_BIT
+        , MgBufferUsageFlagBits.TRANSFER_DST_BIT
+      ];
+
+      let toggles: Array<WGLDeviceMemoryTypeFlagBits> = [
+        WGLDeviceMemoryTypeFlagBits.INDEX
+        , WGLDeviceMemoryTypeFlagBits.VERTEX
+        , WGLDeviceMemoryTypeFlagBits.INDIRECT
+        , WGLDeviceMemoryTypeFlagBits.UNIFORM
+        , WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
+        , WGLDeviceMemoryTypeFlagBits.TRANSFER_DST
+      ];
+
+      let count = references.length;
+
+      for( let i = 0; i < count; i += 1) {
+        let referenceMask = references[i];
+        if ((info.usage & referenceMask) == referenceMask)
+        {
+          flags |= toggles[i];
+        }    
+      }
+
+      return flags;  
+    }
+    
 
     private static determineBufferType(
       info: MgBufferCreateInfo

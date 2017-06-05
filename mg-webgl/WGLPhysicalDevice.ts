@@ -6,7 +6,11 @@
 namespace Magnesium {
   export class WGLPhysicalDevice implements IMgPhysicalDevice {
     private readonly mDevice : IWGLDevice;
-    constructor(device: IWGLDevice) {
+    private readonly mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
+    constructor(
+      device: IWGLDevice
+      , deviceMemoryMap: IWGLDeviceMemoryTypeMap
+    ) {
       this.mDevice = device;
     }  
 		
@@ -43,33 +47,24 @@ namespace Magnesium {
     }
 
 		getPhysicalDeviceMemoryProperties(
-      out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties }
+      out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties|null }
     ) : void {
-			// TODO : overwrite here to shift memory based on which type
-			// 0 : buffer based 
-			// 1 : host defined (for INDIRECT)
 			out.pMemoryProperties = new MgPhysicalDeviceMemoryProperties();
 
-      const MAX_SLOTS = 8;
-			let slots = new Array<MgMemoryType>(MAX_SLOTS);
-
-			const ALL_ON : number = (MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT |
-			                       MgMemoryPropertyFlagBits.HOST_CACHED_BIT |
-			                       MgMemoryPropertyFlagBits.HOST_COHERENT_BIT |
-			                       MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT |
-			                       MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT);
-
-			// THE NUMBER OF SLOTS DETERMINE THE DIFFERENT BUFFER TYPES = no of GLMemoryBufferType enums
-      for (let i = 0; i < MAX_SLOTS; i += 1) {
-        slots[i] = new MgMemoryType();
-        slots[i].propertyFlags = ALL_ON;
+      let count = this.mDeviceMemoryMap.memoryTypes.length;
+      let slots = new Array<MgMemoryType>(count);
+      for(let entry of this.mDeviceMemoryMap.memoryTypes) {
+        // THE NUMBER OF SLOTS DETERMINE THE DIFFERENT BUFFER TYPES = no of GLMemoryBufferType enums
+        let item = new MgMemoryType();
+        item.heapIndex = 0;
+        item.propertyFlags = entry.propertyFlags;
       }
 
       out.pMemoryProperties.memoryTypes = slots;
     }
 
 		getPhysicalDeviceFeatures(
-      out: { pFeatures: MgPhysicalDeviceFeatures }
+      out: { pFeatures: MgPhysicalDeviceFeatures|null }
     ) : void {
       let features = new MgPhysicalDeviceFeatures();
       features.multiViewport = false;      
@@ -78,7 +73,7 @@ namespace Magnesium {
     }
 
 		getPhysicalDeviceFormatProperties(format: MgFormat
-      , out: { pFormatProperties: MgFormatProperties }
+      , out: { pFormatProperties: MgFormatProperties|null }
     ) : never {
       throw new Error('Not implemented');
     }
@@ -86,7 +81,7 @@ namespace Magnesium {
 		getPhysicalDeviceImageFormatProperties(format: MgFormat
       , type: MgImageType, tiling: MgImageTiling
       , usage: MgImageUsageFlagBits, flags: MgImageCreateFlagBits
-      , out: { pImageFormatProperties: MgImageFormatProperties }
+      , out: { pImageFormatProperties: MgImageFormatProperties|null }
     ) : never  {
       throw new Error('Not implemented');
     }
@@ -98,7 +93,7 @@ namespace Magnesium {
     }
 
 		enumerateDeviceExtensionProperties(layerName: string
-      , out: { pProperties: Array<MgExtensionProperties> }
+      , out: { pProperties: Array<MgExtensionProperties>|null }
     ) : MgResult {
         out.pProperties = new Array<MgExtensionProperties>(0);
         return MgResult.SUCCESS;
@@ -108,31 +103,31 @@ namespace Magnesium {
       format: MgFormat
       , type: MgImageType, samples: MgSampleCountFlagBits
       , usage: MgImageUsageFlagBits,  tiling: MgImageTiling
-      , out: { pProperties: Array<MgSparseImageFormatProperties> }
+      , out: { pProperties: Array<MgSparseImageFormatProperties>|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getPhysicalDeviceDisplayPropertiesKHR(
-      out: { pProperties: Array<MgDisplayPropertiesKHR> }
+      out: { pProperties: Array<MgDisplayPropertiesKHR>|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getPhysicalDeviceDisplayPlanePropertiesKHR(
-      out: { pProperties: Array<MgDisplayPlanePropertiesKHR> }
+      out: { pProperties: Array<MgDisplayPlanePropertiesKHR>|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getDisplayPlaneSupportedDisplaysKHR(planeIndex : number
-      , out: { pDisplays: Array<IMgDisplayKHR> }
+      , out: { pDisplays: Array<IMgDisplayKHR>|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getDisplayModePropertiesKHR(display: IMgDisplayKHR
-      , out: {pProperties: Array<MgDisplayModePropertiesKHR>}
+      , out: {pProperties: Array<MgDisplayModePropertiesKHR>|null}
     ) : never {
       throw new Error('Not implemented');
     }
@@ -140,7 +135,7 @@ namespace Magnesium {
 		createDisplayModeKHR(display: IMgDisplayKHR
       , pCreateInfo: MgDisplayModeCreateInfoKHR
       , allocator: IMgAllocationCallbacks|null
-      , out: { pMode: IMgDisplayModeKHR}
+      , out: { pMode: IMgDisplayModeKHR|null}
     ) : never {
       throw new Error('Not implemented');
     }
@@ -148,7 +143,7 @@ namespace Magnesium {
 		getDisplayPlaneCapabilitiesKHR(
       mode: IMgDisplayModeKHR
       , planeIndex: number
-      , out: { pCapabilities : MgDisplayPlaneCapabilitiesKHR}
+      , out: { pCapabilities : MgDisplayPlaneCapabilitiesKHR|null}
     ) : never {
       throw new Error('Not implemented');
     }
@@ -163,21 +158,21 @@ namespace Magnesium {
 
 		getPhysicalDeviceSurfaceCapabilitiesKHR(
       surface : IMgSurfaceKHR
-      , out: { pSurfaceCapabilities: MgSurfaceCapabilitiesKHR }
+      , out: { pSurfaceCapabilities: MgSurfaceCapabilitiesKHR|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getPhysicalDeviceSurfaceFormatsKHR(
       surface: IMgSurfaceKHR
-      , out: {pSurfaceFormats: Array<MgSurfaceFormatKHR> }
+      , out: {pSurfaceFormats: Array<MgSurfaceFormatKHR>|null }
     ) : never {
       throw new Error('Not implemented');
     }
 
 		getPhysicalDeviceSurfacePresentModesKHR(
       surface: IMgSurfaceKHR
-      , out: { pPresentModes: Array<MgPresentModeKHR> }
+      , out: { pPresentModes: Array<MgPresentModeKHR>|null }
     ) : never {
       throw new Error('Not implemented');
     }

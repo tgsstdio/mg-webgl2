@@ -1,36 +1,37 @@
 namespace Magnesium {
-  export enum WGLDeviceMemoryCategoryFlagBits {
-    INDIRECT = 1 << 0,
-    IMAGE = 1 << 1,
-    VERTEX = 1 << 2,
-    INDEX = 1 << 3,
-    UNIFORM = 1 << 4,
-    TRANSFER_SRC = 1 << 5,
-    TRANSFER_DST = 1 << 6,    
-  }
-
-  export class WGLDeviceMemoryInfo {
-    index: number;
-    memoryTypeIndex: number;
-    propertyFlags: MgMemoryPropertyFlagBits;
-    isHosted: boolean;
-    hint: number;
-  }
-
-  export class WGLDeviceMemoryMap {
+  export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     private mGL: WebGL2RenderingContext
     constructor(gl:WebGL2RenderingContext) {
       this.mGL = gl;
+      this.initialize();
     }
 
-    memoryTypes: Array<WGLDeviceMemoryInfo>;
-    initialize(): void {
-      this.memoryTypes = new Array<WGLDeviceMemoryInfo>(8);
+    private mMemoryTypes: Array<WGLDeviceMemoryTypeInfo>;
+    get memoryTypes():  Array<WGLDeviceMemoryTypeInfo> {
+      return this.mMemoryTypes;
+    }
+
+    private initialize(): void {
+      this.mMemoryTypes = new Array<WGLDeviceMemoryTypeInfo>(8);
 
       let index = this.pushIndirectEntries(0);
       index = this.pushImageEntries(index);
       index = this.pushDrawEntries(index);
       index = this.pushReadEntries(index);
+    }
+
+    determineTypeIndex(
+      category: WGLDeviceMemoryTypeFlagBits
+    ) : number {
+      let mask = 0;
+      for(let i = 0; i< this.mMemoryTypes.length; i += 1) {
+        let entry = this.mMemoryTypes[i];
+        if ((entry.memoryTypeIndex & category) == category)
+        {
+          mask |= 1 << i;
+        }
+      }
+      return mask;
     }
 
     private pushIndirectEntries(
@@ -42,13 +43,13 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.HOST_CACHED_BIT
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-      let info = new WGLDeviceMemoryInfo();
+      let info = new WGLDeviceMemoryTypeInfo();
       info.index = offset;
       info.isHosted = true;
-      info.memoryTypeIndex = WGLDeviceMemoryCategoryFlagBits.INDIRECT;
+      info.memoryTypeIndex = WGLDeviceMemoryTypeFlagBits.INDIRECT;
       info.propertyFlags = ALL_ON;
       info.hint = 0;
-      this.memoryTypes[info.index] = info;
+      this.mMemoryTypes[info.index] = info;
 
       return offset + 1;
     }
@@ -62,13 +63,13 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.HOST_CACHED_BIT
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-      let info = new WGLDeviceMemoryInfo();
+      let info = new WGLDeviceMemoryTypeInfo();
       info.index = offset;
       info.isHosted = true;
-      info.memoryTypeIndex = WGLDeviceMemoryCategoryFlagBits.IMAGE;
+      info.memoryTypeIndex = WGLDeviceMemoryTypeFlagBits.IMAGE;
       info.propertyFlags = ALL_ON;
       info.hint = 0;
-      this.memoryTypes[info.index] = info;        
+      this.mMemoryTypes[info.index] = info;        
     
       return offset + 1;
     }  
@@ -76,10 +77,10 @@ namespace Magnesium {
     private pushDrawEntries(
       offset: number
     ) : number {
-      const SELECTED_TYPE_INDEX = WGLDeviceMemoryCategoryFlagBits.VERTEX
-        | WGLDeviceMemoryCategoryFlagBits.INDEX
-        | WGLDeviceMemoryCategoryFlagBits.UNIFORM
-        | WGLDeviceMemoryCategoryFlagBits.TRANSFER_SRC;
+      const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.VERTEX
+        | WGLDeviceMemoryTypeFlagBits.INDEX
+        | WGLDeviceMemoryTypeFlagBits.UNIFORM
+        | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
 
       const ALL_ON = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
         | MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
@@ -87,7 +88,7 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.HOST_CACHED_BIT
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-      let info_stream = new WGLDeviceMemoryInfo();
+      let info_stream = new WGLDeviceMemoryTypeInfo();
       info_stream.memoryTypeIndex = SELECTED_TYPE_INDEX;
       info_stream.index = offset;
       info_stream.isHosted = false;
@@ -97,11 +98,11 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
       info_stream.hint = this.mGL.STREAM_DRAW;
-      this.memoryTypes[info_stream.index] = info_stream; 
+      this.mMemoryTypes[info_stream.index] = info_stream; 
 
       offset += 1;
 
-      let info_static = new WGLDeviceMemoryInfo();
+      let info_static = new WGLDeviceMemoryTypeInfo();
       info_static.memoryTypeIndex = SELECTED_TYPE_INDEX;
       info_static.index = offset;
       info_static.isHosted = false;
@@ -111,17 +112,17 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
         
       info_static.hint = this.mGL.STATIC_DRAW;
-      this.memoryTypes[info_static.index] = info_static; 
+      this.mMemoryTypes[info_static.index] = info_static; 
 
       offset += 1;
 
-      let dynamic = new WGLDeviceMemoryInfo();
+      let dynamic = new WGLDeviceMemoryTypeInfo();
       dynamic.memoryTypeIndex = SELECTED_TYPE_INDEX;
       dynamic.index = offset;
       dynamic.isHosted = false;
       dynamic.propertyFlags = ALL_ON;
       dynamic.hint = this.mGL.DYNAMIC_DRAW;
-      this.memoryTypes[dynamic.index] = dynamic;     
+      this.mMemoryTypes[dynamic.index] = dynamic;     
 
       return offset + 1;      
     }
@@ -129,11 +130,11 @@ namespace Magnesium {
     pushReadEntries(
       offset: number
     ) : number {
-        const SELECTED_TYPE_INDEX = WGLDeviceMemoryCategoryFlagBits.VERTEX
-        | WGLDeviceMemoryCategoryFlagBits.INDEX
-        | WGLDeviceMemoryCategoryFlagBits.UNIFORM
-        | WGLDeviceMemoryCategoryFlagBits.TRANSFER_SRC
-        | WGLDeviceMemoryCategoryFlagBits.TRANSFER_SRC;
+        const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.VERTEX
+        | WGLDeviceMemoryTypeFlagBits.INDEX
+        | WGLDeviceMemoryTypeFlagBits.UNIFORM
+        | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
+        | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
 
       const ALL_ON = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
         | MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
@@ -141,7 +142,7 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.HOST_CACHED_BIT
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-      let info_stream = new WGLDeviceMemoryInfo();
+      let info_stream = new WGLDeviceMemoryTypeInfo();
       info_stream.memoryTypeIndex = SELECTED_TYPE_INDEX;
       info_stream.index = offset;
       info_stream.isHosted = false;
@@ -151,11 +152,11 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
       info_stream.hint = this.mGL.STREAM_READ;
-      this.memoryTypes[info_stream.index] = info_stream; 
+      this.mMemoryTypes[info_stream.index] = info_stream; 
 
       offset += 1;
 
-      let info_static = new WGLDeviceMemoryInfo();
+      let info_static = new WGLDeviceMemoryTypeInfo();
       info_static.memoryTypeIndex = SELECTED_TYPE_INDEX;
       info_static.index = offset;
       info_static.isHosted = false;
@@ -165,17 +166,17 @@ namespace Magnesium {
         | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
         
       info_static.hint = this.mGL.STATIC_READ;
-      this.memoryTypes[info_static.index] = info_static; 
+      this.mMemoryTypes[info_static.index] = info_static; 
 
       offset += 1;
 
-      let dynamic = new WGLDeviceMemoryInfo();
+      let dynamic = new WGLDeviceMemoryTypeInfo();
       dynamic.memoryTypeIndex = SELECTED_TYPE_INDEX;
       dynamic.index = offset;
       dynamic.isHosted = false;
       dynamic.propertyFlags = ALL_ON;
       dynamic.hint = this.mGL.DYNAMIC_READ;
-      this.memoryTypes[dynamic.index] = dynamic;  
+      this.mMemoryTypes[dynamic.index] = dynamic;  
 
       return offset + 1;
     }

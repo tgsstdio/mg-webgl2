@@ -5,6 +5,7 @@ namespace Magnesium {
     readonly hosted: ArrayBuffer|null;
     readonly source: WebGLBuffer|null;
     readonly usage: MgBufferUsageFlagBits;
+    readonly memoryType: WGLDeviceMemoryTypeFlagBits;
     readonly requestedSize: number;
     readonly isBufferType: boolean;
   }

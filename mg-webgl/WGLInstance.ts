@@ -4,9 +4,13 @@
 namespace Magnesium {
   export class WGLInstance implements IMgInstance {
     private mDevice: IWGLDevice;
-
-    constructor(device: IWGLDevice) {
+    private mPhysicalDevice: IMgPhysicalDevice;
+    constructor(
+      device: IWGLDevice
+      , physicalDevice: IMgPhysicalDevice
+    ) {
       this.mDevice = device;
+      this.mPhysicalDevice = physicalDevice;
     }
 
     destroyInstance(allocator: IMgAllocationCallbacks|null) : void {
@@ -15,7 +19,7 @@ namespace Magnesium {
 
 		enumeratePhysicalDevices(out : { physicalDevices: Array<IMgPhysicalDevice>} ): MgResult {      
       let devices = new Array<IMgPhysicalDevice>(1);
-      devices[0] = new WGLPhysicalDevice(this.mDevice);
+      devices[0] = this.mPhysicalDevice;
       out.physicalDevices = devices;
       return MgResult.SUCCESS;
     }

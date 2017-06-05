@@ -50,7 +50,7 @@ namespace Magnesium {
 
     allocateMemory(pAllocateInfo : MgMemoryAllocateInfo
       , allocator : IMgAllocationCallbacks|null
-      , out : { pMemory : IMgDeviceMemory } ) : MgResult;
+      , out : { pMemory : IMgDeviceMemory|null } ) : MgResult;
 
 		createImage(pCreateInfo: MgImageCreateInfo
       , allocator: IMgAllocationCallbacks|null
