@@ -1,23 +1,33 @@
 namespace Magnesium {
   export class WGLDeviceMemory implements IWGLDeviceMemory {
     private mGL: WebGL2RenderingContext;
-    private mBufferId: WebGLBuffer|null;;
+    private mBufferId: WebGLBuffer|null;
+    get bufferId(): WebGLBuffer|null {
+      return this.mBufferId;
+    }
+
     private mIsHostCached: boolean;
-    private mBufferType: GLMemoryBufferType;
+    get isHostCached(): boolean {
+      return this.mIsHostCached;
+    }
+
     private mBufferSize: number;
+    get bufferSize(): number {
+      return this.mBufferSize;
+    }
+
     private mHosted: ArrayBuffer|null;
-    private mBufferTarget: GLMemoryBufferType|null;
+    get hosted(): ArrayBuffer|null {
+      return this.mHosted;
+    }
+
+    private mBestTarget: number|null;
+
     constructor(
       gl: WebGL2RenderingContext
       , pAllocateInfo: MgMemoryAllocateInfo
       , deviceMemoryMap: IWGLDeviceMemoryTypeMap            
     ) {
-      this.mGL = gl;
-      this.mBufferType = pAllocateInfo.memoryTypeIndex as GLMemoryBufferType;
-      this.mIsHostCached = 
-        this.mBufferType == GLMemoryBufferType.INDIRECT
-        || this.mBufferType== GLMemoryBufferType.IMAGE;
-      
 			if (pAllocateInfo.allocationSize > Number.MAX_SAFE_INTEGER) {
 				throw new Error("pAllocateInfo.AllocationSize must be <= Number.MAX_SAFE_INTEGER");
 			}      
@@ -26,21 +36,30 @@ namespace Magnesium {
         throw new Error("pAllocateInfo.AllocationSize must be > 0");
       }
 
-  		this.mBufferTarget = this.getBufferTarget(this.mBufferType);
+      this.mGL = gl;
+      
+      let typeIndex = pAllocateInfo.memoryTypeIndex;
+      let slotInfo = deviceMemoryMap.memoryTypes[typeIndex];
+
+      // IF BUFFER IS USED FOR MULTIPLE TARGETS ???
+        // HOPEFULLY INDIRECT AND IMAGE ARE ISOLATED BUFFER
+      const IS_HOSTED = WGLDeviceMemoryTypeFlagBits.INDIRECT 
+        | WGLDeviceMemoryTypeFlagBits.IMAGE;
+
+  		this.mBestTarget = this.getEstimatedBufferTarget(slotInfo.memoryTypeIndex);
       this.mBufferSize = pAllocateInfo.allocationSize;
+      this.mIsHostCached = (typeIndex & IS_HOSTED) == IS_HOSTED;
 
       if (this.mIsHostCached) {
         this.mHosted = new ArrayBuffer(this.mBufferSize);
         this.mBufferId = null;
       }
-      else if (this.mBufferTarget != null) {
+      else if (this.mBestTarget != null) {
         this.mBufferId = this.mGL.createBuffer();
 
-        let target = this.mBufferTarget as number;
+        let target = this.mBestTarget as number;
         this.mGL.bindBuffer(target, this.mBufferId);
 
-        let typeIndex = pAllocateInfo.memoryTypeIndex;
-        let slotInfo = deviceMemoryMap.memoryTypes[typeIndex];
         let flags = slotInfo.hint; 
 
         this.mGL.bufferData(target, this.mBufferSize, flags);
@@ -48,46 +67,92 @@ namespace Magnesium {
         this.mHosted = null;
       }
     }
-
-    private getMemoryFlags(
-      bufferType: GLMemoryBufferType
-    ) : number {
-      return 0;
-    }
     
-		private getBufferTarget(
-      bufferType: GLMemoryBufferType
+		private getEstimatedBufferTarget(
+      flags: number
     ) : number|null {
-			switch(bufferType)
-			{
-			case GLMemoryBufferType.INDEX:
-				return this.mGL.ELEMENT_ARRAY_BUFFER;
-			case GLMemoryBufferType.VERTEX:
-				return this.mGL.ARRAY_BUFFER;
-      case GLMemoryBufferType.TRANSFER_SRC:
+			
+      let mask = WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
+      if ((flags & mask) == mask)
         return this.mGL.COPY_READ_BUFFER;
-      case GLMemoryBufferType.TRANSFER_DST:
-        return this.mGL.COPY_WRITE_BUFFER;
-      case GLMemoryBufferType.UNIFORM:
+
+      mask = WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
+      if ((flags & mask) == mask)        
+        return this.mGL.COPY_WRITE_BUFFER;        
+
+      mask = WGLDeviceMemoryTypeFlagBits.INDEX;
+      if ((flags & mask) == mask) 
+				return this.mGL.ELEMENT_ARRAY_BUFFER;
+
+      mask = WGLDeviceMemoryTypeFlagBits.VERTEX;
+      if ((flags & mask) == mask)        
+				return this.mGL.ARRAY_BUFFER;
+
+      mask = WGLDeviceMemoryTypeFlagBits.UNIFORM;
+      if ((flags & mask) == mask)        
         return this.mGL.UNIFORM_BUFFER;
-      default:
-				return null;
-			}
+
+  		return null;		
 		}    
 
-    freeMemory(device : IMgDevice, allocator : IMgAllocationCallbacks|null) : never
-    {
-      throw new Error('not implemented');
+    private mIsDisposed: boolean = false;
+    freeMemory(
+      device : IMgDevice
+      , allocator : IMgAllocationCallbacks|null
+    ) : void {
+			if (this.mIsDisposed)
+				return;
+
+			if (this.mIsHostCached) {	
+				this.mHosted = null;
+			}
+			else {        
+				this.mGL.deleteBuffer(this.mBufferId);
+			}
+
+			this.mIsDisposed = true;
     }
     // WARN : offset requires UInt64
     // WARN : size requires UInt64
-		mapMemory(device : IMgDevice, offset : number, size: number, flags: number, out : { ppData : object } 
-    ) : never {
-      throw new Error('not implemented');
+    private mMappedCache: WGLClientMappedMemory|null = null;
+		mapMemory(
+      device : IMgDevice
+      , offset : number
+      , size: number
+      , flags: number
+      , out : { ppData : ArrayBufferView|null } 
+    ) : MgResult {
+      let buffer : ArrayBuffer =
+        (this.mIsHostCached) 
+          ? this.mHosted as ArrayBuffer
+          : new ArrayBuffer(size);
+      let viewOffset = (this.mIsHostCached)
+        ? offset
+        : 0;
+      let view = new DataView(buffer, viewOffset, size);
+      this.mMappedCache
+        = new WGLClientMappedMemory(
+          buffer
+          , offset
+          , size          
+          , view);
+
+      out.ppData = view;
+      return MgResult.SUCCESS;
     }    
 
-		unmapMemory(device : IMgDevice) : never {
-      throw new Error('not implemented');
+		unmapMemory(device : IMgDevice) : void {      
+      if (this.mMappedCache != null) {
+
+        if (!this.mIsHostCached) {
+          let target = this.mBestTarget as number;
+          let cache = this.mMappedCache as WGLClientMappedMemory;
+          this.mGL.bindBuffer(target, this.mBufferId);
+          this.mGL.bufferSubData(target, cache.offset, cache.view, cache.size);
+        }
+
+        this.mMappedCache = null;
+      }
     }    
   }
 }
