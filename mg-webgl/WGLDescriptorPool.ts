@@ -70,47 +70,47 @@ namespace Magnesium {
 			return MgResult.SUCCESS;
     }
 
-    private mStorageBuffers: WGLDescriptorPoolResource<GLBufferDescriptor>;
+    private mStorageBuffers: WGLDescriptorPoolResource<WGLBufferDescriptor>;
 		private setupStorageBuffers(noOfStorageBuffers: number): void {
-			let buffers = new Array<GLBufferDescriptor>(noOfStorageBuffers);
+			let buffers = new Array<WGLBufferDescriptor>(noOfStorageBuffers);
 			for (let i = 0; i < noOfStorageBuffers; i += 1) {
-				buffers[i] = new GLBufferDescriptor();
+				buffers[i] = new WGLBufferDescriptor();
 			}
 
-			this.mStorageBuffers = new WGLDescriptorPoolResource<GLBufferDescriptor>(
+			this.mStorageBuffers = new WGLDescriptorPoolResource<WGLBufferDescriptor>(
 				noOfStorageBuffers
         ,	buffers);
 		}
 
-    private mCombinedImageSamplers: WGLDescriptorPoolResource<GLImageDescriptor>;
+    private mCombinedImageSamplers: WGLDescriptorPoolResource<WGLImageDescriptor>;
     private setupCombinedImageSamplers(
       entrypoint: IWGLImageDescriptorEntrypoint
       , noOfCombinedImageSamplers: number
     ) : void {
-      let cis = new Array<GLImageDescriptor>(noOfCombinedImageSamplers);
+      let cis = new Array<WGLImageDescriptor>(noOfCombinedImageSamplers);
 			for (let i = 0; i < noOfCombinedImageSamplers; i += 1) {
-				cis[i] = new GLImageDescriptor(entrypoint);
+				cis[i] = new WGLImageDescriptor(entrypoint);
 			}
-			this.mCombinedImageSamplers = new WGLDescriptorPoolResource<GLImageDescriptor>(
+			this.mCombinedImageSamplers = new WGLDescriptorPoolResource<WGLImageDescriptor>(
 				noOfCombinedImageSamplers
         ,	cis);
     }
 
-    private mUniformBuffers: WGLDescriptorPoolResource<GLBufferDescriptor>;
+    private mUniformBuffers: WGLDescriptorPoolResource<WGLBufferDescriptor>;
     private setupUniformBlocks(noOfUniformBlocks: number) : void {
-      let blocks = new Array<GLBufferDescriptor>(noOfUniformBlocks);
+      let blocks = new Array<WGLBufferDescriptor>(noOfUniformBlocks);
       for (let i = 0; i < noOfUniformBlocks; i += 1) {
-        blocks[i] = new GLBufferDescriptor();
+        blocks[i] = new WGLBufferDescriptor();
       }
 
-			this.mUniformBuffers = new WGLDescriptorPoolResource<GLBufferDescriptor>(
+			this.mUniformBuffers = new WGLDescriptorPoolResource<WGLBufferDescriptor>(
 				noOfUniformBlocks
         ,	blocks);
     }
 
-    readonly combinedImageSamplers: IGLDescriptorPoolResource<GLImageDescriptor>;
-    readonly uniformBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
-    readonly storageBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
+    readonly combinedImageSamplers: IGLDescriptorPoolResource<WGLImageDescriptor>;
+    readonly uniformBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
+    readonly storageBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
 
 		resetResource(resourceInfo: GLDescriptorPoolResourceInfo) : void {
 			if (resourceInfo != null)	{

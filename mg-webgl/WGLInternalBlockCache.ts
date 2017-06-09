@@ -6,6 +6,9 @@
 namespace Magnesium {
   export class WGLInternalBlockCache {
     private mBlockBindings: Array<WGLInternalCacheBlockBinding>;
+    get blockBindings(): Array<WGLInternalCacheBlockBinding> {
+      return this.mBlockBindings;
+    }
 
     private mArrayMapper: WGLInternalCacheArrayMapper;
     constructor

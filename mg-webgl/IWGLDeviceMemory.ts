@@ -1,12 +1,11 @@
-/// <reference path="GLMemoryBufferType.ts" />
 /// <reference path="../mg/IMgDeviceMemory.ts" />
 
 namespace Magnesium {
   export interface IWGLDeviceMemory extends IMgDeviceMemory {
-    // bufferType: GLMemoryBufferType;
-    // bufferSize: number;
-    // bufferId: number;
+    readonly bufferSize: number;
+    readonly isHostCached: boolean;
+    readonly bufferId: WebGLBuffer|null;
     // // WARN: handle requires IntPtr
-    // handle: any;
+    readonly handle: ArrayBuffer| null;
   }
 }

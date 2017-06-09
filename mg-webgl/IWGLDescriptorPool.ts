@@ -6,9 +6,9 @@ namespace Magnesium {
     readonly maxSets: number;
     readonly allocatedSets: Map<number, IWGLDescriptorSet>;
 
-    readonly combinedImageSamplers: IGLDescriptorPoolResource<GLImageDescriptor>;
-    readonly uniformBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
-    readonly storageBuffers: IGLDescriptorPoolResource<GLBufferDescriptor>;
+    readonly combinedImageSamplers: IGLDescriptorPoolResource<WGLImageDescriptor>;
+    readonly uniformBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
+    readonly storageBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
 
 		resetResource(resource: GLDescriptorPoolResourceInfo) : void;
 

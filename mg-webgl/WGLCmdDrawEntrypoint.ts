@@ -58,9 +58,9 @@ namespace Magnesium {
             (indirect.usage & INDIRECT_BIT) == INDIRECT_BIT
           ) 
           // JUST CHECK IF HOST IS NOT NULL
-          && indirect.hosted != null
+          && indirect.hostMemory != null
       ) {
-        let hosted = indirect.hosted as ArrayBuffer;
+        let hosted = indirect.hostMemory as ArrayBuffer;
         let byteOffset = offset;
         for(let i = 0; i < drawCount; i += 1) {
           let indirectArray = new Uint32Array(
@@ -110,9 +110,9 @@ namespace Magnesium {
             (indirect.usage & INDIRECT_BIT) == INDIRECT_BIT
           ) 
           // JUST CHECK IF HOST IS NOT NULL
-          && indirect.hosted != null
+          && indirect.hostMemory != null
       ) {
-        let hosted = indirect.hosted as ArrayBuffer;
+        let hosted = indirect.hostMemory as ArrayBuffer;
         let startingOffset = offset;
 
         for(let i = 0; i < drawCount; i += 1) {

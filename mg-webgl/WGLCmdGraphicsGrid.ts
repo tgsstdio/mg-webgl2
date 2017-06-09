@@ -1,4 +1,4 @@
-/// <reference path="GLCmdVertexBufferObject.ts" />
+/// <reference path="WGLCmdVertexBufferObject.ts" />
 /// <reference path="WGLCmdInternalDrawIndexed.ts" />
 /// <reference path="WGLCmdScissorParameter.ts" />
 /// <reference path="WGLCmdBeginRenderpassRecord.ts" />

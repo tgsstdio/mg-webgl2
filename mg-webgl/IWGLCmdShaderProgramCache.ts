@@ -1,6 +1,6 @@
 namespace Magnesium {
 	export interface IWGLCmdShaderProgramCache {
-		readonly programID: WebGLProgram;
+		readonly programID: WebGLProgram|null;
     setProgramID(
       bindingPoint: MgPipelineBindPoint
       , programID: WebGLProgram
@@ -8,7 +8,7 @@ namespace Magnesium {
       , pipelineLayout: IWGLPipelineLayout
     ) : void;
 
-    readonly vao: WebGLVertexArrayObject;
+    readonly vao: WebGLVertexArrayObject|null;
 		setVAO(vertexArray: WebGLVertexArrayObject) : void;
     setDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void;
   }

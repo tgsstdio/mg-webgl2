@@ -1,13 +1,13 @@
 namespace Magnesium {
   export class WGLBuffer implements IWGLBuffer {
-    private mHosted: ArrayBuffer;
-    get hosted(): ArrayBuffer {
-      return this.mHosted;
+    private mHostMemory: ArrayBuffer|null;
+    get hostMemory(): ArrayBuffer|null {
+      return this.mHostMemory;
     }
 
-    private mSource: WebGLBuffer|null;
-    get source(): WebGLBuffer|null {
-      return this.mSource;
+    private mDeviceMemory: WebGLBuffer|null;
+    get deviceMemory(): WebGLBuffer|null {
+      return this.mDeviceMemory;
     }
 
     private mUsage: MgBufferUsageFlagBits;
@@ -92,6 +92,11 @@ namespace Magnesium {
         return ((info.usage & IS_BUFFER_TYPE) != 0);
     } 
 
+    private mMemoryOffset: number = 0;
+    get memoryOffset(): number {
+      return this.mMemoryOffset;
+    }
+
     // WARN: memoryOffset requires UInt64
 		bindBufferMemory(
         device: IMgDevice
@@ -99,24 +104,24 @@ namespace Magnesium {
       , memoryOffset: number
     ) : MgResult {
       // TODO : figure this out
+      let bDevMemory = memory as IWGLDeviceMemory;
+
+      this.mMemoryOffset = memoryOffset;
+      if (bDevMemory.isHostCached) {
+        this.mHostMemory = bDevMemory.handle;
+      }
+      else {
+        this.mDeviceMemory = bDevMemory.bufferId;
+      }
+
       return MgResult.SUCCESS;
     }
 
-    private mIsDisposed: boolean = false;
 		destroyBuffer(
       device: IMgDevice
       , allocator: IMgAllocationCallbacks|null
     ) : void {
-			if (this.mIsDisposed)
-				return;
-
-      if (this.mIsBufferType) {
-        if (this.mSource != null) {
-          this.mGL.deleteBuffer(this.mSource);
-        }
-      }
-
-			this.mIsDisposed = true;
+      
 		}    
   }
 }

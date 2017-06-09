@@ -89,7 +89,7 @@ namespace Magnesium {
             (buffer.usage & MgBufferUsageFlagBits.VERTEX_BUFFER_BIT)
               == MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
           ) {
-              bufferIds[i] = buffer.source;
+              bufferIds[i] = buffer.deviceMemory;
               offsets[i] = (vertexData.pOffsets != null) ? vertexData.pOffsets[i] : 0;
           }
           else {

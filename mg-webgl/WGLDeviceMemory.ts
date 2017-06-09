@@ -16,9 +16,9 @@ namespace Magnesium {
       return this.mBufferSize;
     }
 
-    private mHosted: ArrayBuffer|null;
-    get hosted(): ArrayBuffer|null {
-      return this.mHosted;
+    private mHandle: ArrayBuffer|null;
+    get handle(): ArrayBuffer|null {
+      return this.mHandle;
     }
 
     private mBestTarget: number|null;
@@ -51,7 +51,7 @@ namespace Magnesium {
       this.mIsHostCached = (typeIndex & IS_HOSTED) == IS_HOSTED;
 
       if (this.mIsHostCached) {
-        this.mHosted = new ArrayBuffer(this.mBufferSize);
+        this.mHandle = new ArrayBuffer(this.mBufferSize);
         this.mBufferId = null;
       }
       else if (this.mBestTarget != null) {
@@ -64,7 +64,7 @@ namespace Magnesium {
 
         this.mGL.bufferData(target, this.mBufferSize, flags);
 
-        this.mHosted = null;
+        this.mHandle = null;
       }
     }
     
@@ -104,7 +104,7 @@ namespace Magnesium {
 				return;
 
 			if (this.mIsHostCached) {	
-				this.mHosted = null;
+				this.mHandle = null;
 			}
 			else {        
 				this.mGL.deleteBuffer(this.mBufferId);
@@ -124,7 +124,7 @@ namespace Magnesium {
     ) : MgResult {
       let buffer : ArrayBuffer =
         (this.mIsHostCached) 
-          ? this.mHosted as ArrayBuffer
+          ? this.mHandle as ArrayBuffer
           : new ArrayBuffer(size);
       let viewOffset = (this.mIsHostCached)
         ? offset
