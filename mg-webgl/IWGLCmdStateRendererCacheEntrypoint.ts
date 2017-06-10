@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export interface IWGLCmdShaderProgramEntrypoint {
+  export interface IWGLCmdStateRendererCacheEntrypoint {
     bindVAO(vao: WebGLVertexArrayObject|null): void;
     bindProgram(programID:WebGLProgram|null) : void;
     setUniformBlock(programID:WebGLProgram

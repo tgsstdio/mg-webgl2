@@ -30,12 +30,15 @@ namespace Magnesium {
 
     private mGL : WebGL2RenderingContext;
     private mDraws: IWGLCmdDrawEntrypoint;
+    private mCache: IWGLCmdShaderProgramCache;    
     constructor(
       gl: WebGL2RenderingContext
       , draws: IWGLCmdDrawEntrypoint
+      , cache: IWGLCmdShaderProgramCache
     ) {
       this.mGL = gl;
       this.mDraws = draws;
+      this.mCache = cache;
     }
 
     initialize() : void {
@@ -96,7 +99,6 @@ namespace Magnesium {
       this.updateDynamicStates(pipelineInfo);      
     }
 
-    private mCache: IWGLCmdShaderProgramCache;
     private setupStatePipelineSettings(pipelineInfo: WGLCmdBoundPipelineRecordInfo) : void
     {
         // Static pipeline stuff such as depth test enabled

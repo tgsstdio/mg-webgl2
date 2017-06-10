@@ -1,6 +1,8 @@
+/// <reference path="IWGLCmdStateRendererCacheEntrypoint.ts" />
+
 namespace Magnesium {
-  export class WGLCmdShaderProgramEntrypoint
-    implements IWGLCmdShaderProgramEntrypoint {
+  export class WGLCmdStateRendererCacheEntrypoint
+    implements IWGLCmdStateRendererCacheEntrypoint {
 
     private mGL: WebGL2RenderingContext;
     constructor(gl:WebGL2RenderingContext) {

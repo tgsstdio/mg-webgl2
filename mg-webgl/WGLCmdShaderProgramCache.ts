@@ -10,8 +10,8 @@ namespace Magnesium {
     }
     private mBoundDescriptorSets: WGLCmdDescriptorSetParameter;
 
-    private mEntrypoint: IWGLCmdShaderProgramEntrypoint;
-    constructor(entrypoint: IWGLCmdShaderProgramEntrypoint) {
+    private mEntrypoint: IWGLCmdStateRendererCacheEntrypoint;
+    constructor(entrypoint: IWGLCmdStateRendererCacheEntrypoint) {
       this.mEntrypoint = entrypoint;
     }
 
