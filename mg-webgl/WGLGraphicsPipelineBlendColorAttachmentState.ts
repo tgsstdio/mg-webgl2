@@ -3,7 +3,7 @@
 /// <reference path="../mg/MgBlendOp.ts" />
 
 namespace Magnesium {
-  export class GLGraphicsPipelineBlendColorAttachmentState {
+  export class WGLGraphicsPipelineBlendColorAttachmentState {
     blendEnable: boolean;
     srcColorBlendFactor: MgBlendFactor;
     dstColorBlendFactor: MgBlendFactor;
@@ -13,7 +13,7 @@ namespace Magnesium {
     alphaBlendOp: MgBlendOp;
     colorWriteMask: MgColorComponentFlagBits;
 
-		equals (other: GLGraphicsPipelineBlendColorAttachmentState) : boolean
+		equals (other: WGLGraphicsPipelineBlendColorAttachmentState) : boolean
 		{
 			return this.blendEnable == other.blendEnable
 				&& this.colorBlendOp == other.colorBlendOp

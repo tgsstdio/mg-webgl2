@@ -139,12 +139,12 @@ namespace Magnesium {
 				this.mColorBlendEnums.logicOp = colorBlend.logicOp;
 
 				if (colorBlend.attachments != null)	{
-					let colorAttachments = new Array<GLGraphicsPipelineBlendColorAttachmentState>(colorBlend.attachments.length);
+					let colorAttachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(colorBlend.attachments.length);
 
 					for(let i = 0; i < colorBlend.attachments.length; i += 1)	{
 						let src = colorBlend.attachments[i];
 
-						let dst = new GLGraphicsPipelineBlendColorAttachmentState();
+						let dst = new WGLGraphicsPipelineBlendColorAttachmentState();
 						dst.blendEnable = src.blendEnable;
 						dst.srcColorBlendFactor = src.srcColorBlendFactor;
 						dst.dstColorBlendFactor = src.dstColorBlendFactor;
@@ -159,12 +159,12 @@ namespace Magnesium {
 					this.mColorBlendEnums.attachments = colorAttachments;
 				}
 				else {
-					this.mColorBlendEnums.attachments = new Array<GLGraphicsPipelineBlendColorAttachmentState>(0);
+					this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(0);
 				}
 			} 
 			else {
 				this.mBlendConstants = new MgColor4f( 0, 0, 0, 0 );
-				this.mColorBlendEnums.attachments = new Array<GLGraphicsPipelineBlendColorAttachmentState>(0);
+				this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(0);
 
 				this.mColorBlendEnums.logicOpEnable = false;
 				this.mColorBlendEnums.logicOp = MgLogicOp.COPY;

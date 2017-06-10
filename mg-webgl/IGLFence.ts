@@ -3,5 +3,6 @@ namespace Magnesium {
     readonly isSignalled: boolean;
     reset() : void;
     beginSync() : void;
+    isReady(timeInNanoSecs: number) : boolean;
   }
 }
