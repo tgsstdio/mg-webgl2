@@ -1,9 +1,9 @@
 namespace Magnesium {
   export class WGLPresentationSurface 
     implements IMgPresentationSurface {    
-    private mCanvas: string;
-    constructor(elementName: string) {
-      this.mCanvas = elementName;
+    private mCanvas: HTMLCanvasElement;
+    constructor(canvas: HTMLCanvasElement) {
+      this.mCanvas = canvas;
     }
 
     initialize(width: number, height: number) : void {

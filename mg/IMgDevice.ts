@@ -101,8 +101,8 @@ namespace Magnesium {
       , pDescriptorSets: Array<IMgDescriptorSet>) : MgResult;
 
 		updateDescriptorSets(
-      pDescriptorWrites: Array<MgWriteDescriptorSet>
-      , pDescriptorCopies: Array<MgCopyDescriptorSet>) : void;
+      pDescriptorWrites: Array<MgWriteDescriptorSet>|null
+      , pDescriptorCopies: Array<MgCopyDescriptorSet>|null) : void;
 
 		createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
       , allocator: IMgAllocationCallbacks|null
@@ -124,10 +124,10 @@ namespace Magnesium {
 
 		createSwapchainKHR(pCreateInfo: MgSwapchainCreateInfoKHR
       , allocator: IMgAllocationCallbacks|null
-      , out: { pSwapchain : IMgSwapchainKHR }) : MgResult;
+      , out: { pSwapchain : IMgSwapchainKHR|null }) : MgResult;
 
 		getSwapchainImagesKHR(swapchain: IMgSwapchainKHR
-      , out: { pSwapchainImages: Array<IMgImage>} ) : MgResult;
+      , out: { pSwapchainImages: Array<IMgImage>|null} ) : MgResult;
 
     // WARN: timeout requires UInt64
 		acquireNextImageKHR(swapchain: IMgSwapchainKHR
@@ -136,11 +136,11 @@ namespace Magnesium {
 
 		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
        , allocator: IMgAllocationCallbacks|null
-       , out: { pSemaphore: IMgSemaphore }) : MgResult;     
+       , out: { pSemaphore: IMgSemaphore|null }) : MgResult;     
 
 		createFence(pCreateInfo: MgFenceCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { fence: IMgFence})  : MgResult;
+      , out: { fence: IMgFence|null})  : MgResult;
 
 		resetFences(pFences: Array<IMgFence>) : MgResult;
 
@@ -150,5 +150,10 @@ namespace Magnesium {
 		waitForFences(pFences: Array<IMgFence>
       , waitAll: boolean
       , timeout: number) : MgResult;
+
+    getBufferMemoryRequirements (
+      buffer: IMgBuffer
+      , out: { pMemoryRequirements: MgMemoryRequirements|null}
+    ) : void;
   }
 }

@@ -476,5 +476,9 @@ namespace Magnesium {
     ) : never {
       throw new Error("ERROR: not implemented");
     }
+
+    createBuffer() : void {
+
+    }
   }
 }
