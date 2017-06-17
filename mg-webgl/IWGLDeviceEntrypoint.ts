@@ -1,7 +1,3 @@
-/// <reference path="IWGLDeviceMemoryEntrypoint.ts" />
-/// <reference path="IWGLDeviceImageEntrypoint.ts" />
-/// <reference path="IWGLGraphicsPipelineCompiler.ts" />
-
 namespace Magnesium {
   export interface IWGLDeviceEntrypoint {
     readonly deviceMemory : IWGLDeviceMemoryEntrypoint;
@@ -15,5 +11,6 @@ namespace Magnesium {
     readonly imageFormat: IWGLImageFormatEntrypoint;
     readonly semaphores: IWGLSemaphoreEntrypoint;
     readonly fences: IWGLFenceEntrypoint;
+    readonly buffers: IWGLBufferEntrypoint;
   }
 }

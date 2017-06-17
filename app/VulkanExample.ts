@@ -29,19 +29,19 @@ namespace TriangleDemo {
   }
 
   class UniformBufferObject {
-    projectionMatrix: Matrix4;
-    modelMatrix: Matrix4;
-    viewMatrix: Matrix4;
+    projectionMatrix: Array<number>;
+    modelMatrix: Array<number>;
+    viewMatrix: Array<number>;
   }
 
   class StagingBuffer {
-    memory: Magnesium.IMgDeviceMemory|null;
-    buffer: Magnesium.IMgBuffer|null;
+    memory: Magnesium.IMgDeviceMemory;
+    buffer: Magnesium.IMgBuffer;
   }
 
   class TriangleVertex {
-    position: Vector3;
-    color: Vector3;
+    position: Array<number>;
+    color: Array<number>;
   }
 
   export class VulkanExample {
@@ -244,6 +244,463 @@ namespace TriangleDemo {
       }
     }
 
+    private prepareStagingVertices(
+      vertexBuffer: Array<TriangleVertex>
+      , vertexBufferSize: number
+    ): StagingBuffer {
+      // HOST_VISIBLE STAGING Vertex buffer
+      
+      let vertexBufferInfo = new Magnesium.MgBufferCreateInfo();
+      vertexBufferInfo.size = vertexBufferSize;
+      // Buffer is used as the copy source
+      vertexBufferInfo.usage = Magnesium.MgBufferUsageFlagBits.TRANSFER_SRC_BIT;          
+
+      // Create a host-visible buffer to copy the vertex data to (staging buffer)
+      let outBuffer 
+        : {pBuffer:Magnesium.IMgBuffer|null}
+        = {pBuffer:null};
+      let err = this.mConfiguration.device.createBuffer(vertexBufferInfo, null, outBuffer );
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      let sb = new StagingBuffer;
+      sb.buffer = outBuffer.pBuffer as Magnesium.IMgBuffer;
+
+      let outMemReq 
+        : {pMemoryRequirements:Magnesium.MgMemoryRequirements|null}
+        = {pMemoryRequirements:null};
+        this.mConfiguration.device.getBufferMemoryRequirements(
+          sb.buffer
+          , outMemReq);       
+
+      // Request a host visible memory type that can be used to copy our data do
+      // Also request it to be coherent, so that writes are visible to the GPU right after unmapping the buffer
+      let memReqs = outMemReq.pMemoryRequirements as Magnesium.MgMemoryRequirements;
+      let outTypeIndex = {typeIndex:0};
+      let isValid: boolean = this.mConfiguration.partition.getMemoryType(
+        memReqs.memoryTypeBits
+        , Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+          | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+        , outTypeIndex);
+
+      if (!isValid) {
+        throw new Error('getMemoryType');
+      }
+
+      let memAlloc = new Magnesium.MgMemoryAllocateInfo();        
+      memAlloc.allocationSize = memReqs.size;
+      memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
+
+      let outMemory 
+        : {pMemory:Magnesium.IMgDeviceMemory|null}
+        = {pMemory:null};
+      err = this.mConfiguration.device.allocateMemory(
+        memAlloc
+        , null
+        , outMemory);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      sb.memory = outMemory.pMemory as Magnesium.IMgDeviceMemory;        
+
+      // Map and copy
+      let outData
+        : {ppData:ArrayBufferView|null}
+        = {ppData:null};
+      err = sb.memory.mapMemory(
+        this.mConfiguration.device
+        , 0
+        , memAlloc.allocationSize
+        , 0
+        , outData);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      // TODO: something here
+      // let offset = 0;
+      // for (let vertex of vertexBuffer) {
+      //   IntPtr dest = IntPtr.Add(data, offset);
+      //   Marshal.StructureToPtr(vertex, dest, false);
+      //   offset += structSize;
+      // }
+
+      sb.memory.unmapMemory(
+        this.mConfiguration.device);
+
+      sb.buffer.bindBufferMemory(
+        this.mConfiguration.device
+        , sb.memory
+        , 0);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err);
+      }
+      return sb;
+    }
+
+    // DEVICE_LOCAL Vertex buffer
+    private setupDeviceLocalVertices(
+      vertexBufferSize: number
+    ): void {
+      let vertexBufferInfo = new Magnesium.MgBufferCreateInfo();
+      vertexBufferInfo.size = vertexBufferSize;
+      // Create a device local buffer to which the (host local) vertex data will be copied and which will be used for rendering
+      vertexBufferInfo.usage = 
+        Magnesium.MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
+        | Magnesium.MgBufferUsageFlagBits.TRANSFER_DST_BIT;
+
+      let outVertex
+        : { pBuffer:Magnesium.IMgBuffer|null}
+        = { pBuffer:null };
+      let err = this.mConfiguration.device.createBuffer(
+        vertexBufferInfo
+        , null
+        , outVertex);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.vertices.buffer = outVertex.pBuffer as Magnesium.IMgBuffer;
+
+      let outMemReqs
+       : {pMemoryRequirements:Magnesium.MgMemoryRequirements|null} 
+       = {pMemoryRequirements:null};
+      this.mConfiguration.device.getBufferMemoryRequirements(
+        this.vertices.buffer, outMemReqs);
+      let memReqs = outMemReqs.pMemoryRequirements as Magnesium.MgMemoryRequirements;
+
+      let outTypeIndex 
+        : {typeIndex:number}
+        = {typeIndex:0};
+      let isValid = this.mConfiguration.partition.getMemoryType(
+        memReqs.memoryTypeBits
+        , Magnesium.MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+        , outTypeIndex);
+      if (!isValid) {
+        throw new Error('getMemoryType');
+      }
+
+      let memAlloc = new Magnesium.MgMemoryAllocateInfo();
+      memAlloc.allocationSize = memReqs.size;
+      memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
+
+      let outMemory
+        : {pMemory:Magnesium.IMgDeviceMemory|null}
+        = {pMemory:null};
+      err = this.mConfiguration.device.allocateMemory(
+        memAlloc
+        , null
+        , outMemory);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.vertices.memory = outMemory.pMemory as Magnesium.IMgDeviceMemory;
+
+      err = this.vertices.buffer.bindBufferMemory(
+        this.mConfiguration.device
+        , this.vertices.memory
+        , 0);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+    }
+
+    // HOST_VISIBLE Index buffer
+    private prepareStagingIndices(
+      indexBufferSize: number
+    ) : StagingBuffer {
+      let indexbufferInfo = new Magnesium.MgBufferCreateInfo();
+      indexbufferInfo.size = indexBufferSize;
+      indexbufferInfo.usage = Magnesium.MgBufferUsageFlagBits.TRANSFER_SRC_BIT;
+
+      // Copy index data to a buffer visible to the host (staging buffer)
+      let outBuffer 
+        : {pBuffer:Magnesium.IMgBuffer|null}
+        = {pBuffer:null};
+      let err = this.mConfiguration.device.createBuffer(
+        indexbufferInfo
+        , null
+        , outBuffer);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      let sb = new StagingBuffer();
+      sb.buffer = outBuffer.pBuffer as Magnesium.IMgBuffer;
+
+      let outMemReqs
+        : {pMemoryRequirements:Magnesium.MgMemoryRequirements|null}
+        = {pMemoryRequirements:null};
+      this.mConfiguration.device.getBufferMemoryRequirements(
+        sb.buffer
+        , outMemReqs);
+      let memReqs = outMemReqs.pMemoryRequirements as Magnesium.MgMemoryRequirements;
+
+      let outTypeIndex
+        : {typeIndex:number}
+        = {typeIndex:0};
+      let isValid = this.mConfiguration.partition.getMemoryType(
+        memReqs.memoryTypeBits
+        , Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+         | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+        ,outTypeIndex);
+      if (!isValid) {
+        throw new Error('getMemoryType');
+      }
+
+      let memAlloc = new Magnesium.MgMemoryAllocateInfo();
+      memAlloc.allocationSize = memReqs.size;
+      memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
+
+      let outMemory
+        : {pMemory:Magnesium.IMgDeviceMemory|null}         
+        = {pMemory:null};
+      err = this.mConfiguration.device.allocateMemory(
+        memAlloc
+        , null
+        , outMemory);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      sb.memory = outMemory.pMemory as Magnesium.IMgDeviceMemory;
+
+      let outData
+        : {ppData: ArrayBufferView|null}
+        = {ppData: null};
+      err = sb.memory.mapMemory(
+        this.mConfiguration.device
+        , 0
+        , indexBufferSize
+        , 0
+        , outData);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      let data = outData.ppData as ArrayBufferView;
+
+      let uintBuffer = new Uint8Array(indexBufferSize);
+
+      // TODO: copy here
+      // let bufferSize = indexBufferSize;
+      // Buffer.BlockCopy(indexBuffer, 0, uintBuffer, 0, bufferSize);
+      // Marshal.Copy(uintBuffer, 0, outData, bufferSize);
+
+      sb.memory.unmapMemory(this.mConfiguration.device);
+
+      err = sb.buffer.bindBufferMemory(
+        this.mConfiguration.device
+        , sb.memory
+        , 0);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      return sb;
+    }
+
+    // DEVICE_LOCAL index buffer
+    private setupDeviceLocalIndices(
+      indexBufferSize: number
+    ) : void {
+      // Create destination buffer with device only visibility
+      let indexbufferInfo = new Magnesium.MgBufferCreateInfo();
+      indexbufferInfo.size = indexBufferSize;
+      indexbufferInfo.usage = 
+        Magnesium.MgBufferUsageFlagBits.INDEX_BUFFER_BIT
+        | Magnesium.MgBufferUsageFlagBits.TRANSFER_DST_BIT;
+
+      let outBuffer
+        : {pBuffer:Magnesium.IMgBuffer|null}
+        = {pBuffer:null};
+      let err = this.mConfiguration.device.createBuffer(
+        indexbufferInfo
+        , null
+        , outBuffer);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.indices.buffer = outBuffer.pBuffer as Magnesium.IMgBuffer;
+
+      let outMemReqs
+        : {pMemoryRequirements:Magnesium.MgMemoryRequirements|null}
+        = {pMemoryRequirements:null};
+      this.mConfiguration.device.getBufferMemoryRequirements(
+        this.indices.buffer
+        , outMemReqs);
+
+      let memReqs
+        = outMemReqs.pMemoryRequirements as Magnesium.MgMemoryRequirements;
+      let outTypeIndex
+        : {typeIndex:number}
+        = {typeIndex:0};
+      let isValid = this.mConfiguration.partition.getMemoryType(
+        memReqs.memoryTypeBits
+        , Magnesium.MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+        , outTypeIndex);
+      if (!isValid) {
+        throw new Error('getMemoryType');
+      }
+
+      let memAlloc = new Magnesium.MgMemoryAllocateInfo();
+      memAlloc.allocationSize = memReqs.size;
+      memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
+
+      let outMemory
+        : {pMemory:Magnesium.IMgDeviceMemory|null}
+        = {pMemory:null};
+      err = this.mConfiguration.device.allocateMemory(
+        memAlloc
+        , null
+        , outMemory);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.indices.memory
+        = outMemory.pMemory as Magnesium.IMgDeviceMemory;
+
+      err = this.indices.buffer.bindBufferMemory(
+        this.mConfiguration.device
+        , this.indices.memory
+        , 0);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+    }
+
+    // Get a new command buffer from the command pool
+    // If begin is true, the command buffer is also started so we can start adding commands
+    private getCommandBuffer(begin: boolean) : Magnesium.IMgCommandBuffer {
+      let buffers = new Array<Magnesium.IMgCommandBuffer>(1);
+
+      let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo();
+      cmdBufAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
+      cmdBufAllocateInfo.level =  Magnesium.MgCommandBufferLevel.PRIMARY,
+      cmdBufAllocateInfo.commandBufferCount = 1;
+
+      let err = this.mConfiguration.device.allocateCommandBuffers(
+        cmdBufAllocateInfo
+        , buffers);
+
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      let cmdBuf = buffers[0];
+
+      // If requested, also start the new command buffer
+      if (begin)
+      {
+        let cmdBufInfo = new Magnesium.MgCommandBufferBeginInfo();
+
+        err = cmdBuf.beginCommandBuffer(cmdBufInfo);
+        if (err != Magnesium.MgResult.SUCCESS) {
+          throw new Error(err.toString());
+        }
+      }
+
+      return cmdBuf;
+    }
+
+    private prepareStagingCommandBuffers(
+      stagingVertices: StagingBuffer
+      , stagingIndices: StagingBuffer
+      , vertexSize: number
+      , indexBufferSize: number
+    ) {
+      let cmdBufferBeginInfo = new Magnesium.MgCommandBufferBeginInfo();
+
+      // Buffer copies have to be submitted to a queue, so we need a command buffer for them
+      // Note: Some devices offer a dedicated transfer queue (with only the transfer bit set) that may be faster when doing lots of copies
+      let copyCmd: Magnesium.IMgCommandBuffer
+        = this.getCommandBuffer(true);
+
+      // Put buffer region copies into command buffer
+
+      let vertRegion = new Magnesium.MgBufferCopy();
+      vertRegion.size = vertexSize;
+      // Vertex buffer
+      copyCmd.cmdCopyBuffer(stagingVertices.buffer, this.vertices.buffer, [vertRegion]);
+
+      let indexRegion = new Magnesium.MgBufferCopy();
+      indexRegion.size = indexBufferSize;
+      // Index buffer
+      let dstBuffer = this.indices.buffer as Magnesium.IMgBuffer;
+      copyCmd.cmdCopyBuffer(stagingIndices.buffer, dstBuffer, [indexRegion]);
+
+      // Flushing the command buffer will also submit it to the queue and uses a fence to ensure that all commands have been executed before returning
+      this.flushCommandBuffer(copyCmd);
+
+      // Destroy staging buffers
+      // Note: Staging buffer must not be deleted before the copies have been submitted and executed
+      stagingVertices.buffer.destroyBuffer(
+        this.mConfiguration.device, null);
+      stagingVertices.memory.freeMemory(
+        this.mConfiguration.device, null);
+      stagingIndices.buffer.destroyBuffer(
+        this.mConfiguration.device, null);
+      stagingIndices.memory.freeMemory(
+        this.mConfiguration.device, null);
+    }
+
+    // End the command buffer and submit it to the queue
+    // Uses a fence to ensure command buffer has finished executing before deleting it
+    flushCommandBuffer(
+      commandBuffer: Magnesium.IMgCommandBuffer|null
+    ) : void {
+      if (commandBuffer == null) {
+        return;
+      }
+
+      let err = commandBuffer.endCommandBuffer();
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      let submitInfo = new Magnesium.MgSubmitInfo();
+      submitInfo.commandBuffers = [commandBuffer];
+
+      // Create fence to ensure that the command buffer has finished executing
+      let fenceCreateInfo = new Magnesium.MgFenceCreateInfo();
+
+
+      let outFence
+        : {fence:Magnesium.IMgFence|null} 
+        = {fence:null};
+      err = this.mConfiguration.device.createFence(fenceCreateInfo, null, outFence);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      // Submit to the queue
+      let fence = outFence.fence  as Magnesium.IMgFence;
+      err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      // Magnesium.Mg.OpenGL
+      err = this.mConfiguration.queue.queueWaitIdle();
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      // Wait for the fence to signal that command buffer has finished executing
+      const MAX_VALUE = Number.MAX_SAFE_INTEGER;
+      err = this.mConfiguration.device.waitForFences(
+        [fence]
+        , true
+        , MAX_VALUE);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      fence.destroyFence(this.mConfiguration.device, null);
+      this.mConfiguration.device.freeCommandBuffers(
+        this.mConfiguration.partition.commandPool
+        , [commandBuffer]);
+    }    
+
     // Prepare vertex and index buffers for an indexed triangle
     // Also uploads them to device local memory using staging and initializes vertex input and attribute binding to match the vertex shader
     private prepareVertices(): void {
@@ -253,18 +710,18 @@ namespace TriangleDemo {
 
       // Setup vertices
       let vertexBuffer = new Array<TriangleVertex>(3);
-     
+      
       vertexBuffer[0] = new TriangleVertex();
-      vertexBuffer[0].position = new Vector3(1.0, 1.0, 0.0);  
-      vertexBuffer[0].color = new Vector3(1.0, 0.0, 0.0 );    
+      vertexBuffer[0].position = [1.0, 1.0, 0.0];  
+      vertexBuffer[0].color = [1.0, 0.0, 0.0];    
 
       vertexBuffer[1] = new TriangleVertex();
-      vertexBuffer[1].position = new Vector3(-1.0,  1.0, 0.0);  
-      vertexBuffer[1].color = new Vector3(0.0, 1.0, 0.0);
+      vertexBuffer[1].position = [-1.0,  1.0, 0.0];  
+      vertexBuffer[1].color = [0.0, 1.0, 0.0];
 
       vertexBuffer[2] = new TriangleVertex();
-      vertexBuffer[2].position = new Vector3(0.0, -1.0, 0.0);  
-      vertexBuffer[2].color = new Vector3(0.0, 0.0, 1.0);
+      vertexBuffer[2].position = [0.0, -1.0, 0.0];  
+      vertexBuffer[2].color = [0.0, 0.0, 1.0];
 
       const F32_MEMBER_SIZE = 4;
       let structSize = 2 * 3 * F32_MEMBER_SIZE; // 2 * (3 * 4 bytes)
@@ -286,431 +743,132 @@ namespace TriangleDemo {
       // - Copy the data from the host to the device using a command buffer
       // - Delete the host visible (staging) buffer
       // - Use the device local buffers for rendering
-      let stagingBuffers = {
-          vertices: new StagingBuffer(),
-          indices : new StagingBuffer(),
+      let stagingVertices = this.prepareStagingVertices(
+        vertexBuffer
+        , vertexBufferSize
+      );
+
+      this.setupDeviceLocalVertices(vertexBufferSize);
+
+      let stagingIndices = this.prepareStagingIndices(
+        indexBufferSize);
+      
+      this.setupDeviceLocalIndices(indexBufferSize);
+
+      this.prepareStagingCommandBuffers(
+        stagingVertices
+        , stagingIndices
+        , vertexBufferSize
+        , indexBufferSize
+      );
+
+      // Vertex input binding
+      const VERTEX_BUFFER_BIND_ID = 0;
+
+      let inputBinding = new Magnesium.MgVertexInputBindingDescription();
+      inputBinding.binding = VERTEX_BUFFER_BIND_ID;
+      inputBinding.stride = structSize;
+      inputBinding.inputRate = Magnesium.MgVertexInputRate.VERTEX;
+      this.vertices.inputBinding = inputBinding;
+
+      // Inpute attribute binding describe shader attribute locations and memory layouts
+      // These match the following shader layout (see triangle.vert):
+      //	layout (location = 0) in vec3 inPos;
+      //	layout (location = 1) in vec3 inColor;
+
+      let vertexSize = 3 * F32_MEMBER_SIZE;
+
+      // Attribute location 0: Position
+      let positionAttr = new Magnesium.MgVertexInputAttributeDescription();
+      positionAttr.binding = VERTEX_BUFFER_BIND_ID;
+      positionAttr.location = 0;
+      positionAttr.format =  Magnesium.MgFormat.R32G32B32_SFLOAT;
+      positionAttr.offset = 0;
+
+      // Attribute location 1: Color
+      let colorAttr = new Magnesium.MgVertexInputAttributeDescription();
+      colorAttr.binding = VERTEX_BUFFER_BIND_ID;
+      colorAttr.location = 1;
+      colorAttr.format =  Magnesium.MgFormat.R32G32B32_SFLOAT;
+      // NOTE : OFFSET OF DATA SHOULD BE MULTIPLE OF format
+      colorAttr.offset = vertexSize;
+
+      this.vertices.inputAttributes = [positionAttr, colorAttr];
+
+      // Assign to the vertex input state used for pipeline creation
+      let inputState = new Magnesium.MgPipelineVertexInputStateCreateInfo();
+      inputState.vertexBindingDescriptions = [this.vertices.inputBinding];
+      inputState.vertexAttributeDescriptions = this.vertices.inputAttributes;               
+      this.vertices.inputState = inputState;
+    }
+    private prepareUniformBuffers() : void {
+
+      // let structSize = Marshal.SizeOf(typeof(UniformBufferObject));
+      let structSize = 3 * 16 * 4;
+
+      // Vertex shader uniform buffer block
+      let bufferInfo = new Magnesium.MgBufferCreateInfo();
+      bufferInfo.size = structSize;
+      // This buffer will be used as a uniform buffer
+      bufferInfo.usage = Magnesium.MgBufferUsageFlagBits.UNIFORM_BUFFER_BIT;
+
+      // Create a new buffer
+      let outBuffer 
+        : {pBuffer:Magnesium.IMgBuffer|null}
+        = {pBuffer:null};
+      let err = this.mConfiguration.device.createBuffer(
+        bufferInfo
+        , null
+        , outBuffer);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.uniformDataVS.buffer = outBuffer.pBuffer;
+
+      // Prepare and initialize a uniform buffer block containing shader uniforms
+      // Single uniforms like in OpenGL are no longer present in Vulkan. All Shader uniforms are passed via uniform buffer blocks
+      Magnesium.MgMemoryRequirements memReqs;
+
+      // Get memory requirements including size, alignment and memory type 
+      this.mConfiguration.device.getBufferMemoryRequirements(uniformDataVS.buffer, out memReqs);
+
+
+      // Get the memory type index that supports host visibile memory access
+      // Most implementations offer multiple memory types and selecting the correct one to allocate memory from is crucial
+      // We also want the buffer to be host coherent so we don't have to flush (or sync after every update.
+      // Note: This may affect performance so you might not want to do this in a real world application that updates buffers on a regular base
+      uint typeIndex;
+      let isValid = this.mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits, Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT, out typeIndex);
+      Debug.Assert(isValid);
+
+      Magnesium.MgMemoryAllocateInfo allocInfo = new Magnesium.MgMemoryAllocateInfo
+      {
+          AllocationSize = memReqs.Size,
+          MemoryTypeIndex = typeIndex,
       };
 
-      // HOST_VISIBLE STAGING Vertex buffer
-      {
-        let vertexBufferInfo = new Magnesium.MgBufferCreateInfo();
-        vertexBufferInfo.size = vertexBufferSize;
-        // Buffer is used as the copy source
-        vertexBufferInfo.usage = Magnesium.MgBufferUsageFlagBits.TRANSFER_SRC_BIT;          
-
-        // Create a host-visible buffer to copy the vertex data to (staging buffer)
-        let outBuffer = {pBuffer:null};
-        let err = this.mConfiguration.device.createBuffer(vertexBufferInfo, null, outBuffer );
-        if (err != Magnesium.MgResult.SUCCESS) {
-          throw new Error(err);
-        }
-        stagingBuffers.vertices.buffer = outBuffer.pBuffer;
-
-        let outMemReq = {pMemoryRequirements:null};
-        this.mConfiguration.device.getBufferMemoryRequirements(
-          stagingBuffers.vertices.buffer, outMemReq);       
-
-        // Request a host visible memory type that can be used to copy our data do
-        // Also request it to be coherent, so that writes are visible to the GPU right after unmapping the buffer
-        let outTypeIndex = {typeIndex:0};
-        let isValid: boolean = this.mConfiguration.partition.getMemoryType(
-          memReqs.MemoryTypeBits
-          , Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
-            | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
-          , outTypeIndex);
-
-        if (!isValid) {
-          throw new Error('getMemoryType');
-        }
-
-        let memAlloc = new Magnesium.MgMemoryAllocateInfo();        
-        memAlloc.allocationSize = memReqs.Size;
-        memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
-
-        let outMemory = {pMemory:null};
-        err = mConfiguration.device.allocateMemory(
-          memAlloc
-          , null
-          , outMemory);
-        if (err != Magnesium.MgResult.SUCCESS) {
-          throw new Error(err);
-        }
-        stagingBuffers.vertices.memory = outMemory.pMemory;        
-
-        // Map and copy
-        let data: ArrayBufferView = null;
-        err = stagingBuffers.vertices.memory.mapMemory(
-          this.mConfiguration.device
-          , 0
-          , memAlloc.allocationSize
-          , 0
-          , data);
-        if (err != Magnesium.MgResult.SUCCESS) {
-          throw new Error(err);
-        }
-
-        // TODO: something here
-        let offset = 0;
-        for (let vertex of vertexBuffer) {
-            IntPtr dest = IntPtr.Add(data, offset);
-            Marshal.StructureToPtr(vertex, dest, false);
-            offset += structSize;
-        }
-
-        stagingBuffers.vertices.memory.unmapMemory(
-          this.mConfiguration.Device);
-
-        stagingBuffers.vertices.buffer.bindBufferMemory(
-          this.mConfiguration.device
-          , stagingBuffers.vertices.memory
-          , 0);
-        if (err != Magnesium.MgResult.SUCCESS) {
-          throw new Error(err);
-        }
+      // Allocate memory for the uniform buffer
+      err = this.mConfiguration.Device.AllocateMemory(allocInfo, null, out uniformDataVS.memory);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
       }
 
-            // DEVICE_LOCAL Vertex buffer
-            {
-                let vertexBufferInfo = new Magnesium.MgBufferCreateInfo
-                {
-                    Size = vertexBufferSize,
-                    // Create a device local buffer to which the (host local) vertex data will be copied and which will be used for rendering
-                    Usage = Magnesium.MgBufferUsageFlagBits.VERTEX_BUFFER_BIT | Magnesium.MgBufferUsageFlagBits.TRANSFER_DST_BIT,
-                };
-
-                let err = mConfiguration.Device.CreateBuffer(vertexBufferInfo, null, out vertices.buffer);
-                Debug.Assert(err == Result.SUCCESS);
-
-                Magnesium.MgMemoryRequirements memReqs;
-                mConfiguration.Device.GetBufferMemoryRequirements(vertices.buffer, out memReqs);
-
-
-                uint typeIndex;
-                let isValid = mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits, Magnesium.MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT, out typeIndex);
-                Debug.Assert(isValid);
-
-                let memAlloc = new Magnesium.MgMemoryAllocateInfo
-                {
-                    AllocationSize = memReqs.Size,
-                    MemoryTypeIndex = typeIndex,
-                };
-
-                err = mConfiguration.Device.AllocateMemory(memAlloc, null, out vertices.memory);
-                Debug.Assert(err == Result.SUCCESS);
-
-                err = vertices.buffer.BindBufferMemory(mConfiguration.Device, vertices.memory, 0);
-                Debug.Assert(err == Result.SUCCESS);
-            }
-
-            // HOST_VISIBLE Index buffer
-            {
-                let indexbufferInfo = new Magnesium.MgBufferCreateInfo
-                {
-                    Size = indexBufferSize,
-                    Usage = Magnesium.MgBufferUsageFlagBits.TRANSFER_SRC_BIT,
-                };
-
-                // Copy index data to a buffer visible to the host (staging buffer)
-                let err = mConfiguration.Device.CreateBuffer(indexbufferInfo, null, out stagingBuffers.indices.buffer);
-                Debug.Assert(err == Result.SUCCESS);
-
-                Magnesium.MgMemoryRequirements memReqs;
-                mConfiguration.Device.GetBufferMemoryRequirements(stagingBuffers.indices.buffer, out memReqs);
-
-                uint typeIndex;
-                let isValid = mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits,
-                    Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT,
-                    out typeIndex);
-                Debug.Assert(isValid);
-
-                let memAlloc = new Magnesium.MgMemoryAllocateInfo
-                {
-                    AllocationSize = memReqs.Size,
-                    MemoryTypeIndex = typeIndex,
-                };
-
-                err = mConfiguration.Device.AllocateMemory(memAlloc, null, out stagingBuffers.indices.memory);
-                Debug.Assert(err == Result.SUCCESS);
-
-                IntPtr data;
-                err = stagingBuffers.indices.memory.MapMemory(mConfiguration.Device, 0, indexBufferSize, 0, out data);
-                Debug.Assert(err == Result.SUCCESS);
-
-                let uintBuffer = new byte[indexBufferSize];
-
-                let bufferSize = (int)indexBufferSize;
-                Buffer.BlockCopy(indexBuffer, 0, uintBuffer, 0, bufferSize);
-                Marshal.Copy(uintBuffer, 0, data, bufferSize);
-
-                stagingBuffers.indices.memory.UnmapMemory(mConfiguration.Device);
-
-                err = stagingBuffers.indices.buffer.BindBufferMemory(mConfiguration.Device, stagingBuffers.indices.memory, 0);
-                Debug.Assert(err == Result.SUCCESS);
-            }
-
-            // DEVICE_LOCAL index buffer
-            {
-                // Create destination buffer with device only visibility
-                let indexbufferInfo = new Magnesium.MgBufferCreateInfo
-                {
-                    Size = indexBufferSize,
-                    Usage = Magnesium.MgBufferUsageFlagBits.INDEX_BUFFER_BIT | Magnesium.MgBufferUsageFlagBits.TRANSFER_DST_BIT,
-                };
-
-                let err = mConfiguration.Device.CreateBuffer(indexbufferInfo, null, out indices.buffer);
-                Debug.Assert(err == Result.SUCCESS);
-
-                Magnesium.MgMemoryRequirements memReqs;
-                mConfiguration.Device.GetBufferMemoryRequirements(indices.buffer, out memReqs);
-
-                uint typeIndex;
-                let isValid = mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits, Magnesium.MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT, out typeIndex);
-                Debug.Assert(isValid);
-
-                let memAlloc = new Magnesium.MgMemoryAllocateInfo
-                {
-                    AllocationSize = memReqs.Size,
-                    MemoryTypeIndex = typeIndex,
-                };
-
-                err = mConfiguration.Device.AllocateMemory(memAlloc, null, out indices.memory);
-                Debug.Assert(err == Result.SUCCESS);
-
-                err = indices.buffer.BindBufferMemory(mConfiguration.Device, indices.memory, 0);
-                Debug.Assert(err == Result.SUCCESS);
-            }
-
-            {
-                let cmdBufferBeginInfo = new Magnesium.MgCommandBufferBeginInfo
-                {
-
-                };
-
-                // Buffer copies have to be submitted to a queue, so we need a command buffer for them
-                // Note: Some devices offer a dedicated transfer queue (with only the transfer bit set) that may be faster when doing lots of copies
-                Magnesium.IMgCommandBuffer copyCmd = getCommandBuffer(true);
-
-                // Put buffer region copies into command buffer
-
-                // Vertex buffer
-                copyCmd.CmdCopyBuffer(
-                    stagingBuffers.vertices.buffer,
-                    vertices.buffer,
-                    new[]
-                    {
-                        new Magnesium.MgBufferCopy
-                        {
-                            Size = vertexBufferSize,
-                        }
-                    }
-                );
-
-                // Index buffer
-                copyCmd.CmdCopyBuffer(stagingBuffers.indices.buffer, indices.buffer,
-                    new[]
-                    {
-                        new Magnesium.MgBufferCopy
-                        {
-                            Size = indexBufferSize,
-                        }
-                    });
-
-                // Flushing the command buffer will also submit it to the queue and uses a fence to ensure that all commands have been executed before returning
-                flushCommandBuffer(copyCmd);
-
-                // Destroy staging buffers
-                // Note: Staging buffer must not be deleted before the copies have been submitted and executed
-                stagingBuffers.vertices.buffer.destroyBuffer(mConfiguration.Device, null);
-                stagingBuffers.vertices.memory.freeMemory(mConfiguration.Device, null);
-                stagingBuffers.indices.buffer.destroyBuffer(mConfiguration.Device, null);
-                stagingBuffers.indices.memory.freeMemory(mConfiguration.Device, null);
-            }
-
-            // Vertex input binding
-            const VERTEX_BUFFER_BIND_ID = 0;
-
-            vertices.inputBinding = new Magnesium.MgVertexInputBindingDescription
-            {
-                Binding = VERTEX_BUFFER_BIND_ID,
-                Stride = (uint) structSize,
-                InputRate = Magnesium.MgVertexInputRate.VERTEX,
-            };
-
-            // Inpute attribute binding describe shader attribute locations and memory layouts
-            // These match the following shader layout (see triangle.vert):
-            //	layout (location = 0) in vec3 inPos;
-            //	layout (location = 1) in vec3 inColor;
-
-            let vertexSize = (uint) Marshal.SizeOf(typeof(Vector3));
-
-            vertices.inputAttributes = new Magnesium.MgVertexInputAttributeDescription[]
-            {
-                new Magnesium.MgVertexInputAttributeDescription
-                {
-                    // Attribute location 0: Position
-                    Binding = VERTEX_BUFFER_BIND_ID,
-                    Location = 0,
-                    Format =  Magnesium.MgFormat.R32G32B32_SFLOAT,
-                    Offset = 0,
-                },                             
-                new Magnesium.MgVertexInputAttributeDescription
-                {
-                    // Attribute location 1: Color
-                    Binding = VERTEX_BUFFER_BIND_ID,
-                    Location = 1,
-                    Format = Magnesium.MgFormat.R32G32B32_SFLOAT,
-                    Offset = vertexSize,
-                }
-            };
-
-            // Assign to the vertex input state used for pipeline creation
-            vertices.inputState = new Magnesium.MgPipelineVertexInputStateCreateInfo
-            {
-                VertexBindingDescriptions = new Magnesium.MgVertexInputBindingDescription[]
-                {
-                    vertices.inputBinding,
-                },
-                VertexAttributeDescriptions = vertices.inputAttributes,
-            };                
-        }
-
-        // Get a new command buffer from the command pool
-        // If begin is true, the command buffer is also started so we can start adding commands
-        Magnesium.IMgCommandBuffer getCommandBuffer(bool begin)
-        {
-            let buffers = new Magnesium.IMgCommandBuffer[1];
-
-            let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo
-            {
-                CommandPool = mConfiguration.Partition.CommandPool,
-                Level =  Magnesium.MgCommandBufferLevel.PRIMARY,
-                CommandBufferCount = 1,
-            };
-
-            let err = mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, buffers);
-            Debug.Assert(err == Result.SUCCESS);
-
-            let cmdBuf = buffers[0];
-
-            // If requested, also start the new command buffer
-            if (begin)
-            {
-                let cmdBufInfo = new Magnesium.MgCommandBufferBeginInfo
-                {
-
-                };
-
-                err = cmdBuf.BeginCommandBuffer(cmdBufInfo);
-                Debug.Assert(err == Result.SUCCESS);
-            }
-
-            return cmdBuf;
-        }
-
-
-        // End the command buffer and submit it to the queue
-        // Uses a fence to ensure command buffer has finished executing before deleting it
-        void flushCommandBuffer(Magnesium.IMgCommandBuffer commandBuffer)
-        {
-            Debug.Assert(commandBuffer != null);
-
-            let err = commandBuffer.EndCommandBuffer();
-            Debug.Assert(err == Result.SUCCESS);
-
-            let submitInfos = new Magnesium.MgSubmitInfo[] 
-            {
-                new Magnesium.MgSubmitInfo
-                {
-                    CommandBuffers = new []
-                    {
-                        commandBuffer
-                    }
-                }
-            };
-
-            // Create fence to ensure that the command buffer has finished executing
-            let fenceCreateInfo = new Magnesium.MgFenceCreateInfo
-            {
-
-            };
-
-            Magnesium.IMgFence fence;
-            err = mConfiguration.Device.CreateFence(fenceCreateInfo, null, out fence);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Submit to the queue
-            err = mConfiguration.Queue.QueueSubmit(submitInfos, fence);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Magnesium.Mg.OpenGL
-            err = mConfiguration.Queue.QueueWaitIdle();
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Wait for the fence to signal that command buffer has finished executing
-            err = mConfiguration.Device.WaitForFences(new[] { fence }, true, ulong.MaxValue);
-            Debug.Assert(err == Result.SUCCESS);
-
-            fence.DestroyFence(mConfiguration.Device, null);
-            mConfiguration.Device.FreeCommandBuffers(mConfiguration.Partition.CommandPool, new[] { commandBuffer } );
-        }
-
-        void prepareUniformBuffers()
-        {
-
-            let structSize = (uint)Marshal.SizeOf(typeof(UniformBufferObject));
-
-            // Vertex shader uniform buffer block
-            Magnesium.MgBufferCreateInfo bufferInfo = new Magnesium.MgBufferCreateInfo
-            {
-                Size = structSize,
-                // This buffer will be used as a uniform buffer
-                Usage = Magnesium.MgBufferUsageFlagBits.UNIFORM_BUFFER_BIT,
-            };
-
-            // Create a new buffer
-            let err = mConfiguration.Device.CreateBuffer(bufferInfo, null, out uniformDataVS.buffer);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Prepare and initialize a uniform buffer block containing shader uniforms
-            // Single uniforms like in OpenGL are no longer present in Vulkan. All Shader uniforms are passed via uniform buffer blocks
-            Magnesium.MgMemoryRequirements memReqs;
-
-            // Get memory requirements including size, alignment and memory type 
-            mConfiguration.Device.GetBufferMemoryRequirements(uniformDataVS.buffer, out memReqs);
-
-
-            // Get the memory type index that supports host visibile memory access
-            // Most implementations offer multiple memory types and selecting the correct one to allocate memory from is crucial
-            // We also want the buffer to be host coherent so we don't have to flush (or sync after every update.
-            // Note: This may affect performance so you might not want to do this in a real world application that updates buffers on a regular base
-            uint typeIndex;
-            let isValid = mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits, Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT, out typeIndex);
-            Debug.Assert(isValid);
-
-            Magnesium.MgMemoryAllocateInfo allocInfo = new Magnesium.MgMemoryAllocateInfo
-            {
-                AllocationSize = memReqs.Size,
-                MemoryTypeIndex = typeIndex,
-            };
-
-            // Allocate memory for the uniform buffer
-            err = mConfiguration.Device.AllocateMemory(allocInfo, null, out uniformDataVS.memory);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Bind memory to buffer
-            err = uniformDataVS.buffer.BindBufferMemory(mConfiguration.Device, uniformDataVS.memory, 0);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Store information in the uniform's descriptor that is used by the descriptor set
-            uniformDataVS.descriptor = new Magnesium.MgDescriptorBufferInfo
-            {
-                Buffer = uniformDataVS.buffer,
-                Offset = 0,
-                Range = structSize,
-            };
-
-            updateUniformBuffers();
-        }
+      // Bind memory to buffer
+      err = uniformDataVS.buffer.BindBufferMemory(this.mConfiguration.Device, uniformDataVS.memory, 0);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      // Store information in the uniform's descriptor that is used by the descriptor set
+      uniformDataVS.descriptor = new Magnesium.MgDescriptorBufferInfo
+      {
+          Buffer = uniformDataVS.buffer,
+          Offset = 0,
+          Range = structSize,
+      };
+
+      this.updateUniformBuffers();
+  }
 
 
         void setupDescriptorSetLayout()
@@ -734,7 +892,7 @@ namespace TriangleDemo {
                 },
             };
 
-            let err = mConfiguration.Device.CreateDescriptorSetLayout(descriptorLayout, null, out mDescriptorSetLayout);
+            let err = this.mConfiguration.Device.CreateDescriptorSetLayout(descriptorLayout, null, out mDescriptorSetLayout);
             Debug.Assert(err == Result.SUCCESS);
 
             // Create the pipeline layout that is used to generate the rendering pipelines that are based on this descriptor set layout
@@ -747,7 +905,7 @@ namespace TriangleDemo {
                  }
             };
 
-            err = mConfiguration.Device.CreatePipelineLayout(pPipelineLayoutCreateInfo, null, out mPipelineLayout);
+            err = this.mConfiguration.Device.CreatePipelineLayout(pPipelineLayoutCreateInfo, null, out mPipelineLayout);
             Debug.Assert(err == Result.SUCCESS);
         }
 
@@ -770,7 +928,7 @@ namespace TriangleDemo {
                         CodeSize = new UIntPtr((ulong)vertFs.Length),
                     };
                     //  shaderStages[0] = loadShader(getAssetPath() + "shaders/triangle.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-                    mConfiguration.Device.CreateShaderModule(vsCreateInfo, null, out vsModule);
+                    this.mConfiguration.Device.CreateShaderModule(vsCreateInfo, null, out vsModule);
                 }
 
                 Magnesium.IMgShaderModule fsModule;
@@ -781,7 +939,7 @@ namespace TriangleDemo {
                         CodeSize = new UIntPtr((ulong)fragFs.Length),
                     };
                     // shaderStages[1] = loadShader(getAssetPath() + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-                    mConfiguration.Device.CreateShaderModule(fsCreateInfo, null, out fsModule);
+                    this.mConfiguration.Device.CreateShaderModule(fsCreateInfo, null, out fsModule);
                 }
 
                 // Create the graphics pipeline used in this example
@@ -907,8 +1065,8 @@ namespace TriangleDemo {
                 let err = mConfiguration.Device.CreateGraphicsPipelines(null, new[] { pipelineCreateInfo }, null, out pipelines);
                 Debug.Assert(err == Result.SUCCESS);
 
-                vsModule.DestroyShaderModule(mConfiguration.Device, null);
-                fsModule.DestroyShaderModule(mConfiguration.Device, null);
+                vsModule.DestroyShaderModule(this.mConfiguration.device, null);
+                fsModule.DestroyShaderModule(this.mConfiguration.device, null);
 
                 mPipeline = pipelines[0];
             }
@@ -938,7 +1096,7 @@ namespace TriangleDemo {
                 // Set the max. number of descriptor sets that can be requested from this pool (requesting beyond this limit will result in an error)
                 MaxSets = 1,
             };
-            let err = mConfiguration.Device.CreateDescriptorPool(descriptorPoolInfo, null, out mDescriptorPool);
+            let err = this.mConfiguration.Device.CreateDescriptorPool(descriptorPoolInfo, null, out mDescriptorPool);
             Debug.Assert(err == Result.SUCCESS);
         }
 
@@ -953,7 +1111,7 @@ namespace TriangleDemo {
             };
 
             Magnesium.IMgDescriptorSet[] dSets;
-            let err = mConfiguration.Device.AllocateDescriptorSets(allocInfo, out dSets);
+            let err = this.mConfiguration.Device.AllocateDescriptorSets(allocInfo, out dSets);
             mDescriptorSet = dSets[0];
 
             Debug.Assert(err == Result.SUCCESS);
@@ -961,7 +1119,7 @@ namespace TriangleDemo {
             // Update the descriptor set determining the shader binding points
             // For every binding point used in a shader there needs to be one
             // descriptor set matching that binding point
-            mConfiguration.Device.UpdateDescriptorSets(
+            this.mConfiguration.Device.UpdateDescriptorSets(
                 new []
                 {
                     // Binding 0 : Uniform buffer
@@ -995,12 +1153,12 @@ namespace TriangleDemo {
             {
                 let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo
                 {
-                    CommandBufferCount = (uint)mGraphicsDevice.Framebuffers.Length,
-                    CommandPool = mConfiguration.Partition.CommandPool,
+                    CommandBufferCount = this.mGraphicsDevice.framebuffers.Length,
+                    CommandPool = this.mConfiguration.partition.commandPool,
                     Level = Magnesium.MgCommandBufferLevel.PRIMARY,
                 };
 
-                let err = mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, drawCmdBuffers);
+                let err = this.mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, drawCmdBuffers);
                 Debug.Assert(err == Result.SUCCESS);
             }
 
@@ -1009,12 +1167,12 @@ namespace TriangleDemo {
                 let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo
                 {
                     CommandBufferCount = 2,
-                    CommandPool = mConfiguration.Partition.CommandPool,
+                    CommandPool = this.mConfiguration.partition.commandPool,
                     Level = Magnesium.MgCommandBufferLevel.PRIMARY,
                 };
   
                 let presentBuffers = new Magnesium.IMgCommandBuffer[2];
-                let err = mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, presentBuffers);
+                let err = this.mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, presentBuffers);
                 Debug.Assert(err == Result.SUCCESS);
 
                 // Pre present
@@ -1156,20 +1314,17 @@ namespace TriangleDemo {
             uniformDataVS.memory.UnmapMemory(mConfiguration.Device);
         }
 
-        public void RenderLoop()
-        {
+        renderLoop(): void {
             render();
         }
 
-        void render()
-        {
+        private render(): void {
             if (!mPrepared)
                 return;
             draw();
         }
 
-        void draw()
-        {
+        draw() : void {
             // Get next image in the swap chain (back/front buffer)
             let currentBufferIndex = mPresentationLayer.BeginDraw(mPostPresentCmdBuffer, mPresentCompleteSemaphore);
 
@@ -1223,18 +1378,17 @@ namespace TriangleDemo {
             mPresentationLayer.EndDraw([currentBufferIndex], mPrePresentCmdBuffer, [ mRenderCompleteSemaphore ]);
         }
 
-        void viewChanged()
+        private viewChanged(): void
         {
             // This function is called by the base example class each time the view is changed by user input
             updateUniformBuffers();
         }
 
-        private bool mIsDisposed = false; // To detect redundant calls
+        private mIsDisposed: boolean = false; // To detect redundant calls
         private ITriangleDemoShaderPath mTrianglePath;
 
-        virtual void Dispose(bool disposing)
-        {
-            if (mIsDisposed)
+        dispose(disposing: boolean) : void {
+            if (this.mIsDisposed)
             {
                 return;
             }
@@ -1249,14 +1403,12 @@ namespace TriangleDemo {
             mIsDisposed = true;            
         }
 
-        private void ReleaseManagedResources()
-        {
+        private releaseManagedResources(): void {
            
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            let device = mConfiguration.Device;
+        private releaseUnmanagedResources(): void {
+            let device = this.mConfiguration.device;
             if (device != null)
             {
 
@@ -1300,36 +1452,31 @@ namespace TriangleDemo {
                   fence.destroyFence(device, null);
                 }
 
-                if (mDescriptorPool != null)
-                    mDescriptorPool.DestroyDescriptorPool(device, null);
+                if (this.mDescriptorPool != null)
+                  this.mDescriptorPool.DestroyDescriptorPool(device, null);
 
-                if (drawCmdBuffers != null)
-                    mConfiguration.Device.FreeCommandBuffers(mConfiguration.Partition.CommandPool, drawCmdBuffers);
+                if (this.drawCmdBuffers != null) {
+                  this.mConfiguration.Device.FreeCommandBuffers(
+                    this.mConfiguration.partition.commandPool
+                    , drawCmdBuffers);
+                }
 
-                if (mPostPresentCmdBuffer != null)
-                    mConfiguration.Device.FreeCommandBuffers(mConfiguration.Partition.CommandPool, [this.mPostPresentCmdBuffer]);
+                if (this.mPostPresentCmdBuffer != null) {
+                  this.mConfiguration.device.freeCommandBuffers(
+                    this.mConfiguration.partition.commandPool
+                    , [this.mPostPresentCmdBuffer]);
+                }
 
 
-                if (mPrePresentCmdBuffer != null)
-                    mConfiguration.Device.FreeCommandBuffers(mConfiguration.Partition.CommandPool, [this.mPrePresentCmdBuffer]);
+                if (this.mPrePresentCmdBuffer != null) {
+                  this.mConfiguration.device.freeCommandBuffers(
+                    this.mConfiguration.partition.commandPool
+                    , [this.mPrePresentCmdBuffer]);
+                }
 
-                if (mGraphicsDevice != null)
-                    Magnesium.MgraphicsDevice.Dispose();
+                if (this.mGraphicsDevice != null)
+                   this.mGraphicsDevice.dispose();
             }
-        }
-
-        ~VulkanExample()
-        {
-            Dispose(false);
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            GC.SuppressFinalize(this);
         }
     }
 }

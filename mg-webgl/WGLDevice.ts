@@ -477,8 +477,13 @@ namespace Magnesium {
       throw new Error("ERROR: not implemented");
     }
 
-    createBuffer() : void {
-
+    createBuffer(
+      pCreateInfo: MgBufferCreateInfo
+      , allocator: IMgAllocationCallbacks|null
+      , out: { pBuffer:IMgBuffer|null}
+    ) : MgResult {
+      out.pBuffer = this.mEntrypoint.buffers.createBuffer(pCreateInfo);
+      return MgResult.SUCCESS;
     }
   }
 }

@@ -155,5 +155,11 @@ namespace Magnesium {
       buffer: IMgBuffer
       , out: { pMemoryRequirements: MgMemoryRequirements|null}
     ) : void;
+
+    createBuffer(
+      pCreateInfo: MgBufferCreateInfo
+      , allocator: IMgAllocationCallbacks|null
+      , out: { pBuffer:IMgBuffer|null}
+    ) : MgResult;
   }
 }
