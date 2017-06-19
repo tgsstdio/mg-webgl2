@@ -159,7 +159,7 @@ namespace Magnesium {
     createBuffer(
       pCreateInfo: MgBufferCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: {pBuffer: IMgBuffer|null}
-    ) : MgResult;    
+      , out: { pBuffer:IMgBuffer|null}
+    ) : MgResult;
   }
 }

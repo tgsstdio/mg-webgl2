@@ -480,10 +480,10 @@ namespace Magnesium {
     createBuffer(
       pCreateInfo: MgBufferCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: {pBuffer: IMgBuffer|null}
-    ) : MgResult  {
-			out.pBuffer = this.mEntrypoint.buffers.createBuffer(pCreateInfo);
-			return MgResult.SUCCESS;
+      , out: { pBuffer:IMgBuffer|null}
+    ) : MgResult {
+      out.pBuffer = this.mEntrypoint.buffers.createBuffer(pCreateInfo);
+      return MgResult.SUCCESS;
     }
   }
 }
