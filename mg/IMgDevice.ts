@@ -107,7 +107,7 @@ namespace Magnesium {
 
 		createFramebuffer(pCreateInfo: MgFramebufferCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pFramebuffer: IMgFramebuffer }) : MgResult;
+      , out: { pFramebuffer: IMgFramebuffer|null }) : MgResult;
 
 		createRenderPass(pCreateInfo: MgRenderPassCreateInfo
       , allocator: IMgAllocationCallbacks|null

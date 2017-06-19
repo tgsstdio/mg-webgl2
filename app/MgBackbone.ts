@@ -21,6 +21,11 @@ namespace Magnesium {
       return this.mConfiguration;
     }
 
+    private mGraphicsDevice: IMgGraphicsDevice;
+    get graphicsDevice(): IMgGraphicsDevice {
+      return this.mGraphicsDevice;
+    }
+
     constructor(
       appInfo: MgApplicationInfo
       , canvas: HTMLCanvasElement
@@ -96,6 +101,8 @@ namespace Magnesium {
         this.mContext
         , this.mPresentationSurface);
 
-      }
+      let cmdRenderer = new Magnesium.WGLCmdRenderer(renderer);
+      this.mGraphicsDevice = new Magnesium.WGLGraphicsDevice(cmdRenderer, this.mConfiguration);
+    }    
   }
 }

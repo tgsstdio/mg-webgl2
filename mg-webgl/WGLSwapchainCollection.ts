@@ -1,13 +1,4 @@
 namespace Magnesium {
-  class WGLNullImageView implements IMgImageView {
-    destroyImageView(
-      device : IMgDevice
-      , allocator : IMgAllocationCallbacks|null
-    ) : void {
-
-    }
-  }
-
   export class WGLSwapchainCollection implements IMgSwapchainCollection {
     private mSwapchain: IWGLHtmlSwapchainKHR;
     get swapchain(): IMgSwapchainKHR {

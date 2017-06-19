@@ -1,14 +1,14 @@
 namespace Magnesium {
   export class WGLClientMappedMemory {
     private mBuffer: ArrayBuffer;
-    private mView: DataView;
+    private mView: Uint8Array;
     private mOffset: number;
     private mSize: number;
     constructor(
       buffer: ArrayBuffer         
       , offset: number
       , size: number
-      , view: DataView
+      , view: Uint8Array
     ) {
       this.mBuffer = buffer;
       this.mOffset = offset;
@@ -20,7 +20,7 @@ namespace Magnesium {
       return this.mBuffer;
     }
 
-    get view(): DataView {
+    get view(): Uint8Array {
       return this.mView;
     }
 

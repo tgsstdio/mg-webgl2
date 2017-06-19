@@ -23,15 +23,15 @@ namespace TriangleDemo {
 
   // Uniform block object
   class UniformData {
-    memory: Magnesium.IMgDeviceMemory|null;
-    buffer:Magnesium.IMgBuffer|null;
+    memory: Magnesium.IMgDeviceMemory;
+    buffer:Magnesium.IMgBuffer;
     descriptor: Magnesium.MgDescriptorBufferInfo;
   }
 
   class UniformBufferObject {
-    projectionMatrix: Array<number>;
-    modelMatrix: Array<number>;
-    viewMatrix: Array<number>;
+    projectionMatrix: Matrix4;
+    modelMatrix: Matrix4;
+    viewMatrix: Matrix4;
   }
 
   class StagingBuffer {
@@ -1366,38 +1366,53 @@ namespace TriangleDemo {
     }
 
     private updateUniformBuffers() : void {
-      /** TODO: LATER
       // Update matrices
-      uboVS.projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(
-        DegreesToRadians(60.0f), 
-        (mWidth / mHeight), 
-        1.0f,
-        256.0f);
+      let outProj
+        : { result:Matrix4}
+        = { result:this.uboVS.projectionMatrix };
 
-        const ZOOM = -2.5;
+      Matrix4.createPerspectiveFieldOfView(
+        this.degreesToRadians(60.0)
+        , (this.mWidth / this.mHeight)
+        , 1.0
+        , 256.0
+        , outProj
+      );
 
-        uboVS.viewMatrix = Matrix4.CreateTranslation(0, 0, ZOOM);
+      const ZOOM = -2.5;
 
-        // TODO : track down rotation
-        uboVS.modelMatrix = Matrix4.Identity;
-        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+      let outView
+        : { result:Matrix4}
+        = { result:this.uboVS.projectionMatrix }
 
+      Matrix4.createTranslation(0, 0, ZOOM, outView);
 
-        let structSize = (ulong) Marshal.SizeOf(typeof(UniformBufferObject));
+      // TODO : track down rotation
+      this.uboVS.modelMatrix = Matrix4.identity;
+      
+      const F32_SIZE = 4;
+      const STRUCT_SIZE = 3 * Matrix4.NO_OF_MEMBERS * F32_SIZE;
 
-        // Map uniform buffer and update it
-        IntPtr pData;
+      // Map uniform buffer and update it
+      let outData
+        : {ppData:ArrayBufferView|null}
+        = {ppData:null};
 
-        let err = this.uniformDataVS.memory.mapMemory(this.mConfiguration.device,  0, structSize, 0, out pData);
+      let err = this.uniformDataVS.memory.mapMemory(this.mConfiguration.device,  0, STRUCT_SIZE, 0, outData);
 
-        // Marshal.StructureToPtr(uboVS, pData, false);
+      if (outData.ppData != null) {
+        let data = outData.ppData as Uint8Array;
+        // projectionMatrix: Matrix4;
+        // modelMatrix: Matrix4;
+        // viewMatrix: Matrix4;
+        data.set(this.uboVS.projectionMatrix.values, 0);
+        data.set(this.uboVS.modelMatrix.values, 1 * Matrix4.NO_OF_MEMBERS);
+        data.set(this.uboVS.viewMatrix.values, 2 * Matrix4.NO_OF_MEMBERS);
+      }
+      // Marshal.StructureToPtr(uboVS, pData, false);
         // Unmap after data has been copied
         // Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-        this.uniformDataVS.memory.unmapMemory(this.mConfiguration.device);
-
-      **/
+      this.uniformDataVS.memory.unmapMemory(this.mConfiguration.device);
     }
 
     renderLoop(): void {

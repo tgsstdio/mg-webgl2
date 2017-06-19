@@ -120,7 +120,7 @@ namespace Magnesium {
       , offset : number
       , size: number
       , flags: number
-      , out : { ppData : ArrayBufferView|null } 
+      , out : { ppData : Uint8Array|null } 
     ) : MgResult {
       let buffer : ArrayBuffer =
         (this.mIsHostCached) 
@@ -129,7 +129,7 @@ namespace Magnesium {
       let viewOffset = (this.mIsHostCached)
         ? offset
         : 0;
-      let view = new DataView(buffer, viewOffset, size);
+      let view = new Uint8Array(buffer, viewOffset, size);
       this.mMappedCache
         = new WGLClientMappedMemory(
           buffer
