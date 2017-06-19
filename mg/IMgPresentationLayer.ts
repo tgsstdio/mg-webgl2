@@ -7,6 +7,6 @@ namespace Magnesium {
 
       endDraw(nextImage: Array<number>
       , prePresent: IMgCommandBuffer
-      , renderComplete: Array<IMgSemaphore>): number
+      , renderComplete: Array<IMgSemaphore>): void
     }
 }

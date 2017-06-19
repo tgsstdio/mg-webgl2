@@ -131,8 +131,11 @@ namespace Magnesium {
       , out: { pSwapchainImages: Array<IMgImage>|null} ) : MgResult;
 
     // WARN: timeout requires UInt64
-		acquireNextImageKHR(swapchain: IMgSwapchainKHR
-      , timeout: number, semaphore: IMgSemaphore, fence: IMgFence
+		acquireNextImageKHR(
+      swapchain: IMgSwapchainKHR
+      , timeout: number
+      , semaphore: IMgSemaphore|null
+      , fence: IMgFence|null
       , out: { pImageIndex: number}) : MgResult;
 
 		createSemaphore(pCreateInfo: MgSemaphoreCreateInfo
