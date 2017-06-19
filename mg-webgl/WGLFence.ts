@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export class WGLFence implements IGLFence {
+  export class WGLFence implements IWGLFence {
     private mGL: WebGL2RenderingContext;
     private mIsSignalled: boolean;
     get isSignalled(): boolean {

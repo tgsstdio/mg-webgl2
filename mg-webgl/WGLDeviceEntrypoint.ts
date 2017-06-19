@@ -11,6 +11,7 @@ namespace Magnesium {
     private mImageFormat: IWGLImageFormatEntrypoint;
     private mSemaphores: IWGLSemaphoreEntrypoint;
     private mFences: IWGLFenceEntrypoint;
+    private mBuffers: IWGLBufferEntrypoint;
 
     constructor(
       deviceMemory: IWGLDeviceMemoryEntrypoint
@@ -24,6 +25,7 @@ namespace Magnesium {
       , imageFormat: IWGLImageFormatEntrypoint
       , semaphores: IWGLSemaphoreEntrypoint
       , fences: IWGLFenceEntrypoint
+      , buffers: IWGLBufferEntrypoint
     ) {
       this.mDeviceMemory = deviceMemory;
       this.mImage = image;
@@ -36,6 +38,11 @@ namespace Magnesium {
       this.mImageFormat = imageFormat;
       this.mSemaphores = semaphores;
       this.mFences = fences;
+      this.mBuffers = buffers;
+    }
+
+    get buffers(): IWGLBufferEntrypoint {
+      return this.mBuffers;
     }
 
     get fences(): IWGLFenceEntrypoint {

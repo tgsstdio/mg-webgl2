@@ -1,5 +1,5 @@
 namespace Magnesium {
-  export interface IGLFence extends IMgFence {
+  export interface IWGLFence extends IMgFence {
     readonly isSignalled: boolean;
     reset() : void;
     beginSync() : void;

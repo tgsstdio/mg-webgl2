@@ -430,7 +430,7 @@ namespace Magnesium {
 				throw new Error ("swapchain is null");
 			}
 
-			let sc = swapchain as IGLSwapchainKHR;
+			let sc = swapchain as IWGLSwapchainKHR;
 			out.pImageIndex = sc.getNextImage ();
 			// TODO : fence stuff
 			return MgResult.SUCCESS;
@@ -453,7 +453,7 @@ namespace Magnesium {
 
 		resetFences(pFences: Array<IMgFence>) : MgResult {
       for (let fence of pFences) {
-          let bFence = fence as IGLFence;
+          let bFence = fence as IWGLFence;
           bFence.reset();
       }
       return MgResult.SUCCESS; 
@@ -462,7 +462,7 @@ namespace Magnesium {
 		getFenceStatus(
       fence: IMgFence
     ) : MgResult{
-        let bFence = fence as IGLFence;
+        let bFence = fence as IWGLFence;
         return (bFence.isSignalled) 
           ? MgResult.SUCCESS 
           : MgResult.NOT_READY;
@@ -477,8 +477,13 @@ namespace Magnesium {
       throw new Error("ERROR: not implemented");
     }
 
-    createBuffer() : void {
-
+    createBuffer(
+      pCreateInfo: MgBufferCreateInfo
+      , allocator: IMgAllocationCallbacks|null
+      , out: {pBuffer: IMgBuffer|null}
+    ) : MgResult  {
+			out.pBuffer = this.mEntrypoint.buffers.createBuffer(pCreateInfo);
+			return MgResult.SUCCESS;
     }
   }
 }
