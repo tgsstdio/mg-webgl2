@@ -3,7 +3,7 @@
 namespace Magnesium {
   export class WGLQueueSubmitOrder {
     key : number;
-    fence : IGLFence;
+    fence : IWGLFence;
     submissions: Map<number, IWGLSemaphore>;
 
     constructor(key: number) {

@@ -20,7 +20,7 @@ namespace Magnesium {
     vertexInputState : MgPipelineVertexInputStateCreateInfo;
     inputAssemblyState : MgPipelineInputAssemblyStateCreateInfo;
     tessellationState : MgPipelineTessellationStateCreateInfo;
-    viewportState : MgPipelineViewportStateCreateInfo;
+    viewportState : MgPipelineViewportStateCreateInfo|null;
     rasterizationState : MgPipelineRasterizationStateCreateInfo;
     multisampleState : MgPipelineMultisampleStateCreateInfo;
     depthStencilState : MgPipelineDepthStencilStateCreateInfo;

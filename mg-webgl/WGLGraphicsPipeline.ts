@@ -83,7 +83,7 @@ namespace Magnesium {
 		}
 
 		populateViewports (
-			viewportState: MgPipelineViewportStateCreateInfo
+			viewportState: MgPipelineViewportStateCreateInfo|null
 		) : void {
 			let vp = new WGLCmdViewportParameter();
 			let sci = new WGLCmdScissorParameter();
@@ -128,7 +128,7 @@ namespace Magnesium {
 		}
 
 		private populateColorBlend(
-			colorBlend: MgPipelineColorBlendStateCreateInfo
+			colorBlend: MgPipelineColorBlendStateCreateInfo|null
 		) : void {
 
 			this.mColorBlendEnums = new WGLGraphicsPipelineBlendColorState ();
@@ -177,7 +177,7 @@ namespace Magnesium {
 		}
 
 		private populateDynamicStates(
-			dynamicStates: MgPipelineDynamicStateCreateInfo
+			dynamicStates: MgPipelineDynamicStateCreateInfo|null
 		) : void {
 			let flags : WGLGraphicsPipelineDynamicStateFlagBits = 0;
 
@@ -241,7 +241,7 @@ namespace Magnesium {
 		}
 
 		private populateDepthStencilState (
-			depthStencilState: MgPipelineDepthStencilStateCreateInfo
+			depthStencilState: MgPipelineDepthStencilStateCreateInfo|null
 		) : void {
 			let flags: WGLGraphicsPipelineFlagBits = 0;
 

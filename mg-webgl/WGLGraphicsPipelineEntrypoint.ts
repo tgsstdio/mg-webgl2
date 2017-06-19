@@ -26,7 +26,7 @@ namespace Magnesium {
 		isCompiled(program: WebGLProgram): boolean {
 			let result: boolean = this.mGL.getProgramParameter(
 				program
-				, gl.LINK_STATUS);
+				, this.mGL.LINK_STATUS);
 			return result;
 		}
 

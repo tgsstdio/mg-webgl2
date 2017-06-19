@@ -146,6 +146,10 @@ namespace Magnesium {
       let passInfo = items[arg2];
       if(passInfo == null)
         return;
+      let renderer = context.stateRenderer;
+      if (renderer == null)
+        return;    
+
       renderer.beginRenderpass(passInfo);
     }
   }

@@ -24,7 +24,7 @@ namespace Magnesium {
       this.mValue = value;
     }    
 
-    fromColorAndFormat(format: MgFormat, color: MgColor4f) : MgClearValue {
+    static fromColorAndFormat(format: MgFormat, color: MgColor4f) : MgClearValue {
       let factor : number = 0;
       let category : MgClearColorCategory;
       switch (format) {

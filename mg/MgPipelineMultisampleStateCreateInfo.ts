@@ -6,7 +6,7 @@ namespace Magnesium {
     rasterizationSamples : MgSampleCountFlagBits;
     sampleShadingEnable : boolean;
     minSampleShading : number;
-    sampleMask : Array<number>;
+    sampleMask : Array<number>|null;
     alphaToCoverageEnable : boolean;
     alphaToOneEnable : boolean;
 	}

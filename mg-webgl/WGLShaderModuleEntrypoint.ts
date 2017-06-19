@@ -36,7 +36,7 @@ namespace Magnesium {
 		isCompiled(shader:WebGLShader): boolean {
 			let isCompiled: boolean = this.mGL.getShaderParameter(
 				shader
-				, gl.COMPILE_STATUS) as boolean;
+				, this.mGL.COMPILE_STATUS) as boolean;
 			return isCompiled;
 		}
 

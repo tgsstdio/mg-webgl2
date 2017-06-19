@@ -8,6 +8,6 @@ namespace Magnesium {
     descriptorType : MgDescriptorType;
     descriptorCount : number;
     stageFlags : MgShaderStageFlagBits;
-    immutableSamplers : Array<IMgSampler>;
+    immutableSamplers : Array<IMgSampler>|null;
 	}
 }

@@ -54,7 +54,7 @@ namespace Magnesium {
 
 		createImage(pCreateInfo: MgImageCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pImage: IMgImage } ) : MgResult;
+      , out: { pImage: IMgImage|null } ) : MgResult;
 		
     getImageSubresourceLayout(image: IMgImage
       , pSubresource: MgImageSubresource
@@ -62,37 +62,38 @@ namespace Magnesium {
 
 		createImageView(pCreateInfo: MgImageViewCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pView: IMgImageView } ) : MgResult;
+      , out: { pView: IMgImageView|null } ) : MgResult;
 
 		createShaderModule(pCreateInfo: MgShaderModuleCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pShaderModule: IMgShaderModule } ) : MgResult;
+      , out: { pShaderModule: IMgShaderModule|null } ) : MgResult;
 
-		createGraphicsPipelines(pipelineCache: IMgPipelineCache
+		createGraphicsPipelines(
+      pipelineCache: IMgPipelineCache|null
       , pCreateInfos: Array<MgGraphicsPipelineCreateInfo>
       , allocator: IMgAllocationCallbacks|null
-      , out: { pPipelines: Array<IMgPipeline> }) : MgResult;
+      , out: { pPipelines: Array<IMgPipeline>|null }) : MgResult;
 
 		createComputePipelines(pipelineCache: IMgPipelineCache
       , pCreateInfos: Array<MgComputePipelineCreateInfo>
       , allocator: IMgAllocationCallbacks|null
-      , out: { pPipelines: Array<IMgPipeline> } ) : MgResult;
+      , out: { pPipelines: Array<IMgPipeline>|null } ) : MgResult;
 
 		createPipelineLayout(pCreateInfo: MgPipelineLayoutCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pPipelineLayout: IMgPipelineLayout }) : MgResult;
+      , out: { pPipelineLayout: IMgPipelineLayout|null }) : MgResult;
 
 		createSampler(pCreateInfo: MgSamplerCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pSampler: IMgSampler } ) : MgResult;
+      , out: { pSampler: IMgSampler|null } ) : MgResult;
 
 		createDescriptorSetLayout(pCreateInfo: MgDescriptorSetLayoutCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pSetLayout: IMgDescriptorSetLayout }) : MgResult;
+      , out: { pSetLayout: IMgDescriptorSetLayout|null }) : MgResult;
 
 		createDescriptorPool(pCreateInfo: MgDescriptorPoolCreateInfo
       , allocator: IMgAllocationCallbacks|null
-      , out: { pDescriptorPool: IMgDescriptorPool}) : MgResult;
+      , out: { pDescriptorPool: IMgDescriptorPool|null }) : MgResult;
 
 		allocateDescriptorSets(pAllocateInfo: MgDescriptorSetAllocateInfo
       , out: { pDescriptorSets: Array<IMgDescriptorSet> } ) : MgResult;

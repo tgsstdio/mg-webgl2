@@ -66,6 +66,7 @@ namespace Magnesium {
       let vertexArrays = new Magnesium.WGLCmdVertexArrayEntrypoint(gl, errorHandler);
       let imageFormat = new Magnesium.WGLImageFormatEntrypoint();
       let fences = new Magnesium.WGLFenceEntrypoint(gl);
+      let buffers = new Magnesium.WGLBufferEntrypoint(gl);
       let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
         deviceMemory
         , deviceImage
@@ -77,7 +78,8 @@ namespace Magnesium {
         , vertexArrays
         , imageFormat
         , semaphores
-        , fences);
+        , fences
+        , buffers);
 
       let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint, memoryTypeMap);
       let physicalDevice: Magnesium.IMgPhysicalDevice = new Magnesium.WGLPhysicalDevice(device, memoryTypeMap);

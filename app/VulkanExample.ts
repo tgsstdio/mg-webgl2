@@ -16,8 +16,8 @@ namespace TriangleDemo {
   }
 
   class IndicesInfo {
-    memory: Magnesium.IMgDeviceMemory|null;
-    buffer: Magnesium.IMgBuffer|null;
+    memory: Magnesium.IMgDeviceMemory;
+    buffer: Magnesium.IMgBuffer;
     count: number;
   }
 
@@ -42,6 +42,11 @@ namespace TriangleDemo {
   class TriangleVertex {
     position: Array<number>;
     color: Array<number>;
+  }
+
+  interface ITriangleDemoShaderPath {
+    openVertexShader(): string;
+    openFragmentShader(): string;
   }
 
   export class VulkanExample {
@@ -95,6 +100,7 @@ namespace TriangleDemo {
     private mSwapchains: Magnesium.IMgSwapchainCollection;
     private mGraphicsDevice: Magnesium.IMgGraphicsDevice;
     private mPresentationLayer: Magnesium.IMgPresentationLayer;
+    private mTrianglePath: ITriangleDemoShaderPath;
 
     constructor (
       configuration: Magnesium.IMgGraphicsConfiguration
@@ -801,6 +807,7 @@ namespace TriangleDemo {
       inputState.vertexAttributeDescriptions = this.vertices.inputAttributes;               
       this.vertices.inputState = inputState;
     }
+
     private prepareUniformBuffers() : void {
 
       // let structSize = Marshal.SizeOf(typeof(UniformBufferObject));
@@ -823,660 +830,730 @@ namespace TriangleDemo {
       if (err != Magnesium.MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
-      this.uniformDataVS.buffer = outBuffer.pBuffer;
+      let buffer = outBuffer.pBuffer as Magnesium.IMgBuffer;
 
       // Prepare and initialize a uniform buffer block containing shader uniforms
       // Single uniforms like in OpenGL are no longer present in Vulkan. All Shader uniforms are passed via uniform buffer blocks
-      Magnesium.MgMemoryRequirements memReqs;
-
+      let outMemReqs 
+        : {pMemoryRequirements:Magnesium.MgMemoryRequirements|null}
+        = {pMemoryRequirements:null};      
       // Get memory requirements including size, alignment and memory type 
-      this.mConfiguration.device.getBufferMemoryRequirements(uniformDataVS.buffer, out memReqs);
-
+      this.mConfiguration.device.getBufferMemoryRequirements(
+        buffer
+        , outMemReqs);
+      let memReqs = outMemReqs.pMemoryRequirements as Magnesium.MgMemoryRequirements;
 
       // Get the memory type index that supports host visibile memory access
       // Most implementations offer multiple memory types and selecting the correct one to allocate memory from is crucial
       // We also want the buffer to be host coherent so we don't have to flush (or sync after every update.
       // Note: This may affect performance so you might not want to do this in a real world application that updates buffers on a regular base
-      uint typeIndex;
-      let isValid = this.mConfiguration.Partition.GetMemoryType(memReqs.MemoryTypeBits, Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT, out typeIndex);
-      Debug.Assert(isValid);
+      let outTypeIndex
+        : {typeIndex:number}
+        = {typeIndex:0};
 
-      Magnesium.MgMemoryAllocateInfo allocInfo = new Magnesium.MgMemoryAllocateInfo
-      {
-          AllocationSize = memReqs.Size,
-          MemoryTypeIndex = typeIndex,
-      };
+      let isValid = this.mConfiguration.partition.getMemoryType(
+        memReqs.memoryTypeBits
+        , Magnesium.MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+          | Magnesium.MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+        , outTypeIndex);
+      if (!isValid) {
+        throw new Error('getMemoryType');
+      }
+
+      let allocInfo = new Magnesium.MgMemoryAllocateInfo();
+      allocInfo.allocationSize = memReqs.size;
+      allocInfo.memoryTypeIndex = outTypeIndex.typeIndex;
 
       // Allocate memory for the uniform buffer
-      err = this.mConfiguration.Device.AllocateMemory(allocInfo, null, out uniformDataVS.memory);
+      let outMemory
+        : {pMemory:Magnesium.IMgDeviceMemory|null} 
+        = {pMemory:null};
+      err = this.mConfiguration.device.allocateMemory(
+        allocInfo
+        , null
+        , outMemory);
       if (err != Magnesium.MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
+      let memory = outMemory.pMemory as Magnesium.IMgDeviceMemory;
 
       // Bind memory to buffer
-      err = uniformDataVS.buffer.BindBufferMemory(this.mConfiguration.Device, uniformDataVS.memory, 0);
+      err = buffer.bindBufferMemory(
+        this.mConfiguration.device
+        , memory
+        , 0);
+        
       if (err != Magnesium.MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
 
       // Store information in the uniform's descriptor that is used by the descriptor set
-      uniformDataVS.descriptor = new Magnesium.MgDescriptorBufferInfo
-      {
-          Buffer = uniformDataVS.buffer,
-          Offset = 0,
-          Range = structSize,
-      };
+      let descriptor = new Magnesium.MgDescriptorBufferInfo();
+      descriptor.buffer = buffer;
+      descriptor.offset = 0;
+      descriptor.range = structSize;
+
+      this.uniformDataVS.buffer = buffer;
+      this.uniformDataVS.memory = memory;
+      this.uniformDataVS.descriptor = descriptor;
 
       this.updateUniformBuffers();
-  }
-
-
-        void setupDescriptorSetLayout()
-        {
-            // Setup layout of descriptors used in this example
-            // Basically connects the different shader stages to descriptors for binding uniform buffers, image samplers, etc.
-            // So every shader binding should map to one descriptor set layout binding
-            let descriptorLayout = new Magnesium.MgDescriptorSetLayoutCreateInfo
-            {
-                Bindings = new[]
-                {
-                    // Binding 0: Uniform buffer (Vertex shader)
-                    new Magnesium.MgDescriptorSetLayoutBinding
-                    {
-                        DescriptorCount = 1,
-                        StageFlags = Magnesium.MgShaderStageFlagBits.VERTEX_BIT,
-                        ImmutableSamplers = null,
-                        DescriptorType = Magnesium.MgDescriptorType.UNIFORM_BUFFER,
-                        Binding = 0,                         
-                    }
-                },
-            };
-
-            let err = this.mConfiguration.Device.CreateDescriptorSetLayout(descriptorLayout, null, out mDescriptorSetLayout);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Create the pipeline layout that is used to generate the rendering pipelines that are based on this descriptor set layout
-            // In a more complex scenario you would have different pipeline layouts for different descriptor set layouts that could be reused
-            let pPipelineLayoutCreateInfo = new Magnesium.MgPipelineLayoutCreateInfo
-            {
-                 SetLayouts = new Magnesium.IMgDescriptorSetLayout[]
-                 {
-                     mDescriptorSetLayout,
-                 }
-            };
-
-            err = this.mConfiguration.Device.CreatePipelineLayout(pPipelineLayoutCreateInfo, null, out mPipelineLayout);
-            Debug.Assert(err == Result.SUCCESS);
-        }
-
-        void preparePipelines()
-        {
-            // System.IO.File.OpenRead("shaders/triangle.vert.spv")
-            using (let vertFs = mTrianglePath.OpenVertexShader())
-            // System.IO.File.OpenRead("shaders/triangle.frag.spv")
-            using (let fragFs = mTrianglePath.OpenFragmentShader())
-            {
-                // Load shaders
-                // Vulkan loads it's shaders from an immediate binary representation called SPIR-V
-                // Shaders are compiled offline from e.g. GLSL using the reference glslang compiler
-
-                Magnesium.IMgShaderModule vsModule;
-                {
-                    let vsCreateInfo = new Magnesium.MgShaderModuleCreateInfo
-                    {
-                        Code = vertFs,
-                        CodeSize = new UIntPtr((ulong)vertFs.Length),
-                    };
-                    //  shaderStages[0] = loadShader(getAssetPath() + "shaders/triangle.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-                    this.mConfiguration.Device.CreateShaderModule(vsCreateInfo, null, out vsModule);
-                }
-
-                Magnesium.IMgShaderModule fsModule;
-                {
-                    let fsCreateInfo = new Magnesium.MgShaderModuleCreateInfo
-                    {
-                        Code = fragFs,
-                        CodeSize = new UIntPtr((ulong)fragFs.Length),
-                    };
-                    // shaderStages[1] = loadShader(getAssetPath() + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-                    this.mConfiguration.Device.CreateShaderModule(fsCreateInfo, null, out fsModule);
-                }
-
-                // Create the graphics pipeline used in this example
-                // Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
-                // A pipeline is then stored and hashed on the GPU making pipeline changes very fast
-                // Note: There are still a few dynamic states that are not directly part of the pipeline (but the info that they are used is)
-
-                let pipelineCreateInfo = new Magnesium.MgGraphicsPipelineCreateInfo
-                {
-
-                    Stages = new Magnesium.MgPipelineShaderStageCreateInfo[]
-                    {
-                        new Magnesium.MgPipelineShaderStageCreateInfo
-                        {
-                            Stage = Magnesium.MgShaderStageFlagBits.VERTEX_BIT,
-                            Module = vsModule,
-                            Name = "vertFunc",
-                        },
-                        new Magnesium.MgPipelineShaderStageCreateInfo
-                        {
-                            Stage = Magnesium.MgShaderStageFlagBits.FRAGMENT_BIT,
-                            Module = fsModule,
-                            Name = "fragFunc",
-                        },
-                    },
-
-                    VertexInputState = vertices.inputState,
-
-                    // Construct the differnent states making up the pipeline
-                    InputAssemblyState = new Magnesium.MgPipelineInputAssemblyStateCreateInfo
-                    {
-                        // Input assembly state describes how primitives are assembled
-                        // This pipeline will assemble vertex data as a triangle lists (though we only use one triangle)
-                        Topology = Magnesium.MgPrimitiveTopology.TRIANGLE_LIST,
-                    },
-
-                    // Rasterization state
-                    RasterizationState = new Magnesium.MgPipelineRasterizationStateCreateInfo
-                    {
-                        PolygonMode = Magnesium.MgPolygonMode.FILL,
-                        CullMode = Magnesium.MgCullModeFlagBits.NONE,
-                        FrontFace = Magnesium.MgFrontFace.COUNTER_CLOCKWISE,
-                        DepthClampEnable = false,
-                        RasterizerDiscardEnable = false,
-                        DepthBiasEnable = false,
-                        LineWidth = 1.0f,
-                    },
-
-
-                    // Color blend state describes how blend factors are calculated (if used)
-                    // We need one blend attachment state per color attachment (even if blending is not used
-                    ColorBlendState = new Magnesium.MgPipelineColorBlendStateCreateInfo
-                    {
-                        Attachments = new Magnesium.MgPipelineColorBlendAttachmentState[]
-                        {
-                        new Magnesium.MgPipelineColorBlendAttachmentState
-                        {
-                            ColorWriteMask =  Magnesium.MgColorComponentFlagBits.R_BIT | Magnesium.MgColorComponentFlagBits.G_BIT | Magnesium.MgColorComponentFlagBits.B_BIT | Magnesium.MgColorComponentFlagBits.A_BIT,
-                            BlendEnable = false,
-                        }
-                        },
-                    },
-
-                    // Multi sampling state
-                    // This example does not make use fo multi sampling (for anti-aliasing), the state must still be set and passed to the pipeline
-                    MultisampleState = new Magnesium.MgPipelineMultisampleStateCreateInfo
-                    {
-                        RasterizationSamples = Magnesium.MgSampleCountFlagBits.COUNT_1_BIT,
-                        SampleMask = null,
-                    },
-
-
-                    // The layout used for this pipeline (can be shared among multiple pipelines using the same layout)
-                    Layout = mPipelineLayout,
-
-                    // Renderpass this pipeline is attached to
-                    RenderPass = Magnesium.MgraphicsDevice.Renderpass,
-
-                    // Viewport state sets the number of viewports and scissor used in this pipeline
-                    // Note: This is actually overriden by the dynamic states (see below)
-                    ViewportState = null,
-
-                    // Depth and stencil state containing depth and stencil compare and test operations
-                    // We only use depth tests and want depth tests and writes to be enabled and compare with less or equal
-                    DepthStencilState = new Magnesium.MgPipelineDepthStencilStateCreateInfo
-                    {
-                        DepthTestEnable = true,
-                        DepthWriteEnable = true,
-                        DepthCompareOp = Magnesium.MgCompareOp.LESS_OR_EQUAL,
-                        DepthBoundsTestEnable = false,
-                        Back = new Magnesium.MgStencilOpState
-                        {
-                            FailOp = Magnesium.MgStencilOp.KEEP,
-                            PassOp = Magnesium.MgStencilOp.KEEP,
-                            CompareOp = Magnesium.MgCompareOp.ALWAYS,
-                        },
-                        StencilTestEnable = false,
-                        Front = new Magnesium.MgStencilOpState
-                        {
-                            FailOp = Magnesium.MgStencilOp.KEEP,
-                            PassOp = Magnesium.MgStencilOp.KEEP,
-                            CompareOp = Magnesium.MgCompareOp.ALWAYS,
-                        },
-                    },
-
-                    // Enable dynamic states
-                    // Most states are baked into the pipeline, but there are still a few dynamic states that can be changed within a command buffer
-                    // To be able to change these we need do specify which dynamic states will be changed using this pipeline. Their actual states are set later on in the command buffer.
-                    // For this example we will set the viewport and scissor using dynamic states
-
-                    DynamicState = new Magnesium.MgPipelineDynamicStateCreateInfo
-                    {
-                        DynamicStates = new[]
-                        {
-                            Magnesium.MgDynamicState.VIEWPORT,
-                            Magnesium.MgDynamicState.SCISSOR,
-                        }
-                    },
-                };
-
-                Magnesium.IMgPipeline[] pipelines;
-                // Create rendering pipeline using the specified states
-                let err = mConfiguration.Device.CreateGraphicsPipelines(null, new[] { pipelineCreateInfo }, null, out pipelines);
-                Debug.Assert(err == Result.SUCCESS);
-
-                vsModule.DestroyShaderModule(this.mConfiguration.device, null);
-                fsModule.DestroyShaderModule(this.mConfiguration.device, null);
-
-                mPipeline = pipelines[0];
-            }
-
-        }
-
-        void setupDescriptorPool()
-        {
-            // Create the global descriptor pool
-            // All descriptors used in this example are allocated from this pool
-            let descriptorPoolInfo = new Magnesium.MgDescriptorPoolCreateInfo
-            {
-                // We need to tell the API the number of max. requested descriptors per type
-                PoolSizes = new Magnesium.MgDescriptorPoolSize[]
-                {
-                    new Magnesium.MgDescriptorPoolSize
-                    {
-                        // This example only uses one descriptor type (uniform buffer) and only requests one descriptor of this type
-                        Type = Magnesium.MgDescriptorType.UNIFORM_BUFFER,
-                        DescriptorCount = 1,
-                    },
-                    // For additional types you need to add new entries in the type count list
-                    // E.g. for two combined image samplers :
-                    // typeCounts[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                    // typeCounts[1].descriptorCount = 2;
-                },
-                // Set the max. number of descriptor sets that can be requested from this pool (requesting beyond this limit will result in an error)
-                MaxSets = 1,
-            };
-            let err = this.mConfiguration.Device.CreateDescriptorPool(descriptorPoolInfo, null, out mDescriptorPool);
-            Debug.Assert(err == Result.SUCCESS);
-        }
-
-        void setupDescriptorSet()
-        {
-            // Allocate a new descriptor set from the global descriptor pool
-            let allocInfo = new Magnesium.MgDescriptorSetAllocateInfo
-            {
-                DescriptorPool = mDescriptorPool,
-                DescriptorSetCount = 1,
-                SetLayouts = new[] { mDescriptorSetLayout },
-            };
-
-            Magnesium.IMgDescriptorSet[] dSets;
-            let err = this.mConfiguration.Device.AllocateDescriptorSets(allocInfo, out dSets);
-            mDescriptorSet = dSets[0];
-
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Update the descriptor set determining the shader binding points
-            // For every binding point used in a shader there needs to be one
-            // descriptor set matching that binding point
-            this.mConfiguration.Device.UpdateDescriptorSets(
-                new []
-                {
-                    // Binding 0 : Uniform buffer
-                    new Magnesium.MgWriteDescriptorSet
-                    {
-                        DstSet = mDescriptorSet,
-                        DescriptorCount = 1,
-                        DescriptorType =  Magnesium.MgDescriptorType.UNIFORM_BUFFER,
-                        BufferInfo = new Magnesium.MgDescriptorBufferInfo[]
-                        {
-                            uniformDataVS.descriptor,
-                        },
-                        // Binds this uniform buffer to binding point 0
-                        DstBinding = 0,
-                    },
-                }, null);
-        }
-
-        Magnesium.IMgCommandBuffer[] drawCmdBuffers;
-
-        void createCommandBuffers()
-        {
-            // Create one command buffer per frame buffer
-            // in the swap chain
-            // Command buffers store a reference to the
-            // frame buffer inside their render pass info
-            // so for static usage withouth having to rebuild
-            // them each frame, we use one per frame buffer
-            drawCmdBuffers = new Magnesium.IMgCommandBuffer[mGraphicsDevice.Framebuffers.Length];
-
-            {
-                let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo
-                {
-                    CommandBufferCount = this.mGraphicsDevice.framebuffers.Length,
-                    CommandPool = this.mConfiguration.partition.commandPool,
-                    Level = Magnesium.MgCommandBufferLevel.PRIMARY,
-                };
-
-                let err = this.mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, drawCmdBuffers);
-                Debug.Assert(err == Result.SUCCESS);
-            }
-
-            // Command buffers for submitting present barriers
-            {
-                let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo
-                {
-                    CommandBufferCount = 2,
-                    CommandPool = this.mConfiguration.partition.commandPool,
-                    Level = Magnesium.MgCommandBufferLevel.PRIMARY,
-                };
-  
-                let presentBuffers = new Magnesium.IMgCommandBuffer[2];
-                let err = this.mConfiguration.Device.AllocateCommandBuffers(cmdBufAllocateInfo, presentBuffers);
-                Debug.Assert(err == Result.SUCCESS);
-
-                // Pre present
-                mPrePresentCmdBuffer = presentBuffers[0];
-
-                // Post present
-                mPostPresentCmdBuffer = presentBuffers[1];
-            }
-        }
-
-        // Build separate command buffers for every framebuffer image
-        // Unlike in OpenGL all rendering commands are recorded once into command buffers that are then resubmitted to the queue
-        // This allows to generate work upfront and from multiple threads, one of the biggest advantages of Vulkan
-        void buildCommandBuffers()
-        {
-            let renderPassBeginInfo = new Magnesium.MgRenderPassBeginInfo {
-                RenderPass = Magnesium.MgraphicsDevice.Renderpass,
-                RenderArea = new Magnesium.MgRect2D
-                {
-                    Offset = new Magnesium.MgOffset2D {  X = 0, Y = 0 },
-                    Extent = new Magnesium.MgExtent2D { Width = mWidth, Height = mHeight },
-                },
-                // Set clear values for all framebuffer attachments with loadOp set to clear
-                // We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
-                ClearValues = new Magnesium.MgClearValue[]
-                {
-                    Magnesium.MgClearValue.FromColorAndFormat(mSwapchains.Format, new Magnesium.MgColor4f(0f, 0f, 0f, 0f)),                    
-                    new Magnesium.MgClearValue { DepthStencil = new Magnesium.MgClearDepthStencilValue( 1.0f, 0) },
-                },
-            };
-            
-            for (let i = 0; i < drawCmdBuffers.Length; ++i)
-            {
-                // Set target frame buffer
-                renderPassBeginInfo.Framebuffer = Magnesium.MgraphicsDevice.Framebuffers[i];
-
-                let cmdBuf = drawCmdBuffers[i];
-
-                let cmdBufInfo = new Magnesium.MgCommandBufferBeginInfo { };
-                let err = cmdBuf.BeginCommandBuffer(cmdBufInfo);
-                Debug.Assert(err == Result.SUCCESS);
-
-                // Start the first sub pass specified in our default render pass setup by the base class
-                // This will clear the color and depth attachment
-                cmdBuf.CmdBeginRenderPass(renderPassBeginInfo, Magnesium.MgSubpassContents.INLINE);
-
-                // Update dynamic viewport state
-
-                cmdBuf.CmdSetViewport(0, 
-                    new[] {
-                        new Magnesium.MgViewport {
-                            Height = (float) mHeight,
-                            Width = (float) mWidth,
-                            MinDepth = 0.0f,
-                            MaxDepth = 1.0f,
-                        }
-                    }
-                );
-
-                // Update dynamic scissor state
-                cmdBuf.CmdSetScissor(0,
-                    new[] {
-                        new Magnesium.MgRect2D {
-                            Extent = new Magnesium.MgExtent2D { Width = mWidth, Height = mHeight },
-                            Offset = new Magnesium.MgOffset2D { X = 0, Y = 0 },
-                        }
-                    }
-                );
-
-                // Bind descriptor sets describing shader binding points
-                cmdBuf.CmdBindDescriptorSets( Magnesium.MgPipelineBindPoint.GRAPHICS, mPipelineLayout, 0, 1, new[] { mDescriptorSet }, null);
-
-                // Bind the rendering pipeline
-                // The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
-                cmdBuf.CmdBindPipeline(MgPipelineBindPoint.GRAPHICS, mPipeline);
-
-                // Bind triangle vertex buffer (contains position and colors)
-                cmdBuf.CmdBindVertexBuffers(0, new[] { vertices.buffer }, new [] { 0UL });
-
-                // Bind triangle index buffer
-                cmdBuf.CmdBindIndexBuffer(indices.buffer, 0, Magnesium.MgIndexType.UINT32);
-
-                // Draw indexed triangle
-                cmdBuf.CmdDrawIndexed(indices.count, 1, 0, 0, 1);
-
-                cmdBuf.CmdEndRenderPass();
-
-                // Ending the render pass will add an implicit barrier transitioning the frame buffer color attachment to 
-                // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR for presenting it to the windowing system
-
-                err = cmdBuf.EndCommandBuffer();
-                Debug.Assert(err == Result.SUCCESS);
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Convert degrees to radians
-        /// </summary>
-        /// <param name="degrees">An angle in degrees</param>
-        /// <returns>The angle expressed in radians</returns>
-        public static float DegreesToRadians(float degrees)
-        {
-            const double degToRad = System.Math.PI / 180.0;
-            return (float) (degrees * degToRad);
-        }
-
-        void updateUniformBuffers()
-        {
-            // Update matrices
-            uboVS.projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(
-                DegreesToRadians(60.0f), 
-                (mWidth / mHeight), 
-                1.0f,
-                256.0f);
-
-            const float ZOOM = -2.5f;
-
-            uboVS.viewMatrix = Matrix4.CreateTranslation(0, 0, ZOOM);
-
-            // TODO : track down rotation
-            uboVS.modelMatrix = Matrix4.Identity;
-            //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-            //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-
-            let structSize = (ulong) Marshal.SizeOf(typeof(UniformBufferObject));
-
-            // Map uniform buffer and update it
-            IntPtr pData;
-
-            let err = uniformDataVS.memory.MapMemory(mConfiguration.Device,  0, structSize, 0, out pData);
-
-            Marshal.StructureToPtr(uboVS, pData, false);
-            // Unmap after data has been copied
-            // Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-            uniformDataVS.memory.UnmapMemory(mConfiguration.Device);
-        }
-
-        renderLoop(): void {
-            render();
-        }
-
-        private render(): void {
-            if (!mPrepared)
-                return;
-            draw();
-        }
-
-        draw() : void {
-            // Get next image in the swap chain (back/front buffer)
-            let currentBufferIndex = mPresentationLayer.BeginDraw(mPostPresentCmdBuffer, mPresentCompleteSemaphore);
-
-            // Use a fence to wait until the command buffer has finished execution before using it again
-            let fence = mWaitFences[(int) currentBufferIndex];
-            let err = mConfiguration.Device.WaitForFences(new[] { fence } , true, ulong.MaxValue);
-            Debug.Assert(err == Result.SUCCESS);
-
-            err = mConfiguration.Device.ResetFences(new[] { fence });
-
-            // Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
-            let submitInfos = new Magnesium.MgSubmitInfo[]
-            {
-                // The submit info structure specifices a command buffer queue submission batch
-                new Magnesium.MgSubmitInfo
-                {
-                    WaitSemaphores = new []
-                    {
-                        // One wait semaphore
-                        new Magnesium.MgSubmitInfoWaitSemaphoreInfo
-                        {
-                             // Pointer to the list of pipeline stages that the semaphore waits will occur at
-                            WaitDstStageMask =  Magnesium.MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT,
-                            // Semaphore(s) to wait upon before the submitted command buffer starts executing
-                            WaitSemaphore = mPresentCompleteSemaphore,
-                        }
-                    },
-                     // One command buffer
-                    CommandBuffers = new []
-                    {
-                        // Command buffers(s) to execute in this batch (submission)
-                        drawCmdBuffers[currentBufferIndex]
-                    },
-                    // One signal semaphore
-                    SignalSemaphores = new []
-                    {
-                        // Semaphore(s) to be signaled when command buffers have completed
-                        mRenderCompleteSemaphore
-                    },                    
-                }
-            };                                        
-
-            // Submit to the graphics queue passing a wait fence
-            err = mConfiguration.Queue.QueueSubmit(submitInfos, fence);
-            Debug.Assert(err == Result.SUCCESS);
-
-            // Present the current buffer to the swap chain
-            // Pass the semaphore signaled by the command buffer submission from the submit info as the wait semaphore for swap chain presentation
-            // This ensures that the image is not presented to the windowing system until all commands have been submitted
-
-            mPresentationLayer.EndDraw([currentBufferIndex], mPrePresentCmdBuffer, [ mRenderCompleteSemaphore ]);
-        }
-
-        private viewChanged(): void
-        {
-            // This function is called by the base example class each time the view is changed by user input
-            updateUniformBuffers();
-        }
-
-        private mIsDisposed: boolean = false; // To detect redundant calls
-        private ITriangleDemoShaderPath mTrianglePath;
-
-        dispose(disposing: boolean) : void {
-            if (this.mIsDisposed)
-            {
-                return;
-            }
-
-            ReleaseUnmanagedResources();
-
-            if (disposing)
-            {  
-                ReleaseManagedResources();
-            }
-
-            mIsDisposed = true;            
-        }
-
-        private releaseManagedResources(): void {
-           
-        }
-
-        private releaseUnmanagedResources(): void {
-            let device = this.mConfiguration.device;
-            if (device != null)
-            {
-
-                // Clean up used Vulkan resources 
-                // Note: Inherited destructor cleans up resources stored in base class
-                if (mPipeline != null)
-                    mPipeline.DestroyPipeline(device, null);
-
-                if (mPipelineLayout != null)
-                    mPipelineLayout.DestroyPipelineLayout(device, null);
-
-                if (mDescriptorSetLayout != null)
-                    mDescriptorSetLayout.DestroyDescriptorSetLayout(device, null);
-
-                if (vertices.buffer != null)
-                    vertices.buffer.DestroyBuffer(device, null);
-
-                if (vertices.memory != null)
-                    vertices.memory.FreeMemory(device, null);
-
-                if (indices.buffer != null)
-                  indices.buffer.destroyBuffer(device, null);
-
-                if (indices.memory != null)
-                  indices.memory.dreeMemory(device, null);
-
-                if (uniformDataVS.buffer != null)
-                  uniformDataVS.buffer.destroyBuffer(device, null);
-
-                if (uniformDataVS.memory != null)
-                  this.uniformDataVS.memory.freeMemory(device, null);
-
-                if (mPresentCompleteSemaphore != null)
-                  this.mPresentCompleteSemaphore.destroySemaphore(device, null);
-
-
-                if (mRenderCompleteSemaphore != null)
-                  this.mRenderCompleteSemaphore.destroySemaphore(device, null);
-
-                for (let fence of this.mWaitFences) {
-                  fence.destroyFence(device, null);
-                }
-
-                if (this.mDescriptorPool != null)
-                  this.mDescriptorPool.DestroyDescriptorPool(device, null);
-
-                if (this.drawCmdBuffers != null) {
-                  this.mConfiguration.Device.FreeCommandBuffers(
-                    this.mConfiguration.partition.commandPool
-                    , drawCmdBuffers);
-                }
-
-                if (this.mPostPresentCmdBuffer != null) {
-                  this.mConfiguration.device.freeCommandBuffers(
-                    this.mConfiguration.partition.commandPool
-                    , [this.mPostPresentCmdBuffer]);
-                }
-
-
-                if (this.mPrePresentCmdBuffer != null) {
-                  this.mConfiguration.device.freeCommandBuffers(
-                    this.mConfiguration.partition.commandPool
-                    , [this.mPrePresentCmdBuffer]);
-                }
-
-                if (this.mGraphicsDevice != null)
-                   this.mGraphicsDevice.dispose();
-            }
-        }
     }
+
+    private setupDescriptorSetLayout(): void {      
+      // Binding 0: Uniform buffer (Vertex shader)
+      let binding = new Magnesium.MgDescriptorSetLayoutBinding();
+      binding.binding = 0;      
+      binding.descriptorCount = 1;
+      binding.stageFlags = Magnesium.MgShaderStageFlagBits.VERTEX_BIT;
+      binding.immutableSamplers = null;
+      binding.descriptorType = Magnesium.MgDescriptorType.UNIFORM_BUFFER;
+
+      // Setup layout of descriptors used in this example
+      // Basically connects the different shader stages to descriptors for binding uniform buffers, image samplers, etc.
+      // So every shader binding should map to one descriptor set layout binding
+      let descriptorLayout
+        = new Magnesium.MgDescriptorSetLayoutCreateInfo();
+      descriptorLayout.bindings = [binding];
+
+      let outDescriptorSetLayout
+        : {pSetLayout:Magnesium.IMgDescriptorSetLayout|null}
+        = {pSetLayout:null};
+      let err = this.mConfiguration.device.createDescriptorSetLayout(
+        descriptorLayout
+        , null
+        , outDescriptorSetLayout);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.mDescriptorSetLayout = outDescriptorSetLayout.pSetLayout as Magnesium.IMgDescriptorSetLayout;
+
+      // Create the pipeline layout that is used to generate the rendering pipelines that are based on this descriptor set layout
+      // In a more complex scenario you would have different pipeline layouts for different descriptor set layouts that could be reused
+      let pPipelineLayoutCreateInfo
+        = new Magnesium.MgPipelineLayoutCreateInfo();
+      pPipelineLayoutCreateInfo.setLayouts = [this.mDescriptorSetLayout];
+
+      let outPipelineLayout 
+       : {pPipelineLayout:Magnesium.IMgPipelineLayout|null}
+       = {pPipelineLayout:null};
+
+      err = this.mConfiguration.device.createPipelineLayout(
+        pPipelineLayoutCreateInfo
+        , null
+        , outPipelineLayout);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      this.mPipelineLayout
+       = outPipelineLayout.pPipelineLayout as Magnesium.IMgPipelineLayout;
+    }
+
+    private preparePipelines(): void { 
+      let modules : {
+        frag: Magnesium.IMgShaderModule|null
+        ,vert: Magnesium.IMgShaderModule|null
+        }
+        = { frag:null, vert:null };
+
+      const vsPromise = new Promise<string>(
+        (resolve, reject) => {
+          return this.mTrianglePath.openVertexShader();
+        }
+      )
+
+      const fsPromise = new Promise<string>(
+        (resolve, reject) => {
+          return this.mTrianglePath.openVertexShader();
+        }         
+      );
+
+      vsPromise
+        .then((vs) => {
+          let vsCreateInfo = new Magnesium.MgShaderModuleCreateInfo();
+          vsCreateInfo.code = vs;
+          vsCreateInfo.codeSize = vs.length;
+          // shaderStages[1] = loadShader(getAssetPath() 
+          // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+          let outModule
+            : {pShaderModule:Magnesium.IMgShaderModule|null}
+            = {pShaderModule:null};
+          let err = this.mConfiguration.device.createShaderModule(vsCreateInfo, null, outModule);
+          if (err != Magnesium.MgResult.SUCCESS) {
+            throw new Error(err.toString());
+          }
+          modules.vert = outModule.pShaderModule;
+        })
+        .catch((err) => {throw err});        
+
+      fsPromise
+        .then((fs) => {
+          let fsCreateInfo = new Magnesium.MgShaderModuleCreateInfo();
+          fsCreateInfo.code = fs;
+          fsCreateInfo.codeSize = fs.length;
+          // shaderStages[1] = loadShader(getAssetPath() 
+          // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+          let outModule
+            : {pShaderModule:Magnesium.IMgShaderModule|null}
+            = {pShaderModule:null};
+          let err = this.mConfiguration.device.createShaderModule(fsCreateInfo, null, outModule);
+          if (err != Magnesium.MgResult.SUCCESS) {
+            throw new Error(err.toString());
+          }
+          modules.frag = outModule.pShaderModule;
+        })
+        .catch((err) => {throw err});
+
+        // Create the graphics pipeline used in this example
+        // Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
+        // A pipeline is then stored and hashed on the GPU making pipeline changes very fast
+        // Note: There are still a few dynamic states that are not directly part of the pipeline (but the info that they are used is)
+
+        let createInfo
+          = new Magnesium.MgGraphicsPipelineCreateInfo();
+        
+        let vsStage = new Magnesium.MgPipelineShaderStageCreateInfo();
+        vsStage.stage = Magnesium.MgShaderStageFlagBits.VERTEX_BIT;
+
+        let vsModule = modules.vert as Magnesium.IMgShaderModule;
+        vsStage.module = vsModule;
+        vsStage.name = "vertFunc";
+
+        let fsStage = new Magnesium.MgPipelineShaderStageCreateInfo();
+        fsStage.stage = Magnesium.MgShaderStageFlagBits.VERTEX_BIT;
+
+        let fsModule = modules.frag as Magnesium.IMgShaderModule;
+        fsStage.module = fsModule;
+        fsStage.name = "fragFunc";
+
+        // Input assembly state describes how primitives are assembled
+        // This pipeline will assemble vertex data as a triangle lists (though we only use one triangle)
+        let iaState = new Magnesium.MgPipelineInputAssemblyStateCreateInfo();
+        iaState.topology = Magnesium.MgPrimitiveTopology.TRIANGLE_LIST;
+
+        // Rasterization state
+        let rasterState
+          = new Magnesium.MgPipelineRasterizationStateCreateInfo();       
+        rasterState.polygonMode = Magnesium.MgPolygonMode.FILL;
+        rasterState.cullMode = Magnesium.MgCullModeFlagBits.NONE;
+        rasterState.frontFace = Magnesium.MgFrontFace.COUNTER_CLOCKWISE;
+        rasterState.depthClampEnable = false;
+        rasterState.rasterizerDiscardEnable = false;
+        rasterState.depthBiasEnable = false;
+        //rasterState.lineWidth = 1.0;        
+
+        createInfo.stages = [vsStage, fsStage];
+        createInfo.vertexInputState = this.vertices.inputState;
+        createInfo.inputAssemblyState = iaState;
+        createInfo.rasterizationState = rasterState;
+
+        let attachment = new Magnesium.MgPipelineColorBlendAttachmentState();
+        attachment.colorWriteMask 
+          = Magnesium.MgColorComponentFlagBits.R_BIT
+          | Magnesium.MgColorComponentFlagBits.G_BIT
+          | Magnesium.MgColorComponentFlagBits.B_BIT
+          | Magnesium.MgColorComponentFlagBits.A_BIT;
+        attachment.blendEnable = false;
+
+        // Color blend state describes how blend factors are calculated (if used)
+        // We need one blend attachment state per color attachment (even if blending is not used
+        let cbState = new Magnesium.MgPipelineColorBlendStateCreateInfo(); 
+        cbState.attachments = [attachment];
+        createInfo.colorBlendState = cbState;
+
+        // Multi sampling state
+        // This example does not make use fo multi sampling (for anti-aliasing), the state must still be set and passed to the pipeline
+        let msState = new Magnesium.MgPipelineMultisampleStateCreateInfo();
+        msState.rasterizationSamples = Magnesium.MgSampleCountFlagBits.COUNT_1_BIT;
+        msState.sampleMask = null;
+        createInfo.multisampleState = msState;
+
+        // The layout used for this pipeline (can be shared among multiple pipelines using the same layout)
+        createInfo.layout = this.mPipelineLayout;
+
+        // Renderpass this pipeline is attached to
+        createInfo.renderPass = this.mGraphicsDevice.renderpass;
+
+        // Viewport state sets the number of viewports and scissor used in this pipeline
+        // Note: This is actually overriden by the dynamic states (see below)
+        createInfo.viewportState = null;
+
+        // Depth and stencil state containing depth and stencil compare and test operations
+        // We only use depth tests and want depth tests and writes to be enabled and compare with less or equal
+
+        let dssState = new Magnesium.MgPipelineDepthStencilStateCreateInfo();
+        dssState.depthTestEnable = true;
+        dssState.depthWriteEnable = true;
+        dssState.depthCompareOp = Magnesium.MgCompareOp.LESS_OR_EQUAL;
+        dssState.depthBoundsTestEnable = false;
+
+        let dsBack = new Magnesium.MgStencilOpState();
+        dsBack.failOp = Magnesium.MgStencilOp.KEEP;
+        dsBack.passOp = Magnesium.MgStencilOp.KEEP;
+        dsBack.compareOp = Magnesium.MgCompareOp.ALWAYS;
+        dssState.back = dsBack;
+
+        dssState.stencilTestEnable = false;
+
+        let dsFront = new Magnesium.MgStencilOpState();
+        dsFront.failOp = Magnesium.MgStencilOp.KEEP;
+        dsFront.passOp = Magnesium.MgStencilOp.KEEP;
+        dsFront.compareOp = Magnesium.MgCompareOp.ALWAYS;
+        dssState.front = dsFront;
+
+        createInfo.depthStencilState = dssState;
+
+        // Enable dynamic states
+        // Most states are baked into the pipeline, but there are still a few dynamic states that can be changed within a command buffer
+        // To be able to change these we need do specify which dynamic states will be changed using this pipeline. Their actual states are set later on in the command buffer.
+        // For this example we will set the viewport and scissor using dynamic states        
+
+        let dynamicState = new Magnesium.MgPipelineDynamicStateCreateInfo();
+        dynamicState.dynamicStates = [
+           Magnesium.MgDynamicState.VIEWPORT
+          ,Magnesium.MgDynamicState.SCISSOR
+        ];
+
+        createInfo.dynamicState = dynamicState;
+
+        let out
+          : {pPipelines:Array<Magnesium.IMgPipeline>|null}
+          = {pPipelines:null};
+
+        // Create rendering pipeline using the specified states
+        let err = this.mConfiguration.device.createGraphicsPipelines(
+          null
+          , [createInfo]
+          , null
+          , out);
+
+        if (err != Magnesium.MgResult.SUCCESS) {
+          throw new Error(err.toString());
+        }
+
+        vsModule.destroyShaderModule(this.mConfiguration.device, null);
+        fsModule.destroyShaderModule(this.mConfiguration.device, null);
+
+        let pipelines = out.pPipelines as Array<Magnesium.IMgPipeline>;
+        this.mPipeline = pipelines[0];
+    }
+
+    // Create the global descriptor pool
+    // All descriptors used in this example are allocated from this pool
+    private setupDescriptorPool(): void {
+      // We need to tell the API the number of max. requested descriptors per type
+      let typeCounts = new Array<Magnesium.MgDescriptorPoolSize>(1);
+
+      // This example only uses one descriptor type (uniform buffer) and only requests one descriptor of this type
+      typeCounts[0] = new Magnesium.MgDescriptorPoolSize();
+      typeCounts[0].type = Magnesium.MgDescriptorType.UNIFORM_BUFFER;
+      typeCounts[0].descriptorCount = 1;              
+
+      // For additional types you need to add new entries in the type count list
+      // E.g. for two combined image samplers :
+      // typeCounts[1] = new Magnesium.MgDescriptorPoolSize();
+      // typeCounts[1].type = Magnesium.MgDescriptorType.COMBINED_IMAGE_SAMPLER;
+      // typeCounts[1].descriptorCount = 2;        
+
+      let descriptorPoolInfo = new Magnesium.MgDescriptorPoolCreateInfo();
+      descriptorPoolInfo.poolSizes = typeCounts;
+      // Set the max. number of descriptor sets that can be requested from this pool (requesting beyond this limit will result in an error)        
+      descriptorPoolInfo.maxSets = 1;
+
+      let out
+        : {pDescriptorPool:Magnesium.IMgDescriptorPool|null}
+        = {pDescriptorPool:null};
+      let err = this.mConfiguration.device.createDescriptorPool(descriptorPoolInfo, null, out);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+      this.mDescriptorPool = out.pDescriptorPool as Magnesium.IMgDescriptorPool;
+    }    
+
+    private setupDescriptorSet(): void
+    {
+      // Allocate a new descriptor set from the global descriptor pool
+      let allocInfo = new Magnesium.MgDescriptorSetAllocateInfo();        
+      allocInfo.descriptorPool = this.mDescriptorPool;
+      allocInfo.descriptorSetCount = 1;
+      allocInfo.setLayouts = [ this.mDescriptorSetLayout];        
+
+      let out
+        : {pDescriptorSets:Array<Magnesium.IMgDescriptorSet>}
+        = {pDescriptorSets:Array<Magnesium.IMgDescriptorSet>(1)};
+      let err = this.mConfiguration.device.allocateDescriptorSets(allocInfo, out);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }
+
+      this.mDescriptorSet = out.pDescriptorSets[0] as Magnesium.IMgDescriptorSet;      
+
+      // Update the descriptor set determining the shader binding points
+      // For every binding point used in a shader there needs to be one
+      // descriptor set matching that binding point
+
+      // Binding 0 : Uniform buffer
+      let writeDescriptor = new Magnesium.MgWriteDescriptorSet();               
+      writeDescriptor.dstSet = this.mDescriptorSet;
+      writeDescriptor.descriptorCount = 1,
+      writeDescriptor.descriptorType =  Magnesium.MgDescriptorType.UNIFORM_BUFFER,
+      writeDescriptor.bufferInfo = [this.uniformDataVS.descriptor];
+      // Binds this uniform buffer to binding point 0
+      writeDescriptor.dstBinding = 0;
+
+      this.mConfiguration.device.updateDescriptorSets(
+        [writeDescriptor]
+        , null);
+    }
+
+    private createCommandBuffers() : void {
+      // Create one command buffer per frame buffer
+      // in the swap chain
+      // Command buffers store a reference to the
+      // frame buffer inside their render pass info
+      // so for static usage withouth having to rebuild
+      // them each frame, we use one per frame buffer
+      this.drawCmdBuffers
+       = new Array<Magnesium.IMgCommandBuffer>(
+         this.mGraphicsDevice.framebuffers.length
+        );
+
+      let cmdBufAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo();                
+      cmdBufAllocateInfo.commandBufferCount = this.mGraphicsDevice.framebuffers.length;
+      cmdBufAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
+      cmdBufAllocateInfo.level = Magnesium.MgCommandBufferLevel.PRIMARY;             
+
+      let err = this.mConfiguration.device.allocateCommandBuffers(
+        cmdBufAllocateInfo
+        , this.drawCmdBuffers);
+
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }      
+
+      // Command buffers for submitting present barriers      
+      let presentAllocateInfo = new Magnesium.MgCommandBufferAllocateInfo();          
+      presentAllocateInfo.commandBufferCount = 2;
+      presentAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
+      presentAllocateInfo.level = Magnesium.MgCommandBufferLevel.PRIMARY;
+
+      let presentBuffers = new Array<Magnesium.IMgCommandBuffer>(2);
+      err = this.mConfiguration.device.allocateCommandBuffers(cmdBufAllocateInfo, presentBuffers);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }   
+
+      // Pre present
+      this.mPrePresentCmdBuffer = presentBuffers[0];
+
+      // Post present
+      this.mPostPresentCmdBuffer = presentBuffers[1];            
+    }
+
+    // Build separate command buffers for every framebuffer image
+    // Unlike in OpenGL all rendering commands are recorded once into command buffers that are then resubmitted to the queue
+    // This allows to generate work upfront and from multiple threads, one of the biggest advantages of Vulkan
+    private buildCommandBuffers(): void{
+      let beginInfo = new Magnesium.MgRenderPassBeginInfo();
+      beginInfo.renderPass = this.mGraphicsDevice.renderpass;
+      beginInfo.renderArea = new Magnesium.MgRect2D();
+      beginInfo.renderArea.offset = new Magnesium.MgOffset2D();
+      beginInfo.renderArea.offset.x = 0;
+      beginInfo.renderArea.offset.y = 0;
+      beginInfo.renderArea.extent = new Magnesium.MgExtent2D();
+      beginInfo.renderArea.extent.width = this.mWidth;
+      beginInfo.renderArea.extent.height = this.mHeight;
+
+      // Set clear values for all framebuffer attachments with loadOp set to clear
+      // We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
+      
+      let clearColor = new Magnesium.MgColor4f(0, 0, 0, 0);
+      let depthStencil = new Magnesium.MgClearDepthStencilValue();
+      depthStencil.depth = 1.0;
+      depthStencil.stencil = 0;
+      let clearDepth = new Magnesium.MgClearValue();
+      clearDepth.depthStencil = depthStencil;
+
+      let ClearValues = [                
+        Magnesium.MgClearValue.fromColorAndFormat(this.mSwapchains.format, clearColor)
+        , clearDepth
+      ];
+          
+      let vp = new Magnesium.MgViewport();
+      vp.height = this.mHeight;
+      vp.width = this.mWidth;
+      vp.minDepth = 0.0;
+      vp.maxDepth = 1.0;
+
+      let scissor = new Magnesium.MgRect2D();
+      scissor.extent = new Magnesium.MgExtent2D();
+      scissor.extent.width = this.mWidth;
+      scissor.extent.height = this.mHeight;
+      scissor.offset = new Magnesium.MgOffset2D();
+      scissor.offset.x = 0;
+      scissor.offset.y = 0;
+            
+      for (let i = 0; i < this.drawCmdBuffers.length; i += 1) {
+        // Set target frame buffer
+        beginInfo.framebuffer = this.mGraphicsDevice.framebuffers[i];
+
+        let cmdBuf = this.drawCmdBuffers[i];
+
+        let cmdBufInfo = new Magnesium.MgCommandBufferBeginInfo();
+        let err = cmdBuf.beginCommandBuffer(cmdBufInfo);
+        if (err != Magnesium.MgResult.SUCCESS) {
+          throw new Error(err.toString());
+        }   
+
+        // Start the first sub pass specified in our default render pass setup by the base class
+        // This will clear the color and depth attachment
+        cmdBuf.cmdBeginRenderPass(
+          beginInfo
+          , Magnesium.MgSubpassContents.INLINE);
+
+        // Update dynamic viewport state
+        cmdBuf.cmdSetViewport(0, [vp]);            
+
+        // Update dynamic scissor state
+        cmdBuf.cmdSetScissor(0, [scissor]);
+
+        // Bind descriptor sets describing shader binding points
+        cmdBuf.cmdBindDescriptorSets(
+          Magnesium.MgPipelineBindPoint.GRAPHICS
+          , this.mPipelineLayout
+          , 0
+          , 1
+          , [this.mDescriptorSet]
+          , null);
+
+        // Bind the rendering pipeline
+        // The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
+        cmdBuf.cmdBindPipeline(
+          Magnesium.MgPipelineBindPoint.GRAPHICS
+          , this.mPipeline);
+
+        // Bind triangle vertex buffer (contains position and colors)
+        cmdBuf.cmdBindVertexBuffers(0, [this.vertices.buffer ], [ 0 ]);
+
+        // Bind triangle index buffer
+        cmdBuf.cmdBindIndexBuffer(this.indices.buffer, 0, Magnesium.MgIndexType.UINT32);
+
+        // Draw indexed triangle
+        cmdBuf.cmdDrawIndexed(this.indices.count, 1, 0, 0, 1);
+
+        cmdBuf.cmdEndRenderPass();
+
+        // Ending the render pass will add an implicit barrier transitioning the frame buffer color attachment to 
+        // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR for presenting it to the windowing system
+
+        err = cmdBuf.endCommandBuffer();
+        if (err != Magnesium.MgResult.SUCCESS) {
+          throw new Error(err.toString());
+        }   
+      }
+    }
+
+    /// <summary>
+    /// Convert degrees to radians
+    /// </summary>
+    /// <param name="degrees">An angle in degrees</param>
+    /// <returns>The angle expressed in radians</returns>
+    private degreesToRadians(degrees: number): number
+    {
+        const DEG_TO_RAD = Math.PI / 180.0;
+        return (degrees * DEG_TO_RAD);
+    }
+
+    private updateUniformBuffers() : void {
+      /** TODO: LATER
+      // Update matrices
+      uboVS.projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(
+        DegreesToRadians(60.0f), 
+        (mWidth / mHeight), 
+        1.0f,
+        256.0f);
+
+        const ZOOM = -2.5;
+
+        uboVS.viewMatrix = Matrix4.CreateTranslation(0, 0, ZOOM);
+
+        // TODO : track down rotation
+        uboVS.modelMatrix = Matrix4.Identity;
+        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        //uboVS.modelMatrix = glm::rotate(uboVS.modelMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+
+        let structSize = (ulong) Marshal.SizeOf(typeof(UniformBufferObject));
+
+        // Map uniform buffer and update it
+        IntPtr pData;
+
+        let err = this.uniformDataVS.memory.mapMemory(this.mConfiguration.device,  0, structSize, 0, out pData);
+
+        // Marshal.StructureToPtr(uboVS, pData, false);
+        // Unmap after data has been copied
+        // Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
+        this.uniformDataVS.memory.unmapMemory(this.mConfiguration.device);
+
+      **/
+    }
+
+    renderLoop(): void {
+      this.render();
+    }
+
+    private render(): void {
+        if (!this.mPrepared)
+            return;
+        this.draw();
+    }
+
+    private draw() : void {
+      // Get next image in the swap chain (back/front buffer)
+      let currentBufferIndex = this.mPresentationLayer.beginDraw(
+        this.mPostPresentCmdBuffer
+        , this.mPresentCompleteSemaphore
+        , Number.MAX_SAFE_INTEGER);
+
+      // Use a fence to wait until the command buffer has finished execution before using it again
+      let fence = this.mWaitFences[currentBufferIndex];
+      let err = this.mConfiguration.device.waitForFences([fence] , true, Number.MAX_SAFE_INTEGER);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }  
+
+      err = this.mConfiguration.device.resetFences([ fence ]);
+
+      // The submit info structure specifices a command buffer queue submission batch
+      let waitSignal = new Magnesium.MgSubmitInfoWaitSemaphoreInfo();
+      // Pointer to the list of pipeline stages that the semaphore waits will occur at      
+      waitSignal.waitDstStageMask = Magnesium.MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT;
+      // Semaphore(s) to wait upon before the submitted command buffer starts executing      
+      waitSignal.waitSemaphore = this.mPresentCompleteSemaphore;
+
+      // Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
+      let submitInfo = new Magnesium.MgSubmitInfo();
+      submitInfo.waitSemaphores = [waitSignal];
+
+      // Command buffers(s) to execute in this batch (submission)      
+      submitInfo.commandBuffers = [this.drawCmdBuffers[currentBufferIndex]];
+      
+      // Semaphore(s) to be signaled when command buffers have completed
+      submitInfo.signalSemaphores = [this.mRenderCompleteSemaphore];
+
+      // Submit to the graphics queue passing a wait fence
+      err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
+      if (err != Magnesium.MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }   
+
+      // Present the current buffer to the swap chain
+      // Pass the semaphore signaled by the command buffer submission from the submit info as the wait semaphore for swap chain presentation
+      // This ensures that the image is not presented to the windowing system until all commands have been submitted
+
+      this.mPresentationLayer.endDraw(
+        [currentBufferIndex]
+        , this.mPrePresentCmdBuffer
+        , [ this.mRenderCompleteSemaphore ]);
+    }
+
+    private viewChanged(): void
+    {
+        // This function is called by the base example class each time the view is changed by user input
+        this.updateUniformBuffers();
+    }
+
+    private mIsDisposed: boolean = false; // To detect redundant calls
+    dispose(disposing: boolean) : void {
+      if (this.mIsDisposed)
+      {
+        return;
+      }
+
+      this.releaseUnmanagedResources();
+
+      if (disposing) {  
+        this.releaseManagedResources();
+      }
+
+      this.mIsDisposed = true;            
+    }
+
+    private releaseManagedResources(): void {
+        
+    }
+
+    private releaseUnmanagedResources(): void {
+      let device = this.mConfiguration.device;
+      if (device != null) {
+
+        // Clean up used Vulkan resources 
+        // Note: Inherited destructor cleans up resources stored in base class
+        if (this.mPipeline != null)
+          this.mPipeline.destroyPipeline(device, null);
+
+        if (this.mPipelineLayout != null)
+          this.mPipelineLayout.destroyPipelineLayout(device, null);
+
+        if (this.mDescriptorSetLayout != null)
+          this.mDescriptorSetLayout.destroyDescriptorSetLayout(device, null);
+
+        if (this.vertices.buffer != null)
+          this.vertices.buffer.destroyBuffer(device, null);
+
+        if (this.vertices.memory != null)
+          this.vertices.memory.freeMemory(device, null);
+
+        if (this.indices.buffer != null)
+          this.indices.buffer.destroyBuffer(device, null);
+
+        if (this.indices.memory != null)
+          this.indices.memory.freeMemory(device, null);
+
+        if (this.uniformDataVS.buffer != null)
+          this.uniformDataVS.buffer.destroyBuffer(device, null);
+
+        if (this.uniformDataVS.memory != null)
+          this.uniformDataVS.memory.freeMemory(device, null);
+
+        if (this.mPresentCompleteSemaphore != null)
+          this.mPresentCompleteSemaphore.destroySemaphore(device, null);
+
+
+        if (this.mRenderCompleteSemaphore != null)
+          this.mRenderCompleteSemaphore.destroySemaphore(device, null);
+
+        for (let fence of this.mWaitFences) {
+          fence.destroyFence(device, null);
+        }
+
+        if (this.mDescriptorPool != null)
+          this.mDescriptorPool.destroyDescriptorPool(device, null);
+
+        if (this.drawCmdBuffers != null) {
+          this.mConfiguration.device.freeCommandBuffers(
+            this.mConfiguration.partition.commandPool
+            , this.drawCmdBuffers);
+        }
+
+        if (this.mPostPresentCmdBuffer != null) {
+          this.mConfiguration.device.freeCommandBuffers(
+            this.mConfiguration.partition.commandPool
+            , [this.mPostPresentCmdBuffer]);
+        }
+
+
+        if (this.mPrePresentCmdBuffer != null) {
+          this.mConfiguration.device.freeCommandBuffers(
+            this.mConfiguration.partition.commandPool
+            , [this.mPrePresentCmdBuffer]);
+        }
+
+        if (this.mGraphicsDevice != null)
+          this.mGraphicsDevice.dispose();    
+      }    
+    }
+  }
 }

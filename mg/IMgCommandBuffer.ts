@@ -48,7 +48,7 @@ namespace Magnesium {
       , firstSet: number
       , descriptorSetCount: number
       , pDescriptorSets: Array<IMgDescriptorSet>
-      , pDynamicOffsets: Array<number>) : void;
+      , pDynamicOffsets: Array<number>|null) : void;
     // WARN: offset requires UInt64
 		cmdBindIndexBuffer(buffer: IMgBuffer
       , offset: number

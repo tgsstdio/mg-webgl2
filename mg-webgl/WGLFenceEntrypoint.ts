@@ -5,7 +5,7 @@ namespace Magnesium {
       this.mGL = gl;
     }
     
-    createFence(): IGLFence {
+    createFence(): IWGLFence {
       return new WGLFence(this.mGL);
     }
   }

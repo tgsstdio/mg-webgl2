@@ -9,9 +9,9 @@
 /// <reference path="IWGLSemaphoreEntrypoint.ts" />
 /// <reference path="IWGLCmdStateRenderer.ts" />
 /// <reference path="IWGLBlitOperationEntrypoint.ts" />
-/// <reference path="IGLSwapchainKHR.ts" />
+/// <reference path="IWGLSwapchainKHR.ts" />
 /// <reference path="WGLCmdCommandRecording.ts" />
-/// <reference path="IGLFence.ts" />
+/// <reference path="IWGLFence.ts" />
 /// <reference path="IGLQueueFence.ts" />
 
 namespace Magnesium {
@@ -69,7 +69,7 @@ namespace Magnesium {
 			this.enqueueSubmission (sub);
 
 			for (let image of pPresentInfo.images) {
-				let sc = image.swapchain as IGLSwapchainKHR;
+				let sc = image.swapchain as IWGLSwapchainKHR;
 				if (sc != null)	{
 					sc.swapBuffers ();
 				}
@@ -184,7 +184,7 @@ namespace Magnesium {
 						}
 
 						if (order.submissions.size <= 0) {
-							let fence : IGLFence = order.fence;
+							let fence : IWGLFence = order.fence;
               fence.reset();
               fence.beginSync();
 							this.mOrders.delete(orderKey);
@@ -237,7 +237,7 @@ namespace Magnesium {
         if (fence != null) {
 
           let order = new WGLQueueSubmitOrder (this.mOrderKey);
-          order.fence = fence as IGLFence;
+          order.fence = fence as IWGLFence;
           for (let sub of children)
           {
             order.submissions.set (sub.key, sub.orderFence);
