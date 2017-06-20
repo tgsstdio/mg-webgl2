@@ -252,6 +252,7 @@ namespace TriangleDemo {
 
     private prepareStagingVertices(
       vertexBuffer: Array<TriangleVertex>
+      , structSize: number
       , vertexBufferSize: number
     ): StagingBuffer {
       // HOST_VISIBLE STAGING Vertex buffer
@@ -312,7 +313,7 @@ namespace TriangleDemo {
 
       // Map and copy
       let outData
-        : {ppData:ArrayBufferView|null}
+        : {ppData:Uint8Array|null}
         = {ppData:null};
       err = sb.memory.mapMemory(
         this.mConfiguration.device
@@ -323,14 +324,22 @@ namespace TriangleDemo {
       if (err != Magnesium.MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
+      let data = outData.ppData as Uint8Array;
 
-      // TODO: something here
-      // let offset = 0;
-      // for (let vertex of vertexBuffer) {
-      //   IntPtr dest = IntPtr.Add(data, offset);
-      //   Marshal.StructureToPtr(vertex, dest, false);
-      //   offset += structSize;
-      // }
+      let offset: number = 0;
+      let localBuffer = new ArrayBuffer(structSize);
+      let localView = new Float32Array(localBuffer);
+
+      const FLOAT_SIZE = 4;
+      const POSITION_SIZE = 3 * FLOAT_SIZE;
+      for (let vertex of vertexBuffer) {
+         
+         localView.set(vertex.position, 0);
+         localView.set(vertex.color, POSITION_SIZE);
+
+         data.set(localView, offset);
+         offset += structSize;
+      }
 
       sb.memory.unmapMemory(
         this.mConfiguration.device);
@@ -413,7 +422,8 @@ namespace TriangleDemo {
 
     // HOST_VISIBLE Index buffer
     private prepareStagingIndices(
-      indexBufferSize: number
+      indices:Uint32Array
+      , indexBufferSize: number
     ) : StagingBuffer {
       let indexbufferInfo = new Magnesium.MgBufferCreateInfo();
       indexbufferInfo.size = indexBufferSize;
@@ -471,7 +481,7 @@ namespace TriangleDemo {
       sb.memory = outMemory.pMemory as Magnesium.IMgDeviceMemory;
 
       let outData
-        : {ppData: ArrayBufferView|null}
+        : {ppData: Uint8Array|null}
         = {ppData: null};
       err = sb.memory.mapMemory(
         this.mConfiguration.device
@@ -483,14 +493,8 @@ namespace TriangleDemo {
         throw new Error(err.toString());
       }
 
-      let data = outData.ppData as ArrayBufferView;
-
-      let uintBuffer = new Uint8Array(indexBufferSize);
-
-      // TODO: copy here
-      // let bufferSize = indexBufferSize;
-      // Buffer.BlockCopy(indexBuffer, 0, uintBuffer, 0, bufferSize);
-      // Marshal.Copy(uintBuffer, 0, outData, bufferSize);
+      let data = outData.ppData as Uint8Array;
+      data.set(indices, 0);
 
       sb.memory.unmapMemory(this.mConfiguration.device);
 
@@ -730,14 +734,14 @@ namespace TriangleDemo {
       vertexBuffer[2].color = [0.0, 0.0, 1.0];
 
       const F32_MEMBER_SIZE = 4;
-      let structSize = 2 * 3 * F32_MEMBER_SIZE; // 2 * (3 * 4 bytes)
-      let vertexBufferSize = vertexBuffer.length * structSize;
+      const VERTEX_STRUCT_SIZE = 2 * 3 * F32_MEMBER_SIZE; // 2 * (3 * 4 bytes)
+      const VERTEX_BUFFER_SIZE = vertexBuffer.length * VERTEX_STRUCT_SIZE;
 
       // Setup indices      
-      let indexBuffer: Uint32Array = new Uint32Array([ 0, 1, 2 ]);
-      this.indices.count = indexBuffer.length;
+      let indices: Uint32Array = new Uint32Array([ 0, 1, 2 ]);
+      this.indices.count = indices.length;
       const UINT32_MEMBER_SIZE = 4;
-      let indexBufferSize = this.indices.count * UINT32_MEMBER_SIZE;
+      const INDEX_BUFFER_SIZE = this.indices.count * UINT32_MEMBER_SIZE;
 
       // Static data like vertex and index buffer should be stored on the device memory 
       // for optimal (and fastest) access by the GPU
@@ -751,21 +755,23 @@ namespace TriangleDemo {
       // - Use the device local buffers for rendering
       let stagingVertices = this.prepareStagingVertices(
         vertexBuffer
-        , vertexBufferSize
+        , VERTEX_STRUCT_SIZE
+        , VERTEX_BUFFER_SIZE
       );
 
-      this.setupDeviceLocalVertices(vertexBufferSize);
+      this.setupDeviceLocalVertices(VERTEX_BUFFER_SIZE);
 
       let stagingIndices = this.prepareStagingIndices(
-        indexBufferSize);
+        indices,
+        INDEX_BUFFER_SIZE);
       
-      this.setupDeviceLocalIndices(indexBufferSize);
+      this.setupDeviceLocalIndices(INDEX_BUFFER_SIZE);
 
       this.prepareStagingCommandBuffers(
         stagingVertices
         , stagingIndices
-        , vertexBufferSize
-        , indexBufferSize
+        , VERTEX_BUFFER_SIZE
+        , INDEX_BUFFER_SIZE
       );
 
       // Vertex input binding
@@ -773,7 +779,7 @@ namespace TriangleDemo {
 
       let inputBinding = new Magnesium.MgVertexInputBindingDescription();
       inputBinding.binding = VERTEX_BUFFER_BIND_ID;
-      inputBinding.stride = structSize;
+      inputBinding.stride = VERTEX_STRUCT_SIZE;
       inputBinding.inputRate = Magnesium.MgVertexInputRate.VERTEX;
       this.vertices.inputBinding = inputBinding;
 
@@ -1395,7 +1401,7 @@ namespace TriangleDemo {
 
       // Map uniform buffer and update it
       let outData
-        : {ppData:ArrayBufferView|null}
+        : {ppData:Uint8Array|null}
         = {ppData:null};
 
       let err = this.uniformDataVS.memory.mapMemory(this.mConfiguration.device,  0, STRUCT_SIZE, 0, outData);
