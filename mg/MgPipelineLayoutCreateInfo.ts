@@ -1,5 +1,4 @@
-/// <reference path="IMgDescriptorSetLayout.ts" />
-/// <reference path="MgPushConstantRange.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineLayoutCreateInfo	{

@@ -1,6 +1,4 @@
-/// <reference path="MgLogicOp.ts" />
-/// <reference path="MgPipelineColorBlendAttachmentState.ts" />
-/// <reference path="MgColor4f.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineColorBlendStateCreateInfo {

@@ -1,5 +1,4 @@
-/// <reference path="MgVertexInputBindingDescription.ts" />
-/// <reference path="MgVertexInputAttributeDescription.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineVertexInputStateCreateInfo {

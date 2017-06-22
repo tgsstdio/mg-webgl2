@@ -1,4 +1,4 @@
-/// <reference path="MgDescriptorType.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorPoolSize	{

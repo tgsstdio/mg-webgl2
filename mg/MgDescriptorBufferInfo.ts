@@ -1,4 +1,4 @@
-/// <reference path="IMgBuffer.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorBufferInfo	{

@@ -1,5 +1,4 @@
-/// <reference path="IMgQueueInfo.ts" />
-/// <reference path="MgThreadPartition.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
 	export class MgQueueInfo implements IMgQueueInfo {

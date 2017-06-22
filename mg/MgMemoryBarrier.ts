@@ -1,4 +1,4 @@
-/// <reference path="MgAccessFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgMemoryBarrier {

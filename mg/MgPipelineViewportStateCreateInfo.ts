@@ -1,5 +1,4 @@
-/// <reference path="MgViewport.ts" />
-/// <reference path="MgRect2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineViewportStateCreateInfo {

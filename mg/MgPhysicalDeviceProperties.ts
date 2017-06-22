@@ -1,6 +1,4 @@
-/// <reference path="MgPhysicalDeviceType.ts" />
-/// <reference path="MgPhysicalDeviceLimits.ts" />
-/// <reference path="MgPhysicalDeviceSparseProperties.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPhysicalDeviceProperties {

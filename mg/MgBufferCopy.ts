@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export class MgBufferCopy {
     // WARN: srcOffset requires UInt64

@@ -1,6 +1,4 @@
-/// <reference path="IMgAllocationCallbacks.ts" />
-/// <reference path="IMgPhysicalDevice.ts" />
-/// <reference path="MgResult.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgInstance {

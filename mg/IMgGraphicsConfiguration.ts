@@ -1,8 +1,4 @@
-/// <reference path="../mg/MgApplicationInfo.ts" />
-/// <reference path="../mg/IMgCommandPool.ts" />
-/// <reference path="../mg/IMgQueue.ts" />
-/// <reference path="IMgThreadPartition.ts" />
-/// <reference path="IMgDisposable.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgGraphicsConfiguration

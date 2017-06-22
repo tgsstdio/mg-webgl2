@@ -1,26 +1,4 @@
-/// <reference path="MgCommandBufferBeginInfo.ts" />
-/// <reference path="MgCommandBufferResetFlagBits.ts" />
-/// <reference path="MgStencilFaceFlagBits.ts" />
-/// <reference path="MgIndexType.ts" />
-/// <reference path="MgBufferCopy.ts" />
-/// <reference path="MgImageCopy.ts" />
-/// <reference path="MgImageBlit.ts" />
-/// <reference path="MgBufferImageCopy.ts" />
-/// <reference path="MgClearColorValue.ts" />
-/// <reference path="MgClearDepthStencilValue.ts" />
-/// <reference path="MgClearAttachment.ts" />
-/// <reference path="IMgQueryPool.ts" />
-/// <reference path="MgQueryResultFlagBits.ts" />
-/// <reference path="MgRenderPassBeginInfo.ts" />
-/// <reference path="MgSubpassContents.ts" />
-/// <reference path="MgImageMemoryBarrier.ts" />
-/// <reference path="MgBufferMemoryBarrier.ts" />
-/// <reference path="MgMemoryBarrier.ts" />
-/// <reference path="IMgEvent.ts" />
-/// <reference path="MgQueryControlFlagBits.ts" />
-/// <reference path="MgClearRect.ts" />
-/// <reference path="MgImageResolve.ts" />
-/// <reference path="IMgQueryPool.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgCommandBuffer	{

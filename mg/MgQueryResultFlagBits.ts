@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgQueryResultFlagBits {
 		// Results of the queries are written to the destination buffer as 64-bit values

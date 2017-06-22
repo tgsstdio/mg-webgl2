@@ -1,4 +1,4 @@
-/// <reference path="IMgDescriptorSet.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgCopyDescriptorSet {

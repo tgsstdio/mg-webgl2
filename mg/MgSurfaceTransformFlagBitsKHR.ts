@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgSurfaceTransformFlagBitsKHR {
 		IDENTITY_BIT_KHR = 1 << 0,

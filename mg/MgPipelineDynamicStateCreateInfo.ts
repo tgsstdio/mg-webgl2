@@ -1,4 +1,4 @@
-/// <reference path="MgDynamicState.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineDynamicStateCreateInfo {

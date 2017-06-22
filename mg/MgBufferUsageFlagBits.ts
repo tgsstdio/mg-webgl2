@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgBufferUsageFlagBits	{
 		// Can be used as a source of transfer operations

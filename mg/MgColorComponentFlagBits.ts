@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgColorComponentFlagBits {
 		R_BIT = 0x00000001,

@@ -1,6 +1,4 @@
-/// <reference path="MgDependencyFlagBits.ts" />
-/// <reference path="MgPipelineStageFlagBits.ts" />
-/// <reference path="MgAccessFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgCommandPoolCreateInfo {

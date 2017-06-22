@@ -4,8 +4,9 @@ if (el !== null) {
   el.innerText = 'Hello World'
 }
 
-/// <reference path="MgBackbone.ts" />
-
+import VulkanExample from './VulkanExample'
+import MgBackbone from './MgBackbone'
+import VkTriangleDemoShaderPath from './VkTriangleDemoShaderPath'
 
 try {
   let canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
@@ -16,11 +17,20 @@ try {
   appInfo.engineName = "Engine";
   appInfo.engineVersion = 1;
 
-  let backbone = new Magnesium.MgBackbone(appInfo, canvas);
+  let backbone = new MgBackbone(appInfo, canvas);
   let width = 1280;
   let height = 720;
 
-  backbone.configuration.initialize(width, height);
+  let shaderPath = new VkTriangleDemoShaderPath();
+
+  let vk = new VulkanExample(
+    backbone.configuration
+    , backbone.swapchains
+    , backbone.graphicsDevice
+    , backbone.presentationLayer
+    , shaderPath
+  );
+
 }
 catch(err) {
   console.log(err);

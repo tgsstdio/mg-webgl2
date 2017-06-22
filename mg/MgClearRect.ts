@@ -1,4 +1,4 @@
-/// <reference path="MgRect2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgClearRect {

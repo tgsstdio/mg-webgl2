@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgImageType	{
 		TYPE_1D = 1,

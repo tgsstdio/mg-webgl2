@@ -1,6 +1,4 @@
-/// <reference path="MgOffset3D.ts" />
-/// <reference path="MgImageSubresourceLayers.ts" />
-/// <reference path="MgExtent3D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageResolve {

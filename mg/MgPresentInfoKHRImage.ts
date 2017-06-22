@@ -1,4 +1,4 @@
-/// <reference path="IMgSwapchainKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPresentInfoKHRImage {

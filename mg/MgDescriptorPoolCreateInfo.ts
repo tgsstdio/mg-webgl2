@@ -1,5 +1,4 @@
-/// <reference path="MgDescriptorPoolCreateFlagBits.ts" />
-/// <reference path="MgDescriptorPoolSize.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorPoolCreateInfo {

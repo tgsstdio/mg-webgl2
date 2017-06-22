@@ -1,6 +1,4 @@
-/// <reference path="MgBlendOp.ts" />
-/// <reference path="MgColorComponentFlagBits.ts" />
-/// <reference path="MgBlendFactor.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineColorBlendAttachmentState {

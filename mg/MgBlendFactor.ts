@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgBlendFactor {
 		ZERO = 0,

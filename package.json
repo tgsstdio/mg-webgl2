@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "standard": "10.0.2",
-    "typescript": "^2.3.3",
+    "ts-loader": "^2.2.0",
+    "typescript": "2.3.4",
     "webpack": "2.4.1"
   },
   "author": "David Young",

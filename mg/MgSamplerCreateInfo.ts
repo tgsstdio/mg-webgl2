@@ -1,8 +1,4 @@
-/// <reference path="MgFilter.ts" />
-/// <reference path="MgSamplerMipmapMode.ts" />
-/// <reference path="MgSamplerAddressMode.ts" />
-/// <reference path="MgCompareOp.ts" />
-/// <reference path="MgBorderColor.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSamplerCreateInfo {

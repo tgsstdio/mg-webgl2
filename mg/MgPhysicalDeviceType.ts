@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgPhysicalDeviceType {
 		OTHER = 0,

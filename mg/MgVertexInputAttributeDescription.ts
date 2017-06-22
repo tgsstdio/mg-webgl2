@@ -1,4 +1,4 @@
-/// <reference path="MgFormat.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgVertexInputAttributeDescription {

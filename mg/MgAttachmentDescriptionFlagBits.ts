@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgAttachmentDescriptionFlagBits	{
 		// The attachment may alias physical memory of another attachment in the same render pass

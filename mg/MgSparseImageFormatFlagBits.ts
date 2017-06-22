@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgSparseImageFormatFlagBits {
 		// Image uses a single miptail region for all array layers

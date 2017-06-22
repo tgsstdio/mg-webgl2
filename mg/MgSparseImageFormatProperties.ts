@@ -1,6 +1,4 @@
-/// <reference path="MgSparseImageFormatFlagBits.ts" />
-/// <reference path="MgImageAspectFlagBits.ts" />
-/// <reference path="MgExtent3D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSparseImageFormatProperties {

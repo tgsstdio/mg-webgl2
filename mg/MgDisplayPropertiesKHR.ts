@@ -1,6 +1,4 @@
-/// <reference path="IMgDisplayKHR.ts" />
-/// <reference path="MgSurfaceTransformFlagBitsKHR.ts" />
-/// <reference path="MgExtent2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDisplayPropertiesKHR {

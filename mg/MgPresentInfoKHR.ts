@@ -1,5 +1,4 @@
-/// <reference path="IMgSemaphore.ts" />
-/// <reference path="MgPresentInfoKHRImage.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPresentInfoKHR {

@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgShaderStageFlagBits {
 		VERTEX_BIT = 1 << 0,

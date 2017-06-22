@@ -1,4 +1,4 @@
-/// <reference path="MgShaderStageFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPushConstantRange {

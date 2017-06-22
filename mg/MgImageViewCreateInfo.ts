@@ -1,8 +1,4 @@
-/// <reference path="IMgImage.ts" />
-/// <reference path="MgImageViewType.ts" />
-/// <reference path="MgFormat.ts" />
-/// <reference path="MgComponentMapping.ts" />
-/// <reference path="MgImageSubresourceRange.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageViewCreateInfo {

@@ -1,6 +1,4 @@
-/// <reference path="MgDescriptorImageInfo.ts" />
-/// <reference path="MgDescriptorBufferInfo.ts" />
-/// <reference path="IMgBufferView.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgWriteDescriptorSet	{

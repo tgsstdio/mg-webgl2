@@ -1,4 +1,4 @@
-/// <reference path="MgFenceCreateFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgFenceCreateInfo {

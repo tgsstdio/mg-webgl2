@@ -1,8 +1,4 @@
-/// <reference path="../mg/IMgCommandPool.ts" />
-/// <reference path="../mg/IMgDevice.ts" />
-/// <reference path="../mg/IMgQueue.ts" />
-/// <reference path="../mg/IMgPhysicalDevice.ts" />
-/// <reference path="../mg/MgMemoryPropertyFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgThreadPartition

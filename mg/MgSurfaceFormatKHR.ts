@@ -1,5 +1,4 @@
-/// <reference path="MgColorSpaceKHR.ts" />
-/// <reference path="MgFormat.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSurfaceFormatKHR {

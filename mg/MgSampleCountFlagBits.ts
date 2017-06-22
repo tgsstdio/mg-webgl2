@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgSampleCountFlagBits	{
 		// Sample count 1 supported

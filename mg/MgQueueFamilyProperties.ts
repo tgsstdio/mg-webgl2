@@ -1,5 +1,4 @@
-/// <reference path="MgExtent3D.ts" />
-/// <reference path="MgQueueFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgQueueFamilyProperties {

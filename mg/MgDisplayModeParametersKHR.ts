@@ -1,4 +1,4 @@
-/// <reference path="MgExtent2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDisplayModeParametersKHR {

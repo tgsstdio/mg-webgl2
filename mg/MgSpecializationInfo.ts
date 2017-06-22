@@ -1,4 +1,4 @@
-/// <reference path="MgSpecializationMapEntry.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSpecializationInfo {

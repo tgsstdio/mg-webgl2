@@ -1,8 +1,4 @@
-/// <reference path="../mg/IMgEntrypoint.ts" />
-/// <reference path="../mg/IMgInstance.ts" />
-/// <reference path="../mg/MgResult.ts" />
-/// <reference path="IMgDisposable.ts" />
-/// <reference path="MgInstanceExtensionOptions.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
 

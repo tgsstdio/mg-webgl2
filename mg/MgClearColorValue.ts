@@ -1,6 +1,4 @@
-/// <reference path="MgColor4f.ts" />
-/// <reference path="MgVec4i.ts" />
-/// <reference path="MgVec4Ui.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgClearColorValue {

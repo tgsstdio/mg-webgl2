@@ -1,4 +1,4 @@
-/// <reference path="MgComponentSwizzle.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
 	export class MgComponentMapping {

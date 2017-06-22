@@ -1,4 +1,4 @@
-/// <reference path="MgVertexInputRate.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgVertexInputBindingDescription {

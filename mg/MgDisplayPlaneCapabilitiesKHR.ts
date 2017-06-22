@@ -1,6 +1,4 @@
-/// <reference path="MgExtent2D.ts" />
-/// <reference path="MgOffset2D.ts" />
-/// <reference path="MgDisplayPlaneAlphaFlagBitsKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDisplayPlaneCapabilitiesKHR {

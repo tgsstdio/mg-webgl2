@@ -1,5 +1,4 @@
-/// <reference path="MgExtent3D.ts" />
-/// <reference path="MgSampleCountFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageFormatProperties {

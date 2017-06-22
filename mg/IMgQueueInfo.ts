@@ -1,4 +1,6 @@
-	namespace Magnesium {
+	/// <reference path="Magnesium.ts" />
+
+  namespace Magnesium {
     export interface IMgQueueInfo	{
       readonly queueIndex: number;
       readonly queueFamilyIndex: number;

@@ -1,6 +1,4 @@
-/// <reference path="MgDescriptorType.ts" />
-/// <reference path="MgShaderStageFlagBits.ts" />
-/// <reference path="IMgSampler.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorSetLayoutBinding	{

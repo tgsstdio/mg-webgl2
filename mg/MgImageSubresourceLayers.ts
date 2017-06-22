@@ -1,4 +1,4 @@
-/// <reference path="MgImageAspectFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageSubresourceLayers {

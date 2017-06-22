@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgBorderColor {
 		FLOAT_TRANSPARENT_BLACK = 0,

@@ -1,7 +1,4 @@
-/// <reference path="IMgRenderPass.ts" />
-/// <reference path="MgQueryControlFlagBits.ts" />
-/// <reference path="IMgFramebuffer.ts" />
-/// <reference path="MgQueryPipelineStatisticFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgCommandBufferInheritanceInfo {

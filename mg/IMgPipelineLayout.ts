@@ -1,5 +1,5 @@
-/// <reference path="IMgDevice.ts" />
-/// <reference path="IMgAllocationCallbacks.ts" />
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export interface IMgPipelineLayout {
 		destroyPipelineLayout(device: IMgDevice

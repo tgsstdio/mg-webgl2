@@ -1,5 +1,4 @@
-/// <reference path="MgMemoryHeap.ts" />
-/// <reference path="MgMemoryType.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPhysicalDeviceMemoryProperties {

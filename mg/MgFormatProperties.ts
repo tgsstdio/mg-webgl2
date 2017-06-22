@@ -1,5 +1,4 @@
-/// <reference path="MgFormat.ts" />
-/// <reference path="MgFormatFeatureFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgFormatProperties {

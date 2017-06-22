@@ -1,6 +1,6 @@
-namespace TriangleDemo {
-  export interface ITriangleDemoShaderPath {
+interface ITriangleDemoShaderPath {
     openVertexShader(): string;
     openFragmentShader(): string;
-  }
 }
+
+export default ITriangleDemoShaderPath;

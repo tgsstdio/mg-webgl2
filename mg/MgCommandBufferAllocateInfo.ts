@@ -1,5 +1,4 @@
-/// <reference path="MgCommandBufferLevel.ts" />
-/// <reference path="IMgCommandPool.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgCommandBufferAllocateInfo {

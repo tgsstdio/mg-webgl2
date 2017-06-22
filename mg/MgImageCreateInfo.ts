@@ -1,12 +1,4 @@
-/// <reference path="MgImageCreateFlagBits.ts" />
-/// <reference path="MgImageType.ts" />
-/// <reference path="MgFormat.ts" />
-/// <reference path="MgExtent3D.ts" />
-/// <reference path="MgSampleCountFlagBits.ts" />
-/// <reference path="MgImageTiling.ts" />
-/// <reference path="MgImageUsageFlagBits.ts" />
-/// <reference path="MgSharingMode.ts" />
-/// <reference path="MgImageLayout.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageCreateInfo {

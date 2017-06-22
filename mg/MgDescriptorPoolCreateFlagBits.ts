@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgDescriptorPoolCreateFlagBits {
 		// Descriptor sets may be freed individually

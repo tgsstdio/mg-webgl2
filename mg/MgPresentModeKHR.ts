@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgPresentModeKHR {
 		IMMEDIATE_KHR = 0,

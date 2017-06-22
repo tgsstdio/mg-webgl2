@@ -1,5 +1,4 @@
-/// <reference path="../mg/IMgPhysicalDevice.ts" />
-/// <reference path="IMgLogicalDevice.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgLogicalDevice implements IMgLogicalDevice {  

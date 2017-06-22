@@ -1,7 +1,4 @@
-/// <reference path="IMgFramebuffer.ts" />
-/// <reference path="IMgRenderPass.ts" />
-/// <reference path="MgRect2D.ts" />
-/// <reference path="MgClearValue.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgRenderPassBeginInfo {

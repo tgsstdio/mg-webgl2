@@ -1,13 +1,4 @@
-/// <reference path="MgFormat.ts" />
-/// <reference path="MgPresentModeKHR.ts" />
-/// <reference path="MgSurfaceTransformFlagBitsKHR.ts" />
-/// <reference path="MgImageUsageFlagBits.ts" />
-/// <reference path="MgCompositeAlphaFlagBitsKHR.ts" />
-/// <reference path="MgSharingMode.ts" />
-/// <reference path="MgColorSpaceKHR.ts" />
-/// <reference path="MgExtent2D.ts" />
-/// <reference path="IMgSurfaceKHR.ts" />
-/// <reference path="IMgSwapchainKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSwapchainCreateInfoKHR {

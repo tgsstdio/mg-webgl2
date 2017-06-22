@@ -1,5 +1,4 @@
-/// <reference path="IMgDisplayModeKHR.ts" />
-/// <reference path="MgDisplayModeParametersKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDisplayModePropertiesKHR {

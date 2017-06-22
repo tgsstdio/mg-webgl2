@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export  enum MgSamplerMipmapMode {
 		// Choose nearest mip level

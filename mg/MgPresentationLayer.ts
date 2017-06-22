@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export class MgPresentationLayer implements IMgPresentationLayer {
 		private readonly mGraphicsConfiguration: IMgGraphicsConfiguration;

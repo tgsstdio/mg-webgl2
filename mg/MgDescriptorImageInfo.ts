@@ -1,6 +1,4 @@
-/// <reference path="IMgSampler.ts" />
-/// <reference path="IMgImageView.ts" />
-/// <reference path="MgImageLayout.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorImageInfo {

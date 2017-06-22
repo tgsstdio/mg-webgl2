@@ -1,5 +1,4 @@
-/// <reference path="MgDeviceQueueCreateInfo.ts" />
-/// <reference path="MgPhysicalDeviceFeatures.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDeviceCreateInfo {

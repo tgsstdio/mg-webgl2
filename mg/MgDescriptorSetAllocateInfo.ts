@@ -1,5 +1,4 @@
-/// <reference path="IMgDescriptorPool.ts" />
-/// <reference path="IMgDescriptorSetLayout.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDescriptorSetAllocateInfo {

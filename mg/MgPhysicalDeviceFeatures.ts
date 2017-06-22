@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export class MgPhysicalDeviceFeatures {
     robustBufferAccess : boolean;

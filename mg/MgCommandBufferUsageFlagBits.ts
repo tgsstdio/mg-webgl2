@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgCommandBufferUsageFlagBits {
 		ONE_TIME_SUBMIT_BIT = 1 << 0,

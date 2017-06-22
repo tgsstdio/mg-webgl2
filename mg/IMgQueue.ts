@@ -1,9 +1,4 @@
-/// <reference path="IMgAllocationCallbacks.ts" />
-/// <reference path="MgResult.ts" />
-/// <reference path="MgSubmitInfo.ts" />
-/// <reference path="IMgFence.ts" />
-/// <reference path="MgBindSparseInfo.ts" />
-/// <reference path="MgPresentInfoKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgQueue {

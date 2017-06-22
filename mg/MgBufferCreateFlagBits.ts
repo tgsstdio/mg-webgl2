@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
   export enum MgBufferCreateFlagBits {
 		// Buffer should support sparse backing

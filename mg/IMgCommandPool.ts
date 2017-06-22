@@ -1,6 +1,4 @@
-/// <reference path="IMgDevice.ts" />
-/// <reference path="IMgAllocationCallbacks.ts" />
-/// <reference path="MgCommandPoolResetFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export interface IMgCommandPool	{

@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgCommandPoolResetFlagBits {
 		// Release resources owned by the pool

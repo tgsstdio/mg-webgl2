@@ -1,5 +1,4 @@
-/// <reference path="MgOffset2D.ts" />
-/// <reference path="MgExtent2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
 	export class MgRect2D {

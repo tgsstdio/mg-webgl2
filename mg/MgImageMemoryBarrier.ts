@@ -1,7 +1,4 @@
-/// <reference path="MgAccessFlagBits.ts" />
-/// <reference path="MgImageSubresourceRange.ts" />
-/// <reference path="MgImageLayout.ts" />
-/// <reference path="IMgImage.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgImageMemoryBarrier {

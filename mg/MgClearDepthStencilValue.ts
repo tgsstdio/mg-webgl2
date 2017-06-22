@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 
   export class MgClearDepthStencilValue {
@@ -5,12 +7,10 @@ namespace Magnesium {
     stencil: number;
 
     equals(other: MgClearDepthStencilValue ) {
-      const EPSILON: number = 2.2204460492503130808472633361816E-16;
-
-      if (Math.abs(this.depth - other.depth) > EPSILON)
+      if (Math.abs(this.depth - other.depth) > Number.EPSILON)
         return false;
 
-      return (Math.abs(this.stencil - other.stencil) <= EPSILON);
+      return (Math.abs(this.stencil - other.stencil) <= Number.EPSILON);
     }
   }
 }

@@ -1,7 +1,4 @@
-/// <reference path="MgDriverContext.ts" />
-/// <reference path="IMgPresentationSurface.ts" />
-/// <reference path="IMgLogicalDevice.ts" />
-/// <reference path="MgDeviceExtensionOptions.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
 	export class MgDefaultGraphicsConfiguration implements IMgGraphicsConfiguration {    

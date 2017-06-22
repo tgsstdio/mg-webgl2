@@ -1,4 +1,4 @@
-/// <reference path="MgSpecializationInfo.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineShaderStageCreateInfo {

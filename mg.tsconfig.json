@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target":"es6",
+        "module": "umd",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": false,
+        "outDir": "dist/Magnesium",
+        "sourceMap": true,
+        "strictNullChecks":true,
+        "alwaysStrict":true,
+        "noImplicitThis":true,
+        "noFallthroughCasesInSwitch":true,
+        "types" : ["webgl2"]
+    },
+    "include": [
+        "mg/*",
+        "mg-webgl/*",
+        "app/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

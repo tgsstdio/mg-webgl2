@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgImageAspectFlagBits	{
 		COLOR_BIT = 1 << 0,

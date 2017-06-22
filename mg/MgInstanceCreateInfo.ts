@@ -1,4 +1,4 @@
-/// <reference path="MgApplicationInfo.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgInstanceCreateInfo {

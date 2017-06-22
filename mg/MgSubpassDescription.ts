@@ -1,5 +1,4 @@
-/// <reference path="MgAttachmentReference.ts" />
-/// <reference path="MgPipelineBindPoint.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSubpassDescription {

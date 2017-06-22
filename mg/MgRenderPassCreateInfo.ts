@@ -1,6 +1,4 @@
-/// <reference path="MgAttachmentDescription.ts" />
-/// <reference path="MgSubpassDescription.ts" />
-/// <reference path="MgSubpassDependency.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgRenderPassCreateInfo {

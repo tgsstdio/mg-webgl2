@@ -1,5 +1,4 @@
-/// <reference path="MgCommandBufferUsageFlagBits.ts" />
-/// <reference path="MgCommandBufferInheritanceInfo.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgCommandBufferBeginInfo {

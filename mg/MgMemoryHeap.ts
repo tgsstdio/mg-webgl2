@@ -1,4 +1,4 @@
-/// <reference path="MgMemoryHeapFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgMemoryHeap {

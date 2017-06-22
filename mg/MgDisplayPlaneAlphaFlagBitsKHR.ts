@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgDisplayPlaneAlphaFlagBitsKHR {
 		OPAQUE_BIT_KHR = 1 << 0,

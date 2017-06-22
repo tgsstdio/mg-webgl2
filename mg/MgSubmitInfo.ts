@@ -1,6 +1,4 @@
-/// <reference path="IMgCommandBuffer.ts" />
-/// <reference path="MgSubmitInfoWaitSemaphoreInfo.ts" />
-/// <reference path="IMgSemaphore.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSubmitInfo {

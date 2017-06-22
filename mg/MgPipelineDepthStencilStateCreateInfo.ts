@@ -1,5 +1,4 @@
-/// <reference path="MgCompareOp.ts" />
-/// <reference path="MgStencilOpState.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineDepthStencilStateCreateInfo {

@@ -1,6 +1,4 @@
-/// <reference path="MgPolygonMode.ts" />
-/// <reference path="MgCullModeFlagBits.ts" />
-/// <reference path="MgFrontFace.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineRasterizationStateCreateInfo	{

@@ -1,5 +1,4 @@
-/// <reference path="MgImageAspectFlagBits.ts" />
-/// <reference path="MgClearValue.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgClearAttachment {

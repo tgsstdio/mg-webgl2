@@ -1,4 +1,4 @@
-/// <reference path="MgSampleCountFlagBits.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgPipelineMultisampleStateCreateInfo	{

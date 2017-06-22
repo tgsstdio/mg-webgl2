@@ -1,4 +1,4 @@
-/// <reference path="MgPrimitiveTopology.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {  
   export class MgPipelineInputAssemblyStateCreateInfo {

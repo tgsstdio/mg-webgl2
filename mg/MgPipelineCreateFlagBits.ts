@@ -1,3 +1,5 @@
+/// <reference path="Magnesium.ts" />
+
 namespace Magnesium {
 	export enum MgPipelineCreateFlagBits {
 		DISABLE_OPTIMIZATION_BIT = 1 << 0,

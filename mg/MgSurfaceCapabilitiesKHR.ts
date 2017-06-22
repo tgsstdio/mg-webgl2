@@ -1,7 +1,4 @@
-/// <reference path="MgSurfaceTransformFlagBitsKHR.ts" />
-/// <reference path="MgCompositeAlphaFlagBitsKHR.ts" />
-/// <reference path="MgImageUsageFlagBits.ts" />
-/// <reference path="MgExtent2D.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgSurfaceCapabilitiesKHR {

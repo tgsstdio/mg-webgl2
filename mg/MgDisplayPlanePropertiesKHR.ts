@@ -1,4 +1,4 @@
-/// <reference path="IMgDisplayKHR.ts" />
+/// <reference path="Magnesium.ts" />
 
 namespace Magnesium {
   export class MgDisplayPlanePropertiesKHR {
