@@ -1,16 +1,15 @@
-/// <reference path="Magnesium.ts" />
+import {MgCompareOp} from './MgCompareOp'
+import {MgStencilOpState} from './MgStencilOpState'
 
-namespace Magnesium {
-  export class MgPipelineDepthStencilStateCreateInfo {
-    flags : number;
-    depthTestEnable : boolean;
-    depthWriteEnable : boolean;
-    depthCompareOp : MgCompareOp;
-    depthBoundsTestEnable : boolean;
-    stencilTestEnable : boolean;
-    front : MgStencilOpState;
-    back : MgStencilOpState;
-    minDepthBounds : number;
-    maxDepthBounds : number;
-	}
+export class MgPipelineDepthStencilStateCreateInfo {
+  flags : number;
+  depthTestEnable : boolean;
+  depthWriteEnable : boolean;
+  depthCompareOp : MgCompareOp;
+  depthBoundsTestEnable : boolean;
+  stencilTestEnable : boolean;
+  front : MgStencilOpState;
+  back : MgStencilOpState;
+  minDepthBounds : number;
+  maxDepthBounds : number;
 }

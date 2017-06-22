@@ -1,9 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgImageAspectFlagBits} from './MgImageAspectFlagBits'
 
-namespace Magnesium {
-  export class MgImageSubresource {
-    aspectMask : MgImageAspectFlagBits;
-    mipLevel : number;
-    arrayLayer : number;
-  }
+export class MgImageSubresource {
+  aspectMask : MgImageAspectFlagBits;
+  mipLevel : number;
+  arrayLayer : number;
 }

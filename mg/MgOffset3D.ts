@@ -1,9 +1,5 @@
-/// <reference path="Magnesium.ts" />
-
-namespace Magnesium {
-  export class MgOffset3D {
-    x: number;
-    y: number;
-    z: number;
-  }
+export class MgOffset3D {
+  x: number;
+  y: number;
+  z: number;
 }

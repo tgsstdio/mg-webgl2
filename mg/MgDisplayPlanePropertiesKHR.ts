@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDisplayKHR} from './IMgDisplayKHR'
 
-namespace Magnesium {
-  export class MgDisplayPlanePropertiesKHR {
-    currentDisplay: IMgDisplayKHR;
-    currentStackIndex: number;
-  }
+export class MgDisplayPlanePropertiesKHR {
+  currentDisplay: IMgDisplayKHR;
+  currentStackIndex: number;
 }

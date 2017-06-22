@@ -1,9 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import { MgSubmitInfoWaitSemaphoreInfo } from './MgSubmitInfoWaitSemaphoreInfo'
+import { IMgCommandBuffer } from './IMgCommandBuffer'
+import { IMgSemaphore } from './IMgSemaphore'
 
-namespace Magnesium {
-  export class MgSubmitInfo {
-    waitSemaphores: Array<MgSubmitInfoWaitSemaphoreInfo>;
-    commandBuffers: Array<IMgCommandBuffer>;
-    signalSemaphores: Array<IMgSemaphore>;
-  }
+export class MgSubmitInfo {
+  waitSemaphores: Array<MgSubmitInfoWaitSemaphoreInfo>;
+  commandBuffers: Array<IMgCommandBuffer>;
+  signalSemaphores: Array<IMgSemaphore>;
 }

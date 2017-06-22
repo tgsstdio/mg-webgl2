@@ -1,8 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice} from './IMgDevice'
+import {IMgAllocationCallbacks} from './IMgAllocationCallbacks'
 
-namespace Magnesium {
-  export interface IMgBufferView {
-		destroyBufferView(device: IMgDevice
-      , allocator: IMgAllocationCallbacks|null) : void;
-	}
+export interface IMgBufferView {
+  destroyBufferView(device: IMgDevice
+    , allocator: IMgAllocationCallbacks|null) : void;
 }

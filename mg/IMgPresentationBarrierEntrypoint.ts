@@ -1,8 +1,13 @@
-/// <reference path="Magnesium.ts" />
+import {IMgCommandBuffer} from './IMgCommandBuffer'
+import {IMgImage} from './IMgImage'
 
-namespace Magnesium {
-	export interface IMgPresentationBarrierEntrypoint	{
-		submitPrePresentBarrier(prePresent: IMgCommandBuffer, image: IMgImage): void;
-		submitPostPresentBarrier(postPresent: IMgCommandBuffer, image: IMgImage): void;
-	}
+export interface IMgPresentationBarrierEntrypoint	{
+	submitPrePresentBarrier(
+		prePresent: IMgCommandBuffer
+		, image: IMgImage
+	): void;
+	submitPostPresentBarrier(
+		postPresent: IMgCommandBuffer
+		, image: IMgImage
+	): void;
 }

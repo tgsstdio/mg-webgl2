@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {MgAccessFlagBits} from './MgAccessFlagBits'
 
-namespace Magnesium {
-  export class MgMemoryBarrier {
-    srcAccessMask: MgAccessFlagBits;
-    dstAccessMask: MgAccessFlagBits;
-  }
+export class MgMemoryBarrier {
+  srcAccessMask: MgAccessFlagBits;
+  dstAccessMask: MgAccessFlagBits;
 }

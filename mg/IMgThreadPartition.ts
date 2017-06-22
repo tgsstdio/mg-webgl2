@@ -1,17 +1,15 @@
 /// <reference path="Magnesium.ts" />
 
-namespace Magnesium {
-  export interface IMgThreadPartition
-      extends IMgDisposable {
-        
-    readonly commandPool: IMgCommandPool;
-    readonly device: IMgDevice;
-    readonly queue: IMgQueue;
-    readonly physicalDevice: IMgPhysicalDevice;
+export interface IMgThreadPartition
+    extends IMgDisposable {
+      
+  readonly commandPool: IMgCommandPool;
+  readonly device: IMgDevice;
+  readonly queue: IMgQueue;
+  readonly physicalDevice: IMgPhysicalDevice;
 
-    getMemoryType(
-      typeBits: number
-      , memoryPropertyFlags: MgMemoryPropertyFlagBits
-      , out: { typeIndex: number}) : boolean;
-  }
+  getMemoryType(
+    typeBits: number
+    , memoryPropertyFlags: MgMemoryPropertyFlagBits
+    , out: { typeIndex: number}) : boolean;
 }

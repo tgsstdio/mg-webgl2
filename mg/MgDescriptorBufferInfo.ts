@@ -1,11 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import {IMgBuffer} from './IMgBuffer'
 
-namespace Magnesium {
-  export class MgDescriptorBufferInfo	{
-    buffer : IMgBuffer;
-    // WARN: offset requires UInt64 
-    offset : number;
-    // WARN: range requires UInt64 
-    range : number;
-	}
+export class MgDescriptorBufferInfo	{
+  buffer : IMgBuffer;
+  // WARN: offset requires UInt64 
+  offset : number;
+  // WARN: range requires UInt64 
+  range : number;
 }

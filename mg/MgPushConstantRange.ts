@@ -1,9 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgShaderStageFlagBits} from './MgShaderStageFlagBits'
 
-namespace Magnesium {
-  export class MgPushConstantRange {
-    stageFlags : MgShaderStageFlagBits;
-    offset : number;
-    size : number;
-	}
+export class MgPushConstantRange {
+  stageFlags : MgShaderStageFlagBits;
+  offset : number;
+  size : number;
 }

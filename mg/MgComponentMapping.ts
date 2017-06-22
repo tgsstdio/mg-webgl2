@@ -1,10 +1,8 @@
-/// <reference path="Magnesium.ts" />
+import {MgComponentSwizzle} from './MgComponentSwizzle'
 
-namespace Magnesium {
-	export class MgComponentMapping {
-    r : MgComponentSwizzle;
-    g : MgComponentSwizzle;
-    b : MgComponentSwizzle;
-    a : MgComponentSwizzle;
-	}
+export class MgComponentMapping {
+	r : MgComponentSwizzle;
+	g : MgComponentSwizzle;
+	b : MgComponentSwizzle;
+	a : MgComponentSwizzle;
 }

@@ -1,8 +1,4 @@
-/// <reference path="Magnesium.ts" />
-
-namespace Magnesium {
-	export enum MgQueueAllocation	{
-		ONE,
-		ALL,
-	}
+export enum MgQueueAllocation	{
+	ONE,
+	ALL,
 }

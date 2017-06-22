@@ -1,7 +1,5 @@
 /// <reference path="Magnesium.ts" />
 
-namespace Magnesium {
-  export class MgBindSparseInfo {
+export class MgBindSparseInfo {
 
-  }
 }

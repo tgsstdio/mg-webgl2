@@ -1,9 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgMemoryHeapFlagBits} from './MgMemoryHeapFlagBits'
 
-namespace Magnesium {
-  export class MgMemoryHeap {
-    // WARN: size requires UInt64
-    size: number;
-    flags: MgMemoryHeapFlagBits;
-  }
+export class MgMemoryHeap {
+  // WARN: size requires UInt64
+  size: number;
+  flags: MgMemoryHeapFlagBits;
 }

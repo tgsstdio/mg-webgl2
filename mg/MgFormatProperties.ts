@@ -1,10 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import { MgFormatFeatureFlagBits } from './MgFormatFeatureFlagBits'
+import { MgFormat } from './MgFormat'
 
-namespace Magnesium {
-  export class MgFormatProperties {
-    linearTilingFeatures: MgFormatFeatureFlagBits;
-    optimalTilingFeatures: MgFormatFeatureFlagBits;
-    bufferFeatures: MgFormatFeatureFlagBits;
-    format: MgFormat;
-  }
+export class MgFormatProperties {
+  linearTilingFeatures: MgFormatFeatureFlagBits;
+  optimalTilingFeatures: MgFormatFeatureFlagBits;
+  bufferFeatures: MgFormatFeatureFlagBits;
+  format: MgFormat;
 }

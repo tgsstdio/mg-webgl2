@@ -1,14 +1,14 @@
-/// <reference path="Magnesium.ts" />
+import {MgBlendFactor} from './MgBlendFactor'
+import {MgBlendOp} from './MgBlendOp'
+import {MgColorComponentFlagBits} from './MgColorComponentFlagBits'
 
-namespace Magnesium {
-  export class MgPipelineColorBlendAttachmentState {
-    blendEnable: boolean;
-    srcColorBlendFactor: MgBlendFactor;
-    dstColorBlendFactor: MgBlendFactor;
-    colorBlendOp: MgBlendOp;
-    srcAlphaBlendFactor: MgBlendFactor;
-    dstAlphaBlendFactor: MgBlendFactor;
-    alphaBlendOp: MgBlendOp;
-    colorWriteMask: MgColorComponentFlagBits;
-  }
+export class MgPipelineColorBlendAttachmentState {
+  blendEnable: boolean;
+  srcColorBlendFactor: MgBlendFactor;
+  dstColorBlendFactor: MgBlendFactor;
+  colorBlendOp: MgBlendOp;
+  srcAlphaBlendFactor: MgBlendFactor;
+  dstAlphaBlendFactor: MgBlendFactor;
+  alphaBlendOp: MgBlendOp;
+  colorWriteMask: MgColorComponentFlagBits;
 }

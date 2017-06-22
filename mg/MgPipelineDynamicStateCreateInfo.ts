@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {MgDynamicState} from './MgDynamicState'
 
-namespace Magnesium {
-  export class MgPipelineDynamicStateCreateInfo {
-    flags: number;
-    dynamicStates: Array<MgDynamicState>;
-  }
+export class MgPipelineDynamicStateCreateInfo {
+  flags: number;
+  dynamicStates: Array<MgDynamicState>;
 }

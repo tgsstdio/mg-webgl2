@@ -1,9 +1,10 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDisposable} from './IMgDisposable'
+import {IMgPhysicalDevice} from './IMgPhysicalDevice'
+import {IMgDevice} from './IMgDevice'
+import {IMgQueueInfo} from './IMgQueueInfo'
 
-namespace Magnesium {
-	export interface IMgLogicalDevice extends IMgDisposable	{
-		readonly gpu: IMgPhysicalDevice;
-    readonly device: IMgDevice;
-    readonly queues: Array<IMgQueueInfo>;
-	}
+export interface IMgLogicalDevice extends IMgDisposable	{
+	readonly gpu: IMgPhysicalDevice;
+	readonly device: IMgDevice;
+	readonly queues: Array<IMgQueueInfo>;
 }

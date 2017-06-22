@@ -1,9 +1,8 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDescriptorSetLayout} from './IMgDescriptorSetLayout'
+import {MgPushConstantRange} from './MgPushConstantRange'
 
-namespace Magnesium {
-  export class MgPipelineLayoutCreateInfo	{
-    flags : number;
-    setLayouts : Array<IMgDescriptorSetLayout>;
-    pushConstantRanges : Array<MgPushConstantRange>;
-	}
+export class MgPipelineLayoutCreateInfo	{
+  flags : number;
+  setLayouts : Array<IMgDescriptorSetLayout>;
+  pushConstantRanges : Array<MgPushConstantRange>|null;
 }

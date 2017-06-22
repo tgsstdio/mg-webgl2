@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import { IMgSwapchainKHR } from './IMgSwapchainKHR'
 
-namespace Magnesium {
-  export class MgPresentInfoKHRImage {
-    swapchain: IMgSwapchainKHR;
-    imageIndex: number;
-  }
+export class MgPresentInfoKHRImage {
+  swapchain: IMgSwapchainKHR;
+  imageIndex: number;
 }

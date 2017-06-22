@@ -1,4 +1,4 @@
-import Matrix4 from 'Matrix4'
+import Matrix4 from './Matrix4'
 
 export class UniformBufferObject {
   projectionMatrix: Matrix4;

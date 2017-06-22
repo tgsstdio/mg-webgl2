@@ -1,9 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import { IMgSemaphore } from './IMgSemaphore'
+import { MgPresentInfoKHRImage } from './MgPresentInfoKHRImage'
+import { MgResult } from './MgResult'
 
-namespace Magnesium {
-  export class MgPresentInfoKHR {
-		waitSemaphores : Array<IMgSemaphore>;
-		images : Array<MgPresentInfoKHRImage>;
-	  results : Array<MgResult>;
-  }
+export class MgPresentInfoKHR {
+	waitSemaphores : Array<IMgSemaphore>;
+	images : Array<MgPresentInfoKHRImage>;
+	results : Array<MgResult>;
 }

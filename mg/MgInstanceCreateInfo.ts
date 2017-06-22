@@ -1,10 +1,8 @@
-/// <reference path="Magnesium.ts" />
+import {MgApplicationInfo} from './MgApplicationInfo'
 
-namespace Magnesium {
-  export class MgInstanceCreateInfo {
-    flags : number;
-    applicationInfo?: MgApplicationInfo;
-    enabledLayerNames?: Array<string>;
-    enabledExtensionNames?: Array<string>;
-  }
+export class MgInstanceCreateInfo {
+  flags : number;
+  applicationInfo?: MgApplicationInfo;
+  enabledLayerNames?: Array<string>;
+  enabledExtensionNames?: Array<string>;
 }

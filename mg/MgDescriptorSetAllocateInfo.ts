@@ -1,9 +1,8 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDescriptorPool} from './IMgDescriptorPool'
+import {IMgDescriptorSetLayout} from './IMgDescriptorSetLayout'
 
-namespace Magnesium {
-  export class MgDescriptorSetAllocateInfo {
-    descriptorSetCount : number;
-    descriptorPool : IMgDescriptorPool;
-    setLayouts : Array<IMgDescriptorSetLayout>;
-	}
+export class MgDescriptorSetAllocateInfo {
+  descriptorSetCount : number;
+  descriptorPool : IMgDescriptorPool;
+  setLayouts : Array<IMgDescriptorSetLayout>;
 }

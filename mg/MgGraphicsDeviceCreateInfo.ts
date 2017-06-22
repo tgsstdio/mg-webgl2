@@ -1,11 +1,10 @@
-/// <reference path="Magnesium.ts" />
+import {MgFormat} from './MgFormat'
+import {MgSampleCountFlagBits} from './MgSampleCountFlagBits'
 
-namespace Magnesium {
-  export class MgGraphicsDeviceCreateInfo {
-		width: number;
-		height: number;
-		color: MgFormat;
-		depthStencil: MgFormat
-	  samples: MgSampleCountFlagBits
-  }
+export class MgGraphicsDeviceCreateInfo {
+	width: number;
+	height: number;
+	color: MgFormat;
+	depthStencil: MgFormat
+	samples: MgSampleCountFlagBits
 }

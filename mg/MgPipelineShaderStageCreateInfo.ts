@@ -1,11 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgShaderModule} from './IMgShaderModule'
+import {MgShaderStageFlagBits} from './MgShaderStageFlagBits'
+import {MgSpecializationInfo} from './MgSpecializationInfo'
 
-namespace Magnesium {
-  export class MgPipelineShaderStageCreateInfo {
-    flags : number;
-    stage : MgShaderStageFlagBits;
-    module : IMgShaderModule;
-    name : string;
-    specializationInfo : MgSpecializationInfo;
-	}
+export class MgPipelineShaderStageCreateInfo {
+  flags : number;
+  stage : MgShaderStageFlagBits;
+  module : IMgShaderModule;
+  name : string;
+  specializationInfo : MgSpecializationInfo|null;
 }

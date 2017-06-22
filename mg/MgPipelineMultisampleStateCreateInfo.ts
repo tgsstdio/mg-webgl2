@@ -1,13 +1,12 @@
-/// <reference path="Magnesium.ts" />
+import {MgSampleCountFlagBits} from './MgSampleCountFlagBits'
 
-namespace Magnesium {
-  export class MgPipelineMultisampleStateCreateInfo	{
-    flags : number;
-    rasterizationSamples : MgSampleCountFlagBits;
-    sampleShadingEnable : boolean;
-    minSampleShading : number;
-    sampleMask : Array<number>|null;
-    alphaToCoverageEnable : boolean;
-    alphaToOneEnable : boolean;
-	}
+export class MgPipelineMultisampleStateCreateInfo	{
+  flags : number;
+  rasterizationSamples : MgSampleCountFlagBits;
+  sampleShadingEnable : boolean;
+  minSampleShading : number;
+  sampleMask : Array<number>|null;
+  alphaToCoverageEnable : boolean;
+  alphaToOneEnable : boolean;
 }
+

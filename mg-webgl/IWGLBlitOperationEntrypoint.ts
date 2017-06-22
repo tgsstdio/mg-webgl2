@@ -1,14 +1,13 @@
-/// <reference path="GLCmdImageInstructionSet.ts" />
+import {WGLCmdImageInstructionSet} from './WGLCmdImageInstructionSet'
 
-namespace Magnesium {
-  export interface IWGLBlitOperationEntrypoint {
-    initialize() : void;
-    copyBuffer(
-      src:number
-      , dst:number
-      , readOffset:number
-      , writeOffset: number
-      , size:number) : void;
-    performOperation(instructionSet: GLCmdImageInstructionSet) : void;
-  }
+export interface IWGLBlitOperationEntrypoint {
+  initialize() : void;
+  copyBuffer(
+    src:number
+    , dst:number
+    , readOffset:number
+    , writeOffset: number
+    , size:number) : void;
+  performOperation(
+    instructionSet: WGLCmdImageInstructionSet) : void;
 }

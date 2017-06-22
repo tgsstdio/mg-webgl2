@@ -1,9 +1,10 @@
-/// <reference path="Magnesium.ts" />
+import {MgVertexInputBindingDescription} 
+  from './MgVertexInputBindingDescription'
+import {MgVertexInputAttributeDescription}
+  from './MgVertexInputAttributeDescription'
 
-namespace Magnesium {
-  export class MgPipelineVertexInputStateCreateInfo {
-    flags : number;
-    vertexBindingDescriptions : Array<MgVertexInputBindingDescription>;
-    vertexAttributeDescriptions : Array<MgVertexInputAttributeDescription>;
-  }
+export class MgPipelineVertexInputStateCreateInfo {
+  flags : number;
+  vertexBindingDescriptions : Array<MgVertexInputBindingDescription>;
+  vertexAttributeDescriptions : Array<MgVertexInputAttributeDescription>;
 }

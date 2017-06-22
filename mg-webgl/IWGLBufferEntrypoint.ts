@@ -1,8 +1,6 @@
-/// <reference path="../mg/MgBufferCreateInfo.ts" />
+import {IWGLBuffer} from './IWGLBuffer'
+import {MgBufferCreateInfo} from '../mg/MgBufferCreateInfo'
 
-
-namespace Magnesium {
-  export interface IWGLBufferEntrypoint {
-    createBuffer(createInfo: MgBufferCreateInfo): IWGLBuffer;
-  }
+export interface IWGLBufferEntrypoint {
+  createBuffer(createInfo: MgBufferCreateInfo): IWGLBuffer;
 }

@@ -1,4 +1,4 @@
-import ITriangleDemoShaderPath from 'ITriangleDemoShaderPath'
+import ITriangleDemoShaderPath from './ITriangleDemoShaderPath'
 
 class VkTriangleDemoShaderPath implements ITriangleDemoShaderPath {            
   private getShaderSource(id:string): string {

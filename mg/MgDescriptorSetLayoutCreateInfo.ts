@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {MgDescriptorSetLayoutBinding} from './MgDescriptorSetLayoutBinding'
 
-namespace Magnesium {
-  export class MgDescriptorSetLayoutCreateInfo {
-    flags : number;
-    bindings : Array<MgDescriptorSetLayoutBinding>;
-	}
+export class MgDescriptorSetLayoutCreateInfo {
+  flags : number;
+  bindings : Array<MgDescriptorSetLayoutBinding>;
 }

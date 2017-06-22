@@ -1,8 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import { IMgSemaphore } from './IMgSemaphore'
+import { MgPipelineStageFlagBits } from './MgPipelineStageFlagBits'
 
-namespace Magnesium {
-  export class MgSubmitInfoWaitSemaphoreInfo {
-    waitSemaphore: IMgSemaphore;
-    waitDstStageMask: MgPipelineStageFlagBits;
-  }
+export class MgSubmitInfoWaitSemaphoreInfo {
+  waitSemaphore: IMgSemaphore;
+  waitDstStageMask: MgPipelineStageFlagBits;
 }

@@ -1,14 +1,12 @@
 /// <reference path="Magnesium.ts" />
 
-namespace Magnesium {
-    export interface IMgPresentationLayer {
-      beginDraw(
-        postPresent: IMgCommandBuffer
-        , presentComplete: IMgSemaphore
-        , timeout:number) : number;
+export interface IMgPresentationLayer {
+  beginDraw(
+    postPresent: IMgCommandBuffer
+    , presentComplete: IMgSemaphore
+    , timeout:number) : number;
 
-      endDraw(nextImage: Array<number>
-      , prePresent: IMgCommandBuffer
-      , renderComplete: Array<IMgSemaphore>): void
-    }
+  endDraw(nextImage: Array<number>
+  , prePresent: IMgCommandBuffer
+  , renderComplete: Array<IMgSemaphore>): void
 }

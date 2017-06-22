@@ -1,12 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgRenderPass} from './IMgRenderPass'
+import {IMgImageView} from './IMgImageView'
 
-namespace Magnesium {
-  export class MgFramebufferCreateInfo {
-    flags: number;
-    renderPass: IMgRenderPass;
-    attachments: Array<IMgImageView>;
-    width: number;
-    height: number;
-    layers: number;
-  }
+export class MgFramebufferCreateInfo {
+  flags: number;
+  renderPass: IMgRenderPass;
+  attachments: Array<IMgImageView>;
+  width: number;
+  height: number;
+  layers: number;
 }

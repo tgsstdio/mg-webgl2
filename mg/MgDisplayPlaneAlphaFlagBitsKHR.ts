@@ -1,10 +1,7 @@
-/// <reference path="Magnesium.ts" />
-
-namespace Magnesium {
-	export enum MgDisplayPlaneAlphaFlagBitsKHR {
-		OPAQUE_BIT_KHR = 1 << 0,
-		GLOBAL_BIT_KHR = 1 << 1,
-		PER_PIXEL_BIT_KHR = 1 << 2,
-		PER_PIXEL_PREMULTIPLIED_BIT_KHR = 1 << 3,
-	}
+export enum MgDisplayPlaneAlphaFlagBitsKHR {
+	OPAQUE_BIT_KHR = 1 << 0,
+	GLOBAL_BIT_KHR = 1 << 1,
+	PER_PIXEL_BIT_KHR = 1 << 2,
+	PER_PIXEL_PREMULTIPLIED_BIT_KHR = 1 << 3,
 }
+

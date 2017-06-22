@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {MgExtent2D} from './MgExtent2D'
 
-namespace Magnesium {
-  export class MgDisplayModeParametersKHR {
-    visibleRegion: MgExtent2D;
-    refreshRate: number;
-  }
+export class MgDisplayModeParametersKHR {
+  visibleRegion: MgExtent2D;
+  refreshRate: number;
 }

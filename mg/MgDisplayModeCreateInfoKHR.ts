@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
+import {} from './MgDisplayModeParametersKHR'
 
-namespace Magnesium {
-  export class MgDisplayModeCreateInfoKHR {
-    flags: number;
-    parameters: MgDisplayModeParametersKHR;
-  }
+export class MgDisplayModeCreateInfoKHR {
+  flags: number;
+  parameters: MgDisplayModeParametersKHR;
 }

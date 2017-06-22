@@ -1,13 +1,12 @@
-/// <reference path="Magnesium.ts" />
+import { MgStencilOp } from './MgStencilOp'
+import { MgCompareOp } from './MgCompareOp'
 
-namespace Magnesium {
-  export class MgStencilOpState	{
-    failOp : MgStencilOp;
-    passOp : MgStencilOp;
-    depthFailOp : MgStencilOp;
-    compareOp : MgCompareOp;
-    compareMask : number;
-    writeMask : number;
-    reference : number;
-	}
+export class MgStencilOpState	{
+  failOp : MgStencilOp;
+  passOp : MgStencilOp;
+  depthFailOp : MgStencilOp;
+  compareOp : MgCompareOp;
+  compareMask : number;
+  writeMask : number;
+  reference : number;
 }

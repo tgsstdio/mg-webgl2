@@ -1,7 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {MgFenceCreateFlagBits} from './MgFenceCreateFlagBits'
 
-namespace Magnesium {
-  export class MgFenceCreateInfo {
-    flags: MgFenceCreateFlagBits;
-  }
+export class MgFenceCreateInfo {
+  flags: MgFenceCreateFlagBits;
 }

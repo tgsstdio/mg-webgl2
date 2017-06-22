@@ -1,107 +1,116 @@
-/// <reference path="Magnesium.ts" />
+import { IMgPresentationLayer } from './IMgPresentationLayer'
+import { IMgGraphicsConfiguration } from './IMgGraphicsConfiguration'
+import { IMgPresentationBarrierEntrypoint }
+  from './IMgPresentationBarrierEntrypoint'
+import { IMgSwapchainCollection } from './IMgSwapchainCollection'  
+import { IMgSemaphore } from './IMgSemaphore'
+import { MgResult } from './MgResult'
+import { IMgCommandBuffer } from './IMgCommandBuffer'
+import { MgSwapchainBuffer } from './MgSwapchainBuffer'
+import { MgSubmitInfo } from './MgSubmitInfo'
+import { MgPresentInfoKHRImage } from './MgPresentInfoKHRImage'
+import { MgPresentInfoKHR } from './MgPresentInfoKHR'
 
-namespace Magnesium {
-  export class MgPresentationLayer implements IMgPresentationLayer {
-		private readonly mGraphicsConfiguration: IMgGraphicsConfiguration;
-		private readonly mBarrier: IMgPresentationBarrierEntrypoint;
-		private readonly mCollection: IMgSwapchainCollection;
+export class MgPresentationLayer implements IMgPresentationLayer {
+  private readonly mGraphicsConfiguration: IMgGraphicsConfiguration;
+  private readonly mBarrier: IMgPresentationBarrierEntrypoint;
+  private readonly mCollection: IMgSwapchainCollection;
 
-		constructor	(
-			graphicsConfiguration: IMgGraphicsConfiguration
-			, collection: IMgSwapchainCollection
-			, barrier: IMgPresentationBarrierEntrypoint
-		) {
-			this.mGraphicsConfiguration = graphicsConfiguration;
-			this.mCollection = collection;
-			this.mBarrier = barrier;
-		}
+  constructor	(
+    graphicsConfiguration: IMgGraphicsConfiguration
+    , collection: IMgSwapchainCollection
+    , barrier: IMgPresentationBarrierEntrypoint
+  ) {
+    this.mGraphicsConfiguration = graphicsConfiguration;
+    this.mCollection = collection;
+    this.mBarrier = barrier;
+  }
 
-		private acquireNextImage (
-      presentComplete: IMgSemaphore
-      , timeout:number
-    ): number {
-			let out
-        : { pImageIndex:number}
-        = { pImageIndex:0};
-			let err = this.mGraphicsConfiguration.device.acquireNextImageKHR(
-        this.mCollection.swapchain
-        , timeout
-        , presentComplete
-        , null
-        , out);
-      if (err != Magnesium.MgResult.SUCCESS) {
-        throw new Error(err.toString());
-      }  
-			return out.pImageIndex;
-		}
+  private acquireNextImage (
+    presentComplete: IMgSemaphore
+    , timeout:number
+  ): number {
+    let out
+      : { pImageIndex:number}
+      = { pImageIndex:0};
+    let err = this.mGraphicsConfiguration.device.acquireNextImageKHR(
+      this.mCollection.swapchain
+      , timeout
+      , presentComplete
+      , null
+      , out);
+    if (err != MgResult.SUCCESS) {
+      throw new Error(err.toString());
+    }  
+    return out.pImageIndex;
+  }
 
-		beginDraw (
-      postPresent: IMgCommandBuffer
-      , presentComplete: IMgSemaphore
-      , timeout:number
-    ) : number {
-			// Get next image in the swap chain (back/front buffer)
-			//err = swapChain.acquireNextImage(semaphores.presentComplete, &currentBuffer);
-			let nextImage = this.acquireNextImage (presentComplete, timeout);
-			let currentBuffer : MgSwapchainBuffer = this.mCollection.buffers [nextImage];
+  beginDraw (
+    postPresent: IMgCommandBuffer
+    , presentComplete: IMgSemaphore
+    , timeout:number
+  ) : number {
+    // Get next image in the swap chain (back/front buffer)
+    //err = swapChain.acquireNextImage(semaphores.presentComplete, &currentBuffer);
+    let nextImage = this.acquireNextImage (presentComplete, timeout);
+    let currentBuffer : MgSwapchainBuffer = this.mCollection.buffers [nextImage];
 
-			this.mBarrier.submitPostPresentBarrier (postPresent, currentBuffer.image);
-			let submitInfo = new MgSubmitInfo();
-      submitInfo.commandBuffers = [postPresent];
+    this.mBarrier.submitPostPresentBarrier (postPresent, currentBuffer.image);
+    let submitInfo = new MgSubmitInfo();
+    submitInfo.commandBuffers = [postPresent];
 
-			let result = this.mGraphicsConfiguration.queue.queueSubmit(
+    let result = this.mGraphicsConfiguration.queue.queueSubmit(
+      [submitInfo]
+      , null);
+    if (result != MgResult.SUCCESS) {
+      throw new Error(result.toString());
+    } 
+
+    return nextImage;
+  }
+
+  endDraw (
+    nextImage: Array<number>
+    , prePresent: IMgCommandBuffer
+    , renderComplete: Array<IMgSemaphore>): void
+  {
+    let presentImages = new Array<MgPresentInfoKHRImage>();
+    for (let image of nextImage) {
+      let currentBuffer : MgSwapchainBuffer = this.mCollection.buffers[image];
+      this.mBarrier.submitPrePresentBarrier(
+        prePresent
+        , currentBuffer.image);
+
+      let submitInfo = new MgSubmitInfo();
+      submitInfo.commandBuffers = [prePresent];
+
+      let result = this.mGraphicsConfiguration.queue.queueSubmit(
         [submitInfo]
         , null);
-      if (result != Magnesium.MgResult.SUCCESS) {
+      if (result != MgResult.SUCCESS) {
         throw new Error(result.toString());
-      } 
+      }
 
-			return nextImage;
-		}
+      let presentImage = new MgPresentInfoKHRImage();
+      presentImage.imageIndex = image;
+      presentImage.swapchain = this.mCollection.swapchain,
 
-		endDraw (
-      nextImage: Array<number>
-      , prePresent: IMgCommandBuffer
-      , renderComplete: Array<IMgSemaphore>): void
-		{
-			let presentImages = new Array<MgPresentInfoKHRImage>();
-			for (let image of nextImage) {
-				let currentBuffer : MgSwapchainBuffer = this.mCollection.buffers[image];
-				this.mBarrier.submitPrePresentBarrier(
-          prePresent
-          , currentBuffer.image);
+      presentImages.push(presentImage);
+    }
 
-				let submitInfo = new MgSubmitInfo();
-        submitInfo.commandBuffers = [prePresent];
+    let presentInfo = new MgPresentInfoKHR();
+    presentInfo.waitSemaphores = renderComplete;
+    presentInfo.images = presentImages;
 
-				let result = this.mGraphicsConfiguration.queue.queueSubmit(
-          [submitInfo]
-          , null);
-        if (result != Magnesium.MgResult.SUCCESS) {
-          throw new Error(result.toString());
-        }
+    //err = swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete);
+    let err = this.mGraphicsConfiguration.queue.queuePresentKHR (presentInfo);
+    if (err != MgResult.SUCCESS) {
+      throw new Error(err.toString());
+    }  
 
-        let presentImage = new MgPresentInfoKHRImage();
-        presentImage.imageIndex = image;
-        presentImage.swapchain = this.mCollection.swapchain,
-
-				presentImages.push(presentImage);
-			}
-
-			let presentInfo = new MgPresentInfoKHR();
-			presentInfo.waitSemaphores = renderComplete;
-			presentInfo.images = presentImages;
-
-			//err = swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete);
-			let err = this.mGraphicsConfiguration.queue.queuePresentKHR (presentInfo);
-      if (err != Magnesium.MgResult.SUCCESS) {
-        throw new Error(err.toString());
-      }  
-
-			err = this.mGraphicsConfiguration.queue.queueWaitIdle();
-      if (err != Magnesium.MgResult.SUCCESS) {
-        throw new Error(err.toString());
-      }  
-    }        
-  }
+    err = this.mGraphicsConfiguration.queue.queueWaitIdle();
+    if (err != MgResult.SUCCESS) {
+      throw new Error(err.toString());
+    }  
+  }        
 }

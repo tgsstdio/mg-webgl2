@@ -4,7 +4,7 @@ module.exports = {
   entry: './app/indexMg.ts',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')        
+    path: path.resolve(__dirname, 'dist')
   },
   resolve: {
     // Add '.ts' and '.tsx' as a resolvable extension.
