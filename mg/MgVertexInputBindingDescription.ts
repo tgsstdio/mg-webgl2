@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {MgVertexInputRate}
+	from './MgVertexInputRate';	
 
 export class MgVertexInputBindingDescription {
   binding : number;

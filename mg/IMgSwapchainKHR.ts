@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice} from './IMgDevice';
+import {IMgAllocationCallbacks} from './IMgAllocationCallbacks';
 
 export interface IMgSwapchainKHR {
   destroySwapchainKHR(device: IMgDevice

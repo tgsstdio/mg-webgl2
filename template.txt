@@ -1,0 +1,24 @@
+import {}
+	from '../mg/';  
+import {}
+	from '../mg/';   
+import {}
+	from './';	  
+import {}
+	from './';	    
+
+import {IMgDeviceMemory}
+	from './IMgDeviceMemory';	 
+
+
+import {IMgDevice}
+	from './IMgDevice';	  
+import {MgResult}
+	from './MgResult';	  
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';	   
+
+import {IMgDevice}
+	from './IMgDevice';	   
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';	  

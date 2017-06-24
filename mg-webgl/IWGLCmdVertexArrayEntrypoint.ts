@@ -1,37 +1,37 @@
-namespace Magnesium {
-  export interface IWGLCmdVertexArrayEntrypoint {
-		bindIndexBuffer (
-      bufferId: number
-    ): void;
+import {WGLVertexAttributeType} from './WGLVertexAttributeType';
 
-		bindIntVertexAttribute(
-      location: number
-      , size: number
-      , pointerType: WGLVertexAttributeType
-      , stride: number
-      , offset: number): void;
+export interface IWGLCmdVertexArrayEntrypoint {
+  bindIndexBuffer (
+    bufferId: number
+  ): void;
 
-		bindFloatVertexAttribute(
-      location: number
-      , size: number
-      , pointerType: WGLVertexAttributeType
-      , isNormalized: boolean
-      , stride: number
-      , offset: number): void;
+  bindIntVertexAttribute(
+    location: number
+    , size: number
+    , pointerType: WGLVertexAttributeType
+    , stride: number
+    , offset: number): void;
 
-		setupVertexAttributeDivisor(
-      location: number
-      , divisor: number) : void;
+  bindFloatVertexAttribute(
+    location: number
+    , size: number
+    , pointerType: WGLVertexAttributeType
+    , isNormalized: boolean
+    , stride: number
+    , offset: number): void;
 
-		generateVBO (): WebGLVertexArrayObject;
-    bindVertexArray(vbo:WebGLVertexArrayObject|null) : void;
+  setupVertexAttributeDivisor(
+    location: number
+    , divisor: number) : void;
 
-		deleteVBO(vbo: WebGLVertexArrayObject): void;
-    unbindVertexArray() : void;    
+  generateVBO (): WebGLVertexArrayObject;
+  bindVertexArray(vbo:WebGLVertexArrayObject|null) : void;
 
-    // WARN : offsets must be long
-		bindVertexBuffer(
-      bufferId: WebGLBuffer|null
-      ) : void;
-  }
+  deleteVBO(vbo: WebGLVertexArrayObject): void;
+  unbindVertexArray() : void;    
+
+  // WARN : offsets must be long
+  bindVertexBuffer(
+    bufferId: WebGLBuffer|null
+    ) : void;
 }

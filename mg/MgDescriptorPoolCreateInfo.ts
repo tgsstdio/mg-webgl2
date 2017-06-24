@@ -1,9 +1,10 @@
-/// <reference path="Magnesium.ts" />
+import {MgDescriptorPoolCreateFlagBits}
+	from './MgDescriptorPoolCreateFlagBits';	
+import {MgDescriptorPoolSize}
+	from './MgDescriptorPoolSize';
 
-namespace Magnesium {
-  export class MgDescriptorPoolCreateInfo {
-    flags : MgDescriptorPoolCreateFlagBits;
-    maxSets : number;
-    poolSizes : Array<MgDescriptorPoolSize>;
-	}
+export class MgDescriptorPoolCreateInfo {
+  flags : MgDescriptorPoolCreateFlagBits;
+  maxSets : number;
+  poolSizes : Array<MgDescriptorPoolSize>;
 }

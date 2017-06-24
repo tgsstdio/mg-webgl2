@@ -1,7 +1,5 @@
-namespace Magnesium {
-	export enum WGLVertexAttribFunction {
-		FLOAT,
-		DOUBLE, 
-		INT,
-	}
+export enum WGLVertexAttribFunction {
+	FLOAT,
+	DOUBLE, 
+	INT,
 }

@@ -1,9 +1,7 @@
-/// <reference path="../mg/MgVertexInputRate.ts" />
+import {MgVertexInputRate} from '../mg/MgVertexInputRate'
 
-namespace Magnesium {
-  export class WGLVertexBufferBinding {
-    binding: number;
-    inputRate: MgVertexInputRate;
-    stride: number;
-  }
+export class WGLVertexBufferBinding {
+  binding: number;
+  inputRate: MgVertexInputRate;
+  stride: number;
 }

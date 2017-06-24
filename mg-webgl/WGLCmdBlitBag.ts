@@ -1,20 +1,18 @@
-namespace Magnesium {
-  export class GLCmdCopyBufferRecord {
+import {WGLCmdEncoderCollection} from './WGLCmdEncoderCollection';
+import {WGLCmdCopyBufferRecord} from './WGLCmdCopyBufferRecord';
+import {WGLCmdImageInstructionSet} from './WGLCmdImageInstructionSet';
 
+export class WGLCmdBlitBag {
+  copyBuffers: WGLCmdEncoderCollection<WGLCmdCopyBufferRecord>;
+  loadImageOps: WGLCmdEncoderCollection<WGLCmdImageInstructionSet>;
+
+  constructor() {
+    this.copyBuffers = new WGLCmdEncoderCollection<WGLCmdCopyBufferRecord>();
+    this.loadImageOps = new WGLCmdEncoderCollection<WGLCmdImageInstructionSet>();
   }
 
-  export class WGLCmdBlitBag {
-    copyBuffers: WGLCmdEncoderCollection<GLCmdCopyBufferRecord>;
-    loadImageOps: WGLCmdEncoderCollection<GLCmdImageInstructionSet>;
-
-    constructor() {
-      this.copyBuffers = new WGLCmdEncoderCollection<GLCmdCopyBufferRecord>();
-      this.loadImageOps = new WGLCmdEncoderCollection<GLCmdImageInstructionSet>();
-    }
-
-    clear(): void {
-      this.copyBuffers.clear();
-      this.loadImageOps.clear();
-    }
+  clear(): void {
+    this.copyBuffers.clear();
+    this.loadImageOps.clear();
   }
 }

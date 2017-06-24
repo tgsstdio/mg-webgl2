@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgColor4f {
   r : number;
   g : number;

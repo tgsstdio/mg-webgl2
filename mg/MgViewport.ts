@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgViewport {
   x : number;
   y : number;

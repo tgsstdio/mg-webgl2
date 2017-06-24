@@ -1,6 +1,6 @@
-namespace Magnesium {
-  export interface IWGLSwapchainKHR extends IMgSwapchainKHR {
-    getNextImage(): number;
-    swapBuffers() : void;
-  }
+import {IMgSwapchainKHR} from '../mg/IMgSwapchainKHR';
+
+export interface IWGLSwapchainKHR extends IMgSwapchainKHR {
+  getNextImage(): number;
+  swapBuffers() : void;
 }

@@ -1,28 +1,28 @@
-namespace Magnesium {
- 	export interface IWGLCmdRasterizationEntrypoint {
-		disablePolygonOffset (): void;
+import {WGLRasterizerState} from './WGLRasterizerState';
 
-		enablePolygonOffset(
-      slopeScaleDepthBias: number
-      , depthBias:number
-    ) : void;
+export interface IWGLCmdRasterizationEntrypoint {
+	disablePolygonOffset (): void;
 
-		setUsingCounterClockwiseWindings(
-      value: boolean): void;
+	enablePolygonOffset(
+		slopeScaleDepthBias: number
+		, depthBias:number
+	) : void;
 
-		enableScissorTest(): void;
+	setUsingCounterClockwiseWindings(
+		value: boolean): void;
 
-		disableScissorTest(): void;
+	enableScissorTest(): void;
 
-		setCullingMode(
-      front: boolean
-      , back: boolean
-    ): void;
+	disableScissorTest(): void;
 
-		enableCulling(): void;
+	setCullingMode(
+		front: boolean
+		, back: boolean
+	): void;
 
-		disableCulling(): void;
+	enableCulling(): void;
 
-		initialize(): WGLRasterizerState;
-	} 
-}
+	disableCulling(): void;
+
+	initialize(): WGLRasterizerState;
+} 

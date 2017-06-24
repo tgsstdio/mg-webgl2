@@ -1,12 +1,9 @@
-/// <reference path="../mg/MgPrimitiveTopology.ts" />
-/// <reference path="../mg/MgIndexType.ts" />
+import {MgIndexType} from '../mg/MgIndexType'
 
-namespace Magnesium {
-  export class WGLCmdInternalDrawIndexed {
-    mode: number;
-    elementCount: number;
-    elementType: number;
-    indexOffset: number;
-    instanceCount: MgIndexType;
-  }
+export class WGLCmdInternalDrawIndexed {
+  mode: number;
+  elementCount: number;
+  elementType: number;
+  indexOffset: number;
+  instanceCount: MgIndexType;
 }

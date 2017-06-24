@@ -1,21 +1,19 @@
-/// <reference path="WGLCmdComputeRecording.ts" />
-/// <reference path="WGLCmdGraphicsRecording.ts" />
-/// <reference path="GLCmdBlitRecording.ts" />
+import {WGLCmdComputeRecording} from './WGLCmdComputeRecording';
+import {WGLCmdGraphicsRecording} from './WGLCmdGraphicsRecording';
+import {WGLCmdBlitRecording} from './WGLCmdBlitRecording';
 
-namespace Magnesium {
-  export class WGLCmdCommandRecording {
-    compute: WGLCmdComputeRecording;
-    graphics: WGLCmdGraphicsRecording;
-    blit: GLCmdBlitRecording;
+export class WGLCmdCommandRecording {
+  compute: WGLCmdComputeRecording;
+  graphics: WGLCmdGraphicsRecording;
+  blit: WGLCmdBlitRecording;
 
-    constructor(
-      compute: WGLCmdComputeRecording
-      , graphics: WGLCmdGraphicsRecording
-      , blit: GLCmdBlitRecording
-      ) {
-        this.compute = compute;
-        this.graphics = graphics;
-        this.blit = blit;
-      }
-  }
+  constructor(
+    compute: WGLCmdComputeRecording
+    , graphics: WGLCmdGraphicsRecording
+    , blit: WGLCmdBlitRecording
+    ) {
+      this.compute = compute;
+      this.graphics = graphics;
+      this.blit = blit;
+    }
 }

@@ -1,14 +1,13 @@
-/// <reference path="GLUniformBinding.ts" />
-/// <reference path="GLDynamicOffsetInfo.ts" />
-/// <reference path="GLBindingPointOffsetInfo.ts" />
+import {IMgPipelineLayout} from '../mg/IMgPipelineLayout';
+import {WGLUniformBinding} from './WGLUniformBinding';
+import {WGLBindingPointOffsetInfo} from './WGLBindingPointOffsetInfo';
+import {WGLDynamicOffsetInfo} from './WGLDynamicOffsetInfo';
 
-namespace Magnesium {
-  export interface IWGLPipelineLayout extends IMgPipelineLayout {
-    readonly bindings: Array<GLUniformBinding>;
-    readonly noOfBindingPoints: number;
-    readonly ranges: Map<number, GLBindingPointOffsetInfo>;
-    readonly noOfStorageBuffers: number;
-    readonly noOfExpectedDynamicOffsets: number;
-    readonly offsetDestinations: Array<GLDynamicOffsetInfo>;
-  }
+export interface IWGLPipelineLayout extends IMgPipelineLayout {
+  readonly bindings: Array<WGLUniformBinding>;
+  readonly noOfBindingPoints: number;
+  readonly ranges: Map<number, WGLBindingPointOffsetInfo>;
+  readonly noOfStorageBuffers: number;
+  readonly noOfExpectedDynamicOffsets: number;
+  readonly offsetDestinations: Array<WGLDynamicOffsetInfo>;
 }

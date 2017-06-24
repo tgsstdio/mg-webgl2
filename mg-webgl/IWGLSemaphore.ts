@@ -1,9 +1,7 @@
-/// <reference path="../mg/IMgSemaphore.ts" />
+import {IMgSemaphore} from '../mg/IMgSemaphore';
 
-namespace Magnesium {
-  export interface IWGLSemaphore extends IMgSemaphore {
-    isReady () : boolean;
-    reset () : void;
-    beginSync() : void;    
-  }
+export interface IWGLSemaphore extends IMgSemaphore {
+  isReady () : boolean;
+  reset () : void;
+  beginSync() : void;    
 }

@@ -1,4 +1,15 @@
-/// <reference path="Magnesium.ts" />
+import {MgClearColorValue}
+	from './MgClearColorValue';		
+import {MgClearDepthStencilValue}
+	from './MgClearDepthStencilValue';		
+import {MgFormat}
+	from './MgFormat';	
+import {MgColor4f}
+	from './MgColor4f';	 
+import {MgVec4i}
+	from './MgVec4i';	
+import {MgVec4Ui}
+	from './MgVec4Ui';   
 
 enum MgClearColorCategory {
   FLOAT,

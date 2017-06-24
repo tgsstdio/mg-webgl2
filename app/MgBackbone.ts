@@ -1,12 +1,12 @@
 class MgBackbone {
   private mGL: WebGL2RenderingContext;
-  private mContext: Magnesium.MgDriverContext;
-  get context(): Magnesium.MgDriverContext {
+  private mContext: .MgDriverContext;
+  get context(): .MgDriverContext {
     return this.mContext;
   }
 
-  private mEntrypoint: Magnesium.IMgEntrypoint;
-  get entrypoint(): Magnesium.IMgEntrypoint {
+  private mEntrypoint: .IMgEntrypoint;
+  get entrypoint(): .IMgEntrypoint {
     return this.mEntrypoint;
   }
 
@@ -15,33 +15,33 @@ class MgBackbone {
   //   return this.mPresentationSurface;
   // }
 
-  private mConfiguration: Magnesium.IMgGraphicsConfiguration;
-  get configuration(): Magnesium.IMgGraphicsConfiguration {
+  private mConfiguration: .IMgGraphicsConfiguration;
+  get configuration(): .IMgGraphicsConfiguration {
     return this.mConfiguration;
   }
 
-  private mGraphicsDevice: Magnesium.IMgGraphicsDevice;
-  get graphicsDevice(): Magnesium.IMgGraphicsDevice {
+  private mGraphicsDevice: .IMgGraphicsDevice;
+  get graphicsDevice(): .IMgGraphicsDevice {
     return this.mGraphicsDevice;
   }
 
-  private mSwapchains: Magnesium.IMgSwapchainCollection;
-  get swapchains(): Magnesium.IMgSwapchainCollection {
+  private mSwapchains: .IMgSwapchainCollection;
+  get swapchains(): .IMgSwapchainCollection {
     return this.mSwapchains;
   }
 
-  private mPresentationLayer: Magnesium.IMgPresentationLayer;
-  get presentationLayer(): Magnesium.IMgPresentationLayer {
+  private mPresentationLayer: .IMgPresentationLayer;
+  get presentationLayer(): .IMgPresentationLayer {
     return this.mPresentationLayer;
   } 
 
   constructor(
-    appInfo: Magnesium.MgApplicationInfo
+    appInfo: .MgApplicationInfo
     , canvas: HTMLCanvasElement
   ) {
-    // let appInfo = new Magnesium.MgApplicationInfo();
+    // let appInfo = new .MgApplicationInfo();
     // appInfo.application = "Hello World";
-    // appInfo.apiVersion = Magnesium.MgApplicationInfo.generateApiVersion(1, 17, 0);
+    // appInfo.apiVersion = .MgApplicationInfo.generateApiVersion(1, 17, 0);
     // appInfo.engineName = "Engine";
     // appInfo.engineVersion = 1;
 
@@ -52,36 +52,36 @@ class MgBackbone {
 
     this.mGL = gl;
 
-    let semaphores: Magnesium.IWGLSemaphoreEntrypoint = new Magnesium.WGLSemaphoreEntrypoint();
-    let draws = new Magnesium.WGLCmdDrawEntrypoint(gl);
-    let rendererCache = new Magnesium.WGLCmdStateRendererCacheEntrypoint(gl);
-    let cache = new Magnesium.WGLCmdShaderProgramCache(rendererCache);
-    let renderer: Magnesium.IWGLCmdStateRenderer = new Magnesium.WGLCmdStateRenderer(gl, draws, cache);
-    let blit: Magnesium.IWGLBlitOperationEntrypoint = new Magnesium.WGLBlitOperationEntrypoint();
-    let queue: Magnesium.IWGLQueue = new Magnesium.WGLCmdQueue(semaphores, renderer, blit);
-    let memoryTypeMap = new Magnesium.WGLDeviceMemoryTypeMap(gl);
-    let deviceMemory = new Magnesium.WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
-    let deviceImage = new Magnesium.WGLDeviceImageEntrypoint(gl);
-    let shaders = new Magnesium.WGLShaderModuleEntrypoint(gl);
-    let programs = new Magnesium.WGLGraphicsPipelineEntrypoint(gl);
-    let errorHandler = new Magnesium.WGLErrorHandler(gl);
-    let uniforms = new Magnesium.WGLUniformBlockEntrypoint(gl, errorHandler);
-    let parser = new Magnesium.WGLUniformBlockNameParser();
-    let compiler = new Magnesium.WGLGraphicsPipelineCompiler(
+    let semaphores: .IWGLSemaphoreEntrypoint = new .WGLSemaphoreEntrypoint();
+    let draws = new .WGLCmdDrawEntrypoint(gl);
+    let rendererCache = new .WGLCmdStateRendererCacheEntrypoint(gl);
+    let cache = new .WGLCmdShaderProgramCache(rendererCache);
+    let renderer: .IWGLCmdStateRenderer = new .WGLCmdStateRenderer(gl, draws, cache);
+    let blit: .IWGLBlitOperationEntrypoint = new .WGLBlitOperationEntrypoint();
+    let queue: .IWGLQueue = new .WGLCmdQueue(semaphores, renderer, blit);
+    let memoryTypeMap = new .WGLDeviceMemoryTypeMap(gl);
+    let deviceMemory = new .WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
+    let deviceImage = new .WGLDeviceImageEntrypoint(gl);
+    let shaders = new .WGLShaderModuleEntrypoint(gl);
+    let programs = new .WGLGraphicsPipelineEntrypoint(gl);
+    let errorHandler = new .WGLErrorHandler(gl);
+    let uniforms = new .WGLUniformBlockEntrypoint(gl, errorHandler);
+    let parser = new .WGLUniformBlockNameParser();
+    let compiler = new .WGLGraphicsPipelineCompiler(
       errorHandler
       , shaders
       , programs
       , uniforms
       , parser);
-    let sampler = new Magnesium.WGLSamplerEntrypoint(gl, errorHandler);
-    let imageDescriptor = new Magnesium.WGLImageDescriptorEntrypoint();
-    let desciptorPool = new Magnesium.WGLDescriptorPoolEntrypoint(imageDescriptor);
-    let descriptorSets = new Magnesium.WGLDescriptorSetEntrypoint();
-    let vertexArrays = new Magnesium.WGLCmdVertexArrayEntrypoint(gl, errorHandler);
-    let imageFormat = new Magnesium.WGLImageFormatEntrypoint();
-    let fences = new Magnesium.WGLFenceEntrypoint(gl);
-    let buffers = new Magnesium.WGLBufferEntrypoint(gl);
-    let deviceEntrypoint = new Magnesium.WGLDeviceEntrypoint(
+    let sampler = new .WGLSamplerEntrypoint(gl, errorHandler);
+    let imageDescriptor = new .WGLImageDescriptorEntrypoint();
+    let desciptorPool = new .WGLDescriptorPoolEntrypoint(imageDescriptor);
+    let descriptorSets = new .WGLDescriptorSetEntrypoint();
+    let vertexArrays = new .WGLCmdVertexArrayEntrypoint(gl, errorHandler);
+    let imageFormat = new .WGLImageFormatEntrypoint();
+    let fences = new .WGLFenceEntrypoint(gl);
+    let buffers = new .WGLBufferEntrypoint(gl);
+    let deviceEntrypoint = new .WGLDeviceEntrypoint(
       deviceMemory
       , deviceImage
       , compiler
@@ -95,29 +95,29 @@ class MgBackbone {
       , fences
       , buffers);
 
-    let device: Magnesium.IMgDevice = new Magnesium.WGLDevice(gl, queue, deviceEntrypoint, memoryTypeMap);
-    let physicalDevice: Magnesium.IMgPhysicalDevice = new Magnesium.WGLPhysicalDevice(device, memoryTypeMap);
+    let device: .IMgDevice = new .WGLDevice(gl, queue, deviceEntrypoint, memoryTypeMap);
+    let physicalDevice: .IMgPhysicalDevice = new .WGLPhysicalDevice(device, memoryTypeMap);
 
-    this.mEntrypoint = new Magnesium.WGLEntrypoint(device, physicalDevice);
-    this.mContext = new Magnesium.MgDriverContext(this.mEntrypoint);
+    this.mEntrypoint = new .WGLEntrypoint(device, physicalDevice);
+    this.mContext = new .MgDriverContext(this.mEntrypoint);
     this.mContext.initializeWithExtensions(
       appInfo
-      , Magnesium.MgInstanceExtensionOptions.ALL
+      , .MgInstanceExtensionOptions.ALL
     ); 
 
-    let presentationSurface = new Magnesium.WGLPresentationSurface(canvas);
-    this.mConfiguration = new Magnesium.MgDefaultGraphicsConfiguration(
+    let presentationSurface = new .WGLPresentationSurface(canvas);
+    this.mConfiguration = new .MgDefaultGraphicsConfiguration(
       this.mContext
       , presentationSurface);
 
-    let cmdRenderer = new Magnesium.WGLCmdRenderer(renderer);
-    this.mGraphicsDevice = new Magnesium.WGLGraphicsDevice(cmdRenderer, this.mConfiguration);
+    let cmdRenderer = new .WGLCmdRenderer(renderer);
+    this.mGraphicsDevice = new .WGLGraphicsDevice(cmdRenderer, this.mConfiguration);
 
-    let swKHR = new Magnesium.WGLHtmlSwapchainKHR();
-    this.mSwapchains = new Magnesium.WGLSwapchainCollection(swKHR);
+    let swKHR = new .WGLHtmlSwapchainKHR();
+    this.mSwapchains = new .WGLSwapchainCollection(swKHR);
 
-    let barriers = new Magnesium.WGLPresentationBarrierEntrypoint();
-    this.mPresentationLayer = new Magnesium.MgPresentationLayer(
+    let barriers = new .WGLPresentationBarrierEntrypoint();
+    this.mPresentationLayer = new .MgPresentationLayer(
       this.mConfiguration
       , this.mSwapchains
       , barriers);

@@ -1,10 +1,9 @@
-/// <reference path="../mg/MgLogicOp.ts" />
-/// <reference path="WGLGraphicsPipelineBlendColorAttachmentState.ts" />
+import {MgLogicOp} from '../mg/MgLogicOp';
+import {WGLGraphicsPipelineBlendColorAttachmentState} 
+  from './WGLGraphicsPipelineBlendColorAttachmentState';
 
-namespace Magnesium {
-  export class WGLGraphicsPipelineBlendColorState {
-    logicOpEnable: boolean;
-    logicOp: MgLogicOp;
-    attachments: Array<WGLGraphicsPipelineBlendColorAttachmentState>;
-  }
+export class WGLGraphicsPipelineBlendColorState {
+  logicOpEnable: boolean;
+  logicOp: MgLogicOp;
+  attachments: Array<WGLGraphicsPipelineBlendColorAttachmentState>;
 }

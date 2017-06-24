@@ -1,4 +1,17 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice}
+	from './IMgDevice';	  
+import {MgResult}
+	from './MgResult';	  
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';
+import {MgInstanceCreateInfo}
+	from './MgInstanceCreateInfo';	
+import {IMgInstance}
+	from './IMgInstance';	    	
+import {MgLayerProperties}
+	from './MgLayerProperties';
+import {MgExtensionProperties}
+	from './MgExtensionProperties';	
 
 export interface IMgEntrypoint {
   createInstance(

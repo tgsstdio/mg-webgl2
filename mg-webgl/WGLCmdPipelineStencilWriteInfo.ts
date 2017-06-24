@@ -1,8 +1,6 @@
-/// <reference path="../mg/MgStencilFaceFlagBits.ts" />
+import {MgStencilFaceFlagBits} from '../mg/MgStencilFaceFlagBits';
 
-namespace Magnesium {
-  export class WGLCmdPipelineStencilWriteInfo {
-    face: MgStencilFaceFlagBits;
-    writeMask: number;
-  }
+export class WGLCmdPipelineStencilWriteInfo {
+  face: MgStencilFaceFlagBits;
+  writeMask: number;
 }

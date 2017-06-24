@@ -1,38 +1,42 @@
-namespace Magnesium {
-  export class WGLRasterizerState	{
-		flags: WGLGraphicsPipelineFlagBits;
-		depthBias: WGLCmdDepthBiasParameter;
+import {WGLGraphicsPipelineFlagBits}
+	from './WGLGraphicsPipelineFlagBits';	
+import {WGLCmdDepthBiasParameter}
+	from './WGLCmdDepthBiasParameter';
 
-		equals (other: WGLRasterizerState): boolean	{
-      if (this.flags != other.flags) {
-        return false;
-      }
+export class WGLRasterizerState	{
+  flags: WGLGraphicsPipelineFlagBits;
+  depthBias: WGLCmdDepthBiasParameter;
 
-		  if (
-        Math.abs (
-          this.depthBias.depthBiasConstantFactor
-           - other.depthBias.depthBiasConstantFactor
-          ) > Number.EPSILON
-      ) {
-        return false;
-      }
+  equals (other: WGLRasterizerState): boolean	{
+    if (this.flags != other.flags) {
+      return false;
+    }
 
-
-			if (
-        Math.abs (
-          this.depthBias.depthBiasSlopeFactor
-           - other.depthBias.depthBiasSlopeFactor
+    if (
+      Math.abs (
+        this.depthBias.depthBiasConstantFactor
+          - other.depthBias.depthBiasConstantFactor
         ) > Number.EPSILON
-      )  {
-         return false;
-      }
+    ) {
+      return false;
+    }
 
-			return (
-        Math.abs (
-          this.depthBias.depthBiasClamp
-           - other.depthBias.depthBiasClamp
-        ) <= Number.EPSILON
-      );      
-		}
-	}
+
+    if (
+      Math.abs (
+        this.depthBias.depthBiasSlopeFactor
+          - other.depthBias.depthBiasSlopeFactor
+      ) > Number.EPSILON
+    )  {
+        return false;
+    }
+
+    return (
+      Math.abs (
+        this.depthBias.depthBiasClamp
+          - other.depthBias.depthBiasClamp
+      ) <= Number.EPSILON
+    );      
+  }
 }
+

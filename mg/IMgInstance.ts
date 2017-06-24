@@ -1,4 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import {MgResult}
+	from './MgResult';	  
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';
+import {IMgPhysicalDevice}
+	from './IMgPhysicalDevice';	  
 
 export interface IMgInstance {
   destroyInstance(

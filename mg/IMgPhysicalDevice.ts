@@ -1,4 +1,34 @@
-/// <reference path="Magnesium.ts" />
+import {MgResult} from './MgResult';
+import {MgDeviceCreateInfo} from './MgDeviceCreateInfo';
+import {IMgAllocationCallbacks} from './IMgAllocationCallbacks';
+import {IMgDevice} from './IMgDevice';
+import {MgPhysicalDeviceProperties} from './MgPhysicalDeviceProperties';
+import {MgQueueFamilyProperties} from './MgQueueFamilyProperties';
+import {MgPhysicalDeviceMemoryProperties}
+  from './MgPhysicalDeviceMemoryProperties';
+import {MgPhysicalDeviceFeatures} from './MgPhysicalDeviceFeatures';
+import {MgFormat} from './MgFormat';
+import {MgFormatProperties} from './MgFormatProperties';
+import {MgImageTiling} from './MgImageTiling';
+import {MgImageType} from './MgImageType';
+import {MgImageUsageFlagBits} from './MgImageUsageFlagBits';
+import {MgImageCreateFlagBits} from './MgImageCreateFlagBits';
+import {MgImageFormatProperties} from './MgImageFormatProperties';
+import {MgLayerProperties} from './MgLayerProperties';
+import {MgExtensionProperties} from './MgExtensionProperties';
+import {MgSampleCountFlagBits} from './MgSampleCountFlagBits';
+import {MgSparseImageFormatProperties} from './MgSparseImageFormatProperties';
+import {MgDisplayPropertiesKHR} from './MgDisplayPropertiesKHR';
+import {MgDisplayPlanePropertiesKHR} from './MgDisplayPlanePropertiesKHR';
+import {IMgDisplayKHR} from './IMgDisplayKHR';
+import {MgDisplayModePropertiesKHR} from './MgDisplayModePropertiesKHR';
+import {MgDisplayModeCreateInfoKHR} from './MgDisplayModeCreateInfoKHR';
+import {IMgDisplayModeKHR} from './IMgDisplayModeKHR';
+import {MgDisplayPlaneCapabilitiesKHR} from './MgDisplayPlaneCapabilitiesKHR';
+import {IMgSurfaceKHR} from './IMgSurfaceKHR';
+import {MgSurfaceCapabilitiesKHR} from './MgSurfaceCapabilitiesKHR';
+import {MgSurfaceFormatKHR} from './MgSurfaceFormatKHR';
+import {MgPresentModeKHR} from './MgPresentModeKHR';
 
 export interface IMgPhysicalDevice {
   createDevice(

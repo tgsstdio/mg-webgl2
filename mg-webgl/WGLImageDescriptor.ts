@@ -1,18 +1,18 @@
-/// <reference path="./IWGLImageDescriptorEntrypoint.ts" />
+import {IWGLImageDescriptorEntrypoint}
+	from './IWGLImageDescriptorEntrypoint';
 
-namespace Magnesium {
-	export class WGLImageDescriptor {
-		private mImageDescriptor: IWGLImageDescriptorEntrypoint;		
-		constructor (imgDescriptor: IWGLImageDescriptorEntrypoint)	{
-			this.mImageDescriptor = imgDescriptor;	
-		}
+export class WGLImageDescriptor {
+	private mImageDescriptor: IWGLImageDescriptorEntrypoint;		
+	constructor (imgDescriptor: IWGLImageDescriptorEntrypoint)	{
+		this.mImageDescriptor = imgDescriptor;	
+	}
 
-		index: number;
-		texture: WebGLTexture|null;
-		sampler : WebGLSampler|null;
+	index: number;
+	texture: WebGLTexture|null;
+	sampler : WebGLSampler|null;
 
-		destroy () : void {
+	destroy () : void {
 
-		}
 	}
 }
+

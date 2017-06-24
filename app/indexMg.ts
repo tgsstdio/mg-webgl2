@@ -27,9 +27,9 @@ function start() {
 // try {
 //   let canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
 
-//   let appInfo = new Magnesium.MgApplicationInfo();
+//   let appInfo = new .MgApplicationInfo();
 //   appInfo.application = "Hello World";
-//   appInfo.apiVersion = Magnesium.MgApplicationInfo.generateApiVersion(1, 17, 0);
+//   appInfo.apiVersion = .MgApplicationInfo.generateApiVersion(1, 17, 0);
 //   appInfo.engineName = "Engine";
 //   appInfo.engineVersion = 1;
 

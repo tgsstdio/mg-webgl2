@@ -1,8 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgDescriptorType}
+	from './MgDescriptorType';	
 
-namespace Magnesium {
-  export class MgDescriptorPoolSize	{
-    type : MgDescriptorType;
-    descriptorCount : number;
-	}
+export class MgDescriptorPoolSize	{
+  type : MgDescriptorType;
+  descriptorCount : number;
 }

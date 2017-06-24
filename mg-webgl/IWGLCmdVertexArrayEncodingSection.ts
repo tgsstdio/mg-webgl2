@@ -1,25 +1,30 @@
-namespace Magnesium {
-  export interface IWGLCmdVertexArrayEncodingSection {
-    readonly boundIndexBuffer: WGLCmdIndexBufferParameter|null;
+import {IWGLGraphicsPipeline} from './IWGLGraphicsPipeline';
+import {WGLCmdGraphicsBag} from './WGLCmdGraphicsBag';
+import {WGLCmdEncoderContextSorter} from './WGLCmdEncoderContextSorter';
+import {WGLCmdIndexBufferParameter} from './WGLCmdIndexBufferParameter';
+import {IMgBuffer} from '../mg/IMgBuffer';
+import {MgIndexType} from '../mg/MgIndexType';
 
-    clear(): void;
+export interface IWGLCmdVertexArrayEncodingSection {
+  readonly boundIndexBuffer: WGLCmdIndexBufferParameter|null;
 
-    bindVertexBuffers(
-      firstBinding: number
-      , pBuffers: Array<IMgBuffer>
-      , pOffsets: Array<number>|null
-    ): void;    
+  clear(): void;
 
-		bindIndexBuffer(
-      buffer: IMgBuffer
-      , offset: number
-      , indexType: MgIndexType
-    ) : void;    
+  bindVertexBuffers(
+    firstBinding: number
+    , pBuffers: Array<IMgBuffer>
+    , pOffsets: Array<number>|null
+  ): void;    
 
-    pushIfRequired(
-       pipeline: IWGLGraphicsPipeline
-      , bag: WGLCmdGraphicsBag
-      , instructions: WGLCmdEncoderContextSorter
-    ): void;    
-  }
+  bindIndexBuffer(
+    buffer: IMgBuffer
+    , offset: number
+    , indexType: MgIndexType
+  ) : void;    
+
+  pushIfRequired(
+      pipeline: IWGLGraphicsPipeline
+    , bag: WGLCmdGraphicsBag
+    , instructions: WGLCmdEncoderContextSorter
+  ): void;    
 }

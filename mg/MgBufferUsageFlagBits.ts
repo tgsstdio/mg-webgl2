@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgBufferUsageFlagBits	{
 	// Can be used as a source of transfer operations
 	TRANSFER_SRC_BIT = 1 << 0,

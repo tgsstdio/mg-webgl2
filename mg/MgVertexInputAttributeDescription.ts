@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {MgFormat}
+	from '../mg/MgFormat';
 
 export class MgVertexInputAttributeDescription {
   location : number;

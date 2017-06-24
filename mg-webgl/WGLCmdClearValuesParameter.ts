@@ -1,34 +1,32 @@
-/// <reference path="WGLCmdClearValueArrayItem.ts" />
+import {WGLCmdClearValueArrayItem} from './WGLCmdClearValueArrayItem'
 
-namespace Magnesium {
-  export class WGLCmdClearValuesParameter {
-    attachments: Array<WGLCmdClearValueArrayItem>;
+export class WGLCmdClearValuesParameter {
+	attachments: Array<WGLCmdClearValueArrayItem>;
 
-		equals (other: WGLCmdClearValuesParameter) : boolean
+	equals (other: WGLCmdClearValuesParameter) : boolean
+	{
+		if (this.attachments == null && other.attachments != null)
 		{
-			if (this.attachments == null && other.attachments != null)
-			{
+			return false;
+		}
+
+		if (this.attachments != null && other.attachments == null)
+		{
+			return false;
+		}
+
+		if (this.attachments.length != other.attachments.length)
+		{
+			return false;
+		}
+
+		let noOfAttachments = this.attachments.length;
+		for (let i = 0; i < noOfAttachments; i += 1)
+		{
+			if (!this.attachments [i].equals (other.attachments [i]))
 				return false;
-			}
+		}
 
-			if (this.attachments != null && other.attachments == null)
-			{
-				return false;
-			}
-
-			if (this.attachments.length != other.attachments.length)
-			{
-				return false;
-			}
-
-			let noOfAttachments = this.attachments.length;
-			for (let i = 0; i < noOfAttachments; i += 1)
-			{
-				if (!this.attachments [i].equals (other.attachments [i]))
-					return false;
-			}
-
-			return true;
-		}    
-  }
+		return true;
+	}    
 }

@@ -1,5 +1,6 @@
-namespace Magnesium {
-  export interface IWGLSemaphoreEntrypoint {
-    createSemaphore() : IWGLSemaphore;
-  }
+import {IWGLSemaphore}
+	from './IWGLSemaphore';
+
+export interface IWGLSemaphoreEntrypoint {
+  createSemaphore() : IWGLSemaphore;
 }

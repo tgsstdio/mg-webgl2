@@ -1,17 +1,19 @@
+import {IWGLDescriptorSet} from './IWGLDescriptorSet'
+import {IMgDescriptorPool} from '../mg/IMgDescriptorPool';
+import {IWGLDescriptorPoolResource} from './IWGLDescriptorPoolResource';
+import {WGLImageDescriptor} from './WGLImageDescriptor';
+import {WGLBufferDescriptor} from './WGLBufferDescriptor';
+import {WGLDescriptorPoolResourceInfo} from './WGLDescriptorPoolResourceInfo';
 
-/// <reference path="IWGLDescriptorSet.ts" />
+export interface IWGLDescriptorPool extends IMgDescriptorPool {
+  readonly maxSets: number;
+  readonly allocatedSets: Map<number, IWGLDescriptorSet>;
 
-namespace Magnesium {
-  export interface IWGLDescriptorPool extends IMgDescriptorPool {
-    readonly maxSets: number;
-    readonly allocatedSets: Map<number, IWGLDescriptorSet>;
+  readonly combinedImageSamplers: IWGLDescriptorPoolResource<WGLImageDescriptor>;
+  readonly uniformBuffers: IWGLDescriptorPoolResource<WGLBufferDescriptor>;
+  readonly storageBuffers: IWGLDescriptorPoolResource<WGLBufferDescriptor>;
 
-    readonly combinedImageSamplers: IGLDescriptorPoolResource<WGLImageDescriptor>;
-    readonly uniformBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
-    readonly storageBuffers: IGLDescriptorPoolResource<WGLBufferDescriptor>;
+  resetResource(resource: WGLDescriptorPoolResourceInfo) : void;
 
-		resetResource(resource: GLDescriptorPoolResourceInfo) : void;
-
-		tryTake(out: {result: IWGLDescriptorSet|null } ) : boolean;
-  }
+  tryTake(out: {result: IWGLDescriptorSet|null } ) : boolean;
 }

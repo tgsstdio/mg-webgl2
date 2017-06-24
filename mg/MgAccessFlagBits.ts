@@ -1,7 +1,4 @@
-/// <reference path="Magnesium.ts" />
-
-export enum MgAccessFlagBits
-{
+export enum MgAccessFlagBits {
 	// Controls coherency of indirect command reads
 	INDIRECT_COMMAND_READ_BIT = 1 << 0,
 	// Controls coherency of index reads

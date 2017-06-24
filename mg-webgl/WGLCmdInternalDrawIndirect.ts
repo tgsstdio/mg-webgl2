@@ -1,12 +1,10 @@
-/// <reference path="../mg/MgPrimitiveTopology.ts" />
+import {IWGLBuffer} from './IWGLBuffer';
 
-namespace Magnesium {
-  export class WGLCmdInternalDrawIndirect {
-    mode: number;
-    // WARN: indirect requires IntPtr
-    indirect: IWGLBuffer;
-    drawCount: number;
-    offset: number;
-    stride: number;
-  }
+export class WGLCmdInternalDrawIndirect {
+  mode: number;
+  // WARN: indirect requires IntPtr
+  indirect: IWGLBuffer;
+  drawCount: number;
+  offset: number;
+  stride: number;
 }

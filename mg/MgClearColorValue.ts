@@ -1,4 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import {MgColor4f}
+	from './MgColor4f';		
+import {MgVec4i}
+	from './MgVec4i';		
+import {MgVec4Ui}
+	from './MgVec4Ui';		
 
 export class MgClearColorValue {
   private mValue: MgColor4f | MgVec4i | MgVec4Ui;

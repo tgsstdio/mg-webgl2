@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export interface IMgDevice {
   destroyDevice(allocator : IMgAllocationCallbacks|null) : void;
 

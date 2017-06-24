@@ -1,4 +1,21 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDisposable}
+	from './IMgDisposable';	  
+import {MgRect2D}
+	from './MgRect2D';
+import {MgViewport}
+	from './MgViewport';	  
+import {IMgImageView}
+	from './IMgImageView';	    
+import {IMgRenderPass}
+	from './IMgRenderPass';	  
+import {IMgFramebuffer}
+	from './IMgFramebuffer';
+import {IMgCommandBuffer}
+	from './IMgCommandBuffer';	  
+import {IMgSwapchainCollection}
+	from './IMgSwapchainCollection';	  
+import {MgGraphicsDeviceCreateInfo}
+	from './MgGraphicsDeviceCreateInfo';  
 
 export interface IMgGraphicsDevice extends IMgDisposable {
   readonly scissor : MgRect2D;

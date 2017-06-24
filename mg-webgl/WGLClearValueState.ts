@@ -1,21 +1,21 @@
-namespace Magnesium {
-	export class WGLClearValueState {
-		clearColor: MgColor4f;
-		depthValue: number;
-		stencilValue: number;
+import {MgColor4f} from '../mg/MgColor4f'
 
-  	equals (
-      other: WGLClearValueState
-    ): boolean {
-			if (this.stencilValue != other.stencilValue) {
-				return false;
-			}
+export class WGLClearValueState {
+	clearColor: MgColor4f;
+	depthValue: number;
+	stencilValue: number;
 
-			if (Math.abs (this.depthValue - other.depthValue) > Number.EPSILON)	{
-				return false;
-			}
-
-			return this.clearColor.equals (other.clearColor);
+	equals (
+		other: WGLClearValueState
+	): boolean {
+		if (this.stencilValue != other.stencilValue) {
+			return false;
 		}
+
+		if (Math.abs (this.depthValue - other.depthValue) > Number.EPSILON)	{
+			return false;
+		}
+
+		return this.clearColor.equals (other.clearColor);
 	}
 }

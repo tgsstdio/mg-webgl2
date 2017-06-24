@@ -1,27 +1,28 @@
-namespace Magnesium {
-  export interface IWGLDeviceImageEntrypoint {
-		deleteImage(
-      textureId: WebGLTexture) : void;
+import {MgFormat}
+	from '../mg/MgFormat'; 
 
-		createTextureStorage1D (
-       levels: number
-      , format: MgFormat
-      , width: number
-    ) : WebGLTexture;
+export interface IWGLDeviceImageEntrypoint {
+  deleteImage(
+    textureId: WebGLTexture) : void;
 
-		createTextureStorage2D (
-       levels: number
-      , format: MgFormat
-      , width: number
-      , height: number
-    ) : WebGLTexture;
+  createTextureStorage1D (
+      levels: number
+    , format: MgFormat
+    , width: number
+  ) : WebGLTexture;
 
-		createTextureStorage3D (
-       levels: number
-      , format: MgFormat
-      , width: number
-      , height: number
-      , depth: number
-    ) : WebGLTexture;    
-	}
+  createTextureStorage2D (
+      levels: number
+    , format: MgFormat
+    , width: number
+    , height: number
+  ) : WebGLTexture;
+
+  createTextureStorage3D (
+      levels: number
+    , format: MgFormat
+    , width: number
+    , height: number
+    , depth: number
+  ) : WebGLTexture;    
 }

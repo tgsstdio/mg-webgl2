@@ -1,13 +1,11 @@
-/// <reference path="WGLCmdAction.ts" />
-/// <reference path="WGLCmdCommandRecording.ts" />
+import {WGLCmdAction} from './WGLCmdAction'
+import {WGLCmdCommandRecording} from './WGLCmdCommandRecording'
 
-namespace Magnesium {
-  export class WGLCmdRecordInstruction {
-    index: number;
-    operation: WGLCmdAction;
+export class WGLCmdRecordInstruction {
+  index: number;
+  operation: WGLCmdAction;
 
-    perform(recording: WGLCmdCommandRecording): void {
-      this.operation.action(recording, this.index);
-    }
+  perform(recording: WGLCmdCommandRecording): void {
+    this.operation.action(recording, this.index);
   }
 }

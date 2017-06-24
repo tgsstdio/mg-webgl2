@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice}
+	from './IMgDevice';	  
+import {IMgDeviceMemory}
+	from './IMgDeviceMemory';	  
+import {MgResult}
+	from './MgResult';	  
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';	      
 
 export interface IMgImage {
   // WARN: memoryOffset requires UInt64

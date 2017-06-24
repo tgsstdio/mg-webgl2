@@ -1,23 +1,23 @@
-/// <reference path="WGLVertexAttributeType.ts" />
-/// <reference path="WGLVertexAttribFunction.ts" />
+import {WGLVertexAttributeType}
+	from './WGLVertexAttributeType';	
+import {WGLVertexAttribFunction}
+	from './WGLVertexAttribFunction';	
 
-namespace Magnesium {
-  export class WGLVertexAttributeInfo {
-    pointerType: WGLVertexAttributeType;
-    size: number;
-    isNormalized: boolean;
-    function: WGLVertexAttribFunction;
+export class WGLVertexAttributeInfo {
+  pointerType: WGLVertexAttributeType;
+  size: number;
+  isNormalized: boolean;
+  function: WGLVertexAttribFunction;
 
-    constructor(
-      attributeSize: number
-      , isNormalized: boolean
-      , pointerType: WGLVertexAttributeType
-      , attributeFunction: WGLVertexAttribFunction
-    ) {
-      this.size = attributeSize;
-      this.isNormalized = isNormalized;
-      this.pointerType = pointerType;
-      this.function = attributeFunction;
-    }
+  constructor(
+    attributeSize: number
+    , isNormalized: boolean
+    , pointerType: WGLVertexAttributeType
+    , attributeFunction: WGLVertexAttribFunction
+  ) {
+    this.size = attributeSize;
+    this.isNormalized = isNormalized;
+    this.pointerType = pointerType;
+    this.function = attributeFunction;
   }
 }

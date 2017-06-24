@@ -1,7 +1,7 @@
-/// <reference path="../mg/IMgQueue.ts" />
+import {IMgQueue}
+	from '../mg/IMgQueue';
 
-namespace Magnesium {
-  export interface IWGLQueue extends IMgQueue {
-		isEmpty() : boolean;
-  }
+export interface IWGLQueue extends IMgQueue {
+  isEmpty() : boolean;
 }
+

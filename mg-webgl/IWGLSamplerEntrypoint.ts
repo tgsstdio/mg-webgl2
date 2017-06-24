@@ -1,43 +1,46 @@
-namespace Magnesium {
-  export interface IWGLSamplerEntrypoint {
-		createSampler() : WebGLSampler;
-		deleteSampler (samplerId: WebGLSampler) : void;
+import {MgSamplerAddressMode} from '../mg/MgSamplerAddressMode';
+import {MgFilter} from '../mg/MgFilter';
+import {MgCompareOp} from '../mg/MgCompareOp';
+import {MgSamplerMipmapMode} from '../mg/MgSamplerMipmapMode';
 
-		setTextureWrapS (
-      samplerId: WebGLSampler
-      , addressModeU: MgSamplerAddressMode
-    ) : void;
+export interface IWGLSamplerEntrypoint {
+  createSampler() : WebGLSampler;
+  deleteSampler (samplerId: WebGLSampler) : void;
 
-		setTextureWrapT (
-      samplerId: WebGLSampler
-      , addressModeV: MgSamplerAddressMode): void;
+  setTextureWrapS (
+    samplerId: WebGLSampler
+    , addressModeU: MgSamplerAddressMode
+  ) : void;
 
-	  setTextureWrapR (
-      samplerId: WebGLSampler
-      , addressModeW: MgSamplerAddressMode
-    ) : void ;
+  setTextureWrapT (
+    samplerId: WebGLSampler
+    , addressModeV: MgSamplerAddressMode): void;
 
-		setTextureMinLod (
-      samplerId: WebGLSampler
-      , minLod: number) : void;
+  setTextureWrapR (
+    samplerId: WebGLSampler
+    , addressModeW: MgSamplerAddressMode
+  ) : void ;
 
-		setTextureMaxLod (
-      samplerId: WebGLSampler
-      , maxLod: number) : void;
+  setTextureMinLod (
+    samplerId: WebGLSampler
+    , minLod: number) : void;
 
-		setTextureMinFilter (
-      samplerId: WebGLSampler
-      , minFilter: MgFilter
-      , mipmapMode: MgSamplerMipmapMode
-    ) : void;
+  setTextureMaxLod (
+    samplerId: WebGLSampler
+    , maxLod: number) : void;
 
-		setTextureMagFilter (
-      samplerId: WebGLSampler
-      , magFilter: MgFilter
-    ) : void;
+  setTextureMinFilter (
+    samplerId: WebGLSampler
+    , minFilter: MgFilter
+    , mipmapMode: MgSamplerMipmapMode
+  ) : void;
 
-		setTextureCompareFunc(
-      samplerId: WebGLSampler
-      , compareOp: MgCompareOp) : void;
-  }
+  setTextureMagFilter (
+    samplerId: WebGLSampler
+    , magFilter: MgFilter
+  ) : void;
+
+  setTextureCompareFunc(
+    samplerId: WebGLSampler
+    , compareOp: MgCompareOp) : void;
 }

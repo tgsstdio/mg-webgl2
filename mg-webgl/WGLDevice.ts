@@ -3,7 +3,7 @@
 /// <reference path="WGLImage.ts" />
 /// <reference path="../mg/MgMemoryRequirements.ts" />
 
-namespace Magnesium {
+namespace  {
   export class WGLDevice implements IWGLDevice {
     private mGL: WebGL2RenderingContext;
     private mQueue: IWGLQueue;

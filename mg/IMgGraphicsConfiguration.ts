@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDisposable}
+	from './IMgDisposable';	
+import {IMgDevice}
+	from './IMgDevice';	
+import {IMgThreadPartition}
+	from './IMgThreadPartition';	
+import {IMgQueue}
+	from './IMgQueue';
 
 export interface IMgGraphicsConfiguration extends IMgDisposable {
       

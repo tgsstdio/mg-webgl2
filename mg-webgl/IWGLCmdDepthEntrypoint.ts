@@ -1,17 +1,18 @@
-namespace Magnesium {
-	export interface IWGLCmdDepthEntrypoint {
-		getDefaultEnums() : MgCompareOp;
+import {MgCompareOp} from '../mg/MgCompareOp';
 
-		initialize() : MgCompareOp;
+export interface IWGLCmdDepthEntrypoint {
+	getDefaultEnums() : MgCompareOp;
 
-		//bool IsDepthBufferEnabled { get; }		
-		enableDepthBuffer(): void;
-		disableDepthBuffer(): void;
+	initialize() : MgCompareOp;
 
-		setDepthBufferFunc(func: MgCompareOp): void;
-		setDepthMask(isMaskOn :boolean): void;
+	//bool IsDepthBufferEnabled { get; }		
+	enableDepthBuffer(): void;
+	disableDepthBuffer(): void;
 
-		//void SetClipControl(bool usingLowerLeftCorner, bool zeroToOneRange);
-    //void SetDepthBounds(float min, float max);
-  }
+	setDepthBufferFunc(func: MgCompareOp): void;
+	setDepthMask(isMaskOn :boolean): void;
+
+	//void SetClipControl(bool usingLowerLeftCorner, bool zeroToOneRange);
+	//void SetDepthBounds(float min, float max);
 }
+

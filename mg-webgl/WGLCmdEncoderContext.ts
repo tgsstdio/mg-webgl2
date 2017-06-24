@@ -1,9 +1,7 @@
-/// <reference path="WGLCmdEncoderCategory.ts" />
+import {WGLCmdEncoderCategory} from './WGLCmdEncoderCategory'
 
-namespace Magnesium {
-  export class WGLCmdEncoderContext {
-    first: number;
-    last: number;
-    category: WGLCmdEncoderCategory;
-  }
+export class WGLCmdEncoderContext {
+  first: number;
+  last: number;
+  category: WGLCmdEncoderCategory;
 }

@@ -1,16 +1,15 @@
-/// <reference path="IWGLCmdStateRenderer.ts" />
-/// <reference path="WGLCmdGraphicsGrid.ts" />
+import {WGLCmdGraphicsGrid} from './WGLCmdGraphicsGrid';
+import {IWGLCmdStateRenderer} from './IWGLCmdStateRenderer';
 
-namespace Magnesium {
-  export class WGLCmdGraphicsRecording {
-    grid: WGLCmdGraphicsGrid;
-    stateRenderer: IWGLCmdStateRenderer;
+export class WGLCmdGraphicsRecording {
+  grid: WGLCmdGraphicsGrid;
+  stateRenderer: IWGLCmdStateRenderer;
 
-    constructor(grid: WGLCmdGraphicsGrid
-    , renderer: IWGLCmdStateRenderer)
-    {
-      this.grid = grid;
-      this.stateRenderer = renderer;
-    }    
-  }
+  constructor(grid: WGLCmdGraphicsGrid
+  , renderer: IWGLCmdStateRenderer)
+  {
+    this.grid = grid;
+    this.stateRenderer = renderer;
+  }    
 }
+
