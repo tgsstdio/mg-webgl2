@@ -109,10 +109,22 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
     gl: WebGL2RenderingContext
     , draws: IWGLCmdDrawEntrypoint
     , cache: IWGLCmdShaderProgramCache
+    , blend: IWGLCmdBlendEntrypoint
+    , stencil: IWGLCmdStencilEntrypoint
+    , depth: IWGLCmdDepthEntrypoint
+    , raster: IWGLCmdRasterizationEntrypoint
+    , scissor: IWGLCmdScissorsEntrypoint
+    , clear: IWGLCmdClearEntrypoint
   ) {
     this.mGL = gl;
     this.mDraws = draws;
     this.mCache = cache;
+    this.mBlend = blend;
+    this.mStencil = stencil;
+    this.mRaster = raster;
+    this.mDepth = depth;
+    this.mScissor = scissor;
+    this.mClear = clear;  
   }
 
   initialize() : void {
@@ -212,13 +224,14 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
       return true;
     }
 
-    if (this.mPastColorBlendEnums.logicOpEnable != next.logicOpEnable) {
-      return true;
-    }
+  // NO LOGIC OPS in WebGL1/2
+    // if (this.mPastColorBlendEnums.logicOpEnable != next.logicOpEnable) {
+    //   return true;
+    // }
 
-    if (this.mPastColorBlendEnums.logicOp != next.logicOp) {
-      return true;
-    }
+    // if (this.mPastColorBlendEnums.logicOp != next.logicOp) {
+    //   return true;
+    // }
 
     for (let i = 0; i < next.attachments.length; i += 1) {
       if (
@@ -234,18 +247,23 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
   private applyBlendChanges(
     current: WGLGraphicsPipelineBlendColorState
   ) : void {
-    if (
-      this.mPastColorBlendEnums.logicOpEnable != current.logicOpEnable
-      || this.mPastColorBlendEnums.logicOp != current.logicOp
-    ) {
-      this.mBlend.enableLogicOp(current.logicOpEnable);
-      this.mBlend.logicOp(current.logicOp);
-    }
+    // NO LOGIC OPS in WebGL1/2
+    // if (
+    //   this.mPastColorBlendEnums.logicOpEnable != current.logicOpEnable
+    //   || this.mPastColorBlendEnums.logicOp != current.logicOp
+    // ) {
+    //   this.mBlend.enableLogicOp(current.logicOpEnable);
+    //   this.mBlend.logicOp(current.logicOp);
+    // }
+
+    // no independant blending 
 
     let leftSize = this.mPastColorBlendEnums.attachments.length;
     let rightSize = current.attachments.length;
 
-    let fullLoop = Math.max(leftSize, rightSize);
+    // no independant blending 
+      // SHOULD ALWAYS BE THE SAME
+    let fullLoop = Math.min(Math.max(leftSize, rightSize), 1);
 
     for (let i = 0; i < fullLoop; i += 1) {
       let hasPastValue : boolean = (i < leftSize);
@@ -256,7 +274,7 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
         let next = current.attachments[i];
 
         if (past.blendEnable != next.blendEnable) {
-          this.mBlend.enableBlending(i, next.blendEnable);
+          this.mBlend.enableBlending(next.blendEnable);
         }
 
         if (next.srcColorBlendFactor != past.srcColorBlendFactor ||
@@ -265,8 +283,7 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
             next.dstAlphaBlendFactor != past.dstAlphaBlendFactor)
         {
           this.mBlend.applyBlendSeparateFunction(
-            i
-            , next.srcColorBlendFactor
+              next.srcColorBlendFactor
             , next.dstColorBlendFactor
             , next.srcAlphaBlendFactor
             , next.dstAlphaBlendFactor
@@ -274,23 +291,22 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
         }
 
         if (past.colorWriteMask != next.colorWriteMask) {
-          this.mBlend.setColorMask(i, next.colorWriteMask);
+          this.mBlend.setColorMask(next.colorWriteMask);
         }
       }
       else if (!hasPastValue && hasNextValue) {
         let next = current.attachments[i];
 
-        this.mBlend.enableBlending(i, next.blendEnable);
+        this.mBlend.enableBlending(next.blendEnable);
 
         this.mBlend.applyBlendSeparateFunction(
-          i
-          , next.srcColorBlendFactor
+            next.srcColorBlendFactor
           , next.dstColorBlendFactor
           , next.srcAlphaBlendFactor
           , next.dstAlphaBlendFactor
         );
 
-        this.mBlend.setColorMask(i, next.colorWriteMask);
+        this.mBlend.setColorMask(next.colorWriteMask);
       }
     }
   }

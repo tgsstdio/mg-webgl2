@@ -99,6 +99,8 @@ import {WGLSwapchainCollection}
 	from '../mg-webgl/WGLSwapchainCollection';  
 import {WGLPresentationBarrierEntrypoint}
 	from '../mg-webgl/WGLPresentationBarrierEntrypoint';  
+import {WGLCmdBlendEntrypoint}
+	from '../mg-webgl/WGLCmdBlendEntrypoint';  
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
@@ -158,7 +160,24 @@ export class MgBackbone {
     let draws = new WGLCmdDrawEntrypoint(gl);
     let rendererCache = new WGLCmdStateRendererCacheEntrypoint(gl);
     let cache = new WGLCmdShaderProgramCache(rendererCache);
-    let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(gl, draws, cache);
+        let errorHandler = new WGLErrorHandler(gl);
+    let blend = new WGLCmdBlendEntrypoint(gl, errorHandler);
+    let stencil = new WGLCmdStencilEntrypoint(gl);
+    let depth = new WGLCmdDepthEntrypoint(gl);
+    let raster = new WGLCmdRasterizationEntrypoint(gl);
+    let scissor = new WGLCmdScissorEntrypoint(gl);
+    let clear = new WGLCmdClearEntrypoint(gl);
+    let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(
+      gl
+      , draws
+      , cache
+      , blend
+      , stencil
+      , depth
+      , raster
+      , scissor
+      , clear
+      );
     let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint();
     let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, blit);
     let memoryTypeMap = new WGLDeviceMemoryTypeMap(gl);
@@ -166,7 +185,7 @@ export class MgBackbone {
     let deviceImage = new WGLDeviceImageEntrypoint(gl);
     let shaders = new WGLShaderModuleEntrypoint(gl);
     let programs = new WGLGraphicsPipelineEntrypoint(gl);
-    let errorHandler = new WGLErrorHandler(gl);
+
     let uniforms = new WGLUniformBlockEntrypoint(gl, errorHandler);
     let parser = new WGLUniformBlockNameParser();
     let compiler = new WGLGraphicsPipelineCompiler(

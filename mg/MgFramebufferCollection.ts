@@ -10,6 +10,7 @@ export class MgFramebufferCollection {
   private mGraphicsConfiguration: IMgGraphicsConfiguration;
   constructor(configuration: IMgGraphicsConfiguration) {
     this.mGraphicsConfiguration = configuration;
+    this.mFramebuffers = new Array<IMgFramebuffer>(0);
   }
 
   private mFramebuffers: Array<IMgFramebuffer>;

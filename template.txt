@@ -9,6 +9,11 @@ import {}
 import {}
 	from './';	
 
+import {}
+	from '../mg-webgl/';  
+import {}
+	from '../mg-webgl/';  
+
 import {IMgDeviceMemory}
 	from './IMgDeviceMemory';	 
 

@@ -200,8 +200,9 @@ if (info.rasterizationState == null)
 		if (colorBlend != null)	{
 			this.mBlendConstants = colorBlend.blendConstants;
 
-			this.mColorBlendEnums.logicOpEnable = colorBlend.logicOpEnable;
-			this.mColorBlendEnums.logicOp = colorBlend.logicOp;
+			// NO LOGIC OPS in WebGL1/2
+			// this.mColorBlendEnums.logicOpEnable = colorBlend.logicOpEnable;
+			// this.mColorBlendEnums.logicOp = colorBlend.logicOp;
 
 			if (colorBlend.attachments != null)	{
 				let colorAttachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(colorBlend.attachments.length);
@@ -231,8 +232,9 @@ if (info.rasterizationState == null)
 			this.mBlendConstants = new MgColor4f( 0, 0, 0, 0 );
 			this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(0);
 
-			this.mColorBlendEnums.logicOpEnable = false;
-			this.mColorBlendEnums.logicOp = MgLogicOp.COPY;
+			// NO LOGIC OPS in WebGL1/2
+			// this.mColorBlendEnums.logicOpEnable = false;
+			// this.mColorBlendEnums.logicOp = MgLogicOp.COPY;
 		}
 	}
 

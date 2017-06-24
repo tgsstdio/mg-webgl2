@@ -45,10 +45,12 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
   private mRenderer: IWGLRenderer;
   private mGraphicsConfiguration: IMgGraphicsConfiguration;
   private mView: IMgImageView;
+  private mFramebuffers: MgFramebufferCollection;  
   constructor(renderer: IWGLRenderer, configuration:IMgGraphicsConfiguration) {
     this.mRenderer = renderer;
     this.mGraphicsConfiguration = configuration;
     this.mView = new WGLNullImageView ();
+    this.mFramebuffers = new MgFramebufferCollection(configuration);
   }
   
   get depthStencilImageView(): IMgImageView {
@@ -60,7 +62,7 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
     return this.mRenderpass;
   }
 
-  private mFramebuffers: MgFramebufferCollection;
+
   get framebuffers(): Array<IMgFramebuffer> {
     return this.mFramebuffers.framebuffers;
   }

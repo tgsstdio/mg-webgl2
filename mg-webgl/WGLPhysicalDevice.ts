@@ -45,6 +45,7 @@ export class WGLPhysicalDevice implements IMgPhysicalDevice {
     , deviceMemoryMap: IWGLDeviceMemoryTypeMap
   ) {
     this.mDevice = device;
+    this.mDeviceMemoryMap = deviceMemoryMap;
   }  
   
   createDevice(
@@ -102,6 +103,8 @@ export class WGLPhysicalDevice implements IMgPhysicalDevice {
     let features = new MgPhysicalDeviceFeatures();
     features.multiViewport = false;      
     features.wideLines = false;
+    features.logicOp = false;
+    features.independentBlend = false;
     out.pFeatures = features;
   }
 

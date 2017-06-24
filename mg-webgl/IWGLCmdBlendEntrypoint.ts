@@ -6,29 +6,24 @@ import {WGLGraphicsPipelineBlendColorState}
 import {MgColorComponentFlagBits} from '../mg/MgColorComponentFlagBits';
 
 export interface IWGLCmdBlendEntrypoint {
-  enableLogicOp (logicOpEnable: boolean) : void;
-  logicOp (logicOp: MgLogicOp): void;
-
-  // NOT SURE IF THIS IS GETTING USED
-  isEnabled(index: number): boolean;
+  // NO LOGIC OPS
+  //enableLogicOp (logicOpEnable: boolean) : void;
+  //logicOp (logicOp: MgLogicOp): void;
 
   initialize(
     noOfAttachments: number
   ): WGLGraphicsPipelineBlendColorState;
 
-  enableBlending(
-    index: number
-    , value: boolean
+  enableBlending(    
+    value: boolean
   ) : void;
 
   setColorMask(
-    index: number
-    , colorMask: MgColorComponentFlagBits
+    colorMask: MgColorComponentFlagBits
   ) : void;
 
   applyBlendSeparateFunction (
-    index: number
-    , colorSource: MgBlendFactor
+     colorSource: MgBlendFactor
     ,	colorDest: MgBlendFactor
     , alphaSource: MgBlendFactor 
     ,	alphaDest: MgBlendFactor

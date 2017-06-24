@@ -1,4 +1,4 @@
-function initWebGL (canvas: HTMLCanvasElement) {
+export function initWebGL (canvas: HTMLCanvasElement) {
   var gl = null
 
   gl = canvas.getContext('webgl2')
@@ -16,4 +16,4 @@ function initWebGL (canvas: HTMLCanvasElement) {
   return gl
 }
 
-export default initWebGL
+export default initWebGL;
