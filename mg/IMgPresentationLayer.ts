@@ -1,4 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {IMgCommandBuffer}
+	from './IMgCommandBuffer';	  
+import {IMgSemaphore}
+	from './IMgSemaphore';	
 
 export interface IMgPresentationLayer {
   beginDraw(

@@ -2,7 +2,7 @@ import {WGLVertexAttributeType} from './WGLVertexAttributeType';
 
 export interface IWGLCmdVertexArrayEntrypoint {
   bindIndexBuffer (
-    bufferId: number
+    bufferId: WebGLBuffer|null
   ): void;
 
   bindIntVertexAttribute(

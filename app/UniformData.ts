@@ -1,8 +1,14 @@
-  // Uniform block object
-  export class UniformData {
-    memory: Magnesium.IMgDeviceMemory;
-    buffer:Magnesium.IMgBuffer;
-    descriptor: Magnesium.MgDescriptorBufferInfo;
-  }
+import {IMgDeviceMemory}
+	from '../mg/IMgDeviceMemory';  
+import {IMgBuffer}
+	from '../mg/IMgBuffer';   
+import {MgDescriptorBufferInfo}
+	from '../mg/MgDescriptorBufferInfo'; 
 
-  export default UniformData;
+// Uniform block object
+export class UniformData {
+  memory: IMgDeviceMemory;
+  buffer: IMgBuffer;
+  descriptor: MgDescriptorBufferInfo;
+}
+

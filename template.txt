@@ -10,6 +10,13 @@ import {}
 import {IMgDeviceMemory}
 	from './IMgDeviceMemory';	 
 
+import {IMgDevice}
+	from '../mg/IMgDevice';	  
+import {MgResult}
+	from '../mg/MgResult';	  
+import {IMgAllocationCallbacks}
+	from '../mg/IMgAllocationCallbacks';
+
 
 import {IMgDevice}
 	from './IMgDevice';	  
@@ -22,3 +29,8 @@ import {IMgDevice}
 	from './IMgDevice';	   
 import {IMgAllocationCallbacks}
 	from './IMgAllocationCallbacks';	  
+
+import {WGLCmdAction}
+	from './WGLCmdAction';	  
+import {WGLCmdCommandRecording}
+	from './WGLCmdCommandRecording';		
