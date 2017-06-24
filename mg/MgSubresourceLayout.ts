@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgSubresourceLayout {
   // WARN: offset requires UInt64 
   offset : number;

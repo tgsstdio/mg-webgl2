@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgApplicationInfo {
   application: string;
   applicationVersion: number;

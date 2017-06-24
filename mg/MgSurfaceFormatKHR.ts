@@ -1,4 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgFormat}
+	from './MgFormat';
+import {MgColorSpaceKHR}
+	from './MgColorSpaceKHR';	
 
 export class MgSurfaceFormatKHR {
   format: MgFormat;

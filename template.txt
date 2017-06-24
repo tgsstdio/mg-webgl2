@@ -5,7 +5,9 @@ import {}
 import {}
 	from './';	  
 import {}
-	from './';	    
+	from './';
+import {}
+	from './';	
 
 import {IMgDeviceMemory}
 	from './IMgDeviceMemory';	 

@@ -1,4 +1,17 @@
-/// <reference path="Magnesium.ts" />
+import {IMgThreadPartition}
+	from './IMgThreadPartition';	  
+import {IMgPhysicalDevice}
+	from './IMgPhysicalDevice';
+import {IMgDevice}
+	from './IMgDevice';
+import {IMgQueue}
+	from './IMgQueue';	  
+import {IMgCommandPool}
+	from './IMgCommandPool';
+import {MgPhysicalDeviceMemoryProperties}
+	from './MgPhysicalDeviceMemoryProperties';
+import {MgMemoryPropertyFlagBits}
+	from './MgMemoryPropertyFlagBits';	  
 
 export class MgThreadPartition implements IMgThreadPartition {    
   private mPhysicalDevice: IMgPhysicalDevice;

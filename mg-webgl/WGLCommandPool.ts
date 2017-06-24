@@ -11,8 +11,8 @@ import {MgCommandPoolCreateFlagBits}
 	from '../mg/MgCommandPoolCreateFlagBits'; 
 import {IWGLCommandBuffer}
 	from './IWGLCommandBuffer';	  
-import {}
-	from './';     
+import {MgCommandPoolResetFlagBits}
+	from '../mg/MgCommandPoolResetFlagBits';     
 
 export class WGLCommandPool implements IMgCommandPool {
   private mFlags: MgCommandPoolCreateFlagBits;

@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDescriptorSet}
+	from './IMgDescriptorSet';
 
 export class MgCopyDescriptorSet {
   srcSet : IMgDescriptorSet;

@@ -1,4 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice}
+	from './IMgDevice';	   
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';	  
 
 export interface IMgSurfaceKHR {
   destroySurfaceKHR(device: IMgDevice

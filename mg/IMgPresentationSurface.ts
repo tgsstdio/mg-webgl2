@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {IMgSurfaceKHR}
+	from './IMgSurfaceKHR';	
 
 export interface IMgPresentationSurface {
   initialize(

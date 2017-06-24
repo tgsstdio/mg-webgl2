@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgComponentSwizzle {
 	IDENTITY = 0,
 	ZERO = 1,

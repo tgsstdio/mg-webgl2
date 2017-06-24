@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgColorComponentFlagBits {
 	R_BIT = 0x00000001,
 	G_BIT = 0x00000002,

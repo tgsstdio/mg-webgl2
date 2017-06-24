@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgBufferCreateFlagBits {
 	// Buffer should support sparse backing
 	BINDING_BIT = 1 << 0,

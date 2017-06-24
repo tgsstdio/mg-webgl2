@@ -1,4 +1,32 @@
 import {WGLCmdEncoderCollection} from './WGLCmdEncoderCollection';
+import {WGLCmdInternalDraw}
+	from './WGLCmdInternalDraw';	  
+import {WGLCmdInternalDrawIndirect}
+	from './WGLCmdInternalDrawIndirect';
+import {WGLCmdInternalDrawIndexed}
+	from './WGLCmdInternalDrawIndexed';
+import {WGLCmdBoundPipelineRecordInfo}
+	from './WGLCmdBoundPipelineRecordInfo';	  
+import {WGLCmdDepthBiasParameter}
+	from './WGLCmdDepthBiasParameter';
+import {MgColor4f}
+	from '../mg/MgColor4f';   
+import {WGLCmdScissorParameter}
+	from './WGLCmdScissorParameter';	  
+import {WGLCmdViewportParameter}
+	from './WGLCmdViewportParameter';
+import {WGLCmdPipelineStencilWriteInfo}
+	from './WGLCmdPipelineStencilWriteInfo';
+import {WGLCmdStencilFunctionInfo}
+	from './WGLCmdStencilFunctionInfo';	  
+import {WGLCmdDescriptorSetParameter}
+	from './WGLCmdDescriptorSetParameter';
+import {WGLCmdBeginRenderpassRecord}
+	from './WGLCmdBeginRenderpassRecord';      
+import {WGLCmdVertexBufferObject}
+	from './WGLCmdVertexBufferObject';	  
+import {WGLCmdInternalDrawIndexedIndirect}
+	from './WGLCmdInternalDrawIndexedIndirect';
 
 export class WGLCmdGraphicsBag {
   draws: WGLCmdEncoderCollection<WGLCmdInternalDraw>;

@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgBlendFactor {
 	ZERO = 0,
 	ONE = 1,

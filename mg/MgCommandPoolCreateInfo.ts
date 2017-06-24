@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {MgCommandPoolCreateFlagBits}
+	from './MgCommandPoolCreateFlagBits';	 
 
 export class MgCommandPoolCreateInfo {
   flags: MgCommandPoolCreateFlagBits;

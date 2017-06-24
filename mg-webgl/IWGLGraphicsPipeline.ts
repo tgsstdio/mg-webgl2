@@ -6,7 +6,7 @@ import {MgPrimitiveTopology} from '../mg/MgPrimitiveTopology';
 import {WGLInternalBlockCache} from './WGLInternalBlockCache';
 import {IWGLPipelineLayout} from './IWGLPipelineLayout';
 import {WGLGraphicsPipelineDynamicStateFlagBits} from './WGLGraphicsPipelineDynamicStateFlagBits';
-import WGLGraphicsPipelineBlendColorState} from './WGLGraphicsPipelineBlendColorState';
+import {WGLGraphicsPipelineBlendColorState} from './WGLGraphicsPipelineBlendColorState';
 import {WGLCmdViewportParameter} from './WGLCmdViewportParameter';
 import {WGLCmdScissorParameter} from './WGLCmdScissorParameter';
 import {WGLGraphicsPipelineFlagBits} from './WGLGraphicsPipelineFlagBits';

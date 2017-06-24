@@ -1,42 +1,43 @@
-namespace Magnesium {
-	export class WGLGraphicsPipelineEntrypoint 
-		implements IWGLGraphicsPipelineEntrypoint	{
-		private mGL: WebGL2RenderingContext;
-		constructor(gl: WebGL2RenderingContext) {
-			this.mGL = gl;
-		}
-		
-		createProgram() : WebGLProgram {
-			let program = this.mGL.createProgram() as WebGLProgram;
-			return program;
-		}
+import {IWGLGraphicsPipelineEntrypoint}
+	from './IWGLGraphicsPipelineEntrypoint';	  
 
-		attach(
-			program: WebGLProgram
-			, shader: WebGLShader
-		) : void {
-			this.mGL.attachShader(program, shader);
-			this.mGL.deleteShader(shader);
-		}
+export class WGLGraphicsPipelineEntrypoint 
+	implements IWGLGraphicsPipelineEntrypoint	{
+	private mGL: WebGL2RenderingContext;
+	constructor(gl: WebGL2RenderingContext) {
+		this.mGL = gl;
+	}
+	
+	createProgram() : WebGLProgram {
+		let program = this.mGL.createProgram() as WebGLProgram;
+		return program;
+	}
 
-		link(program: WebGLProgram): void {
-			this.mGL.linkProgram(program);
-		}
+	attach(
+		program: WebGLProgram
+		, shader: WebGLShader
+	) : void {
+		this.mGL.attachShader(program, shader);
+		this.mGL.deleteShader(shader);
+	}
 
-		isCompiled(program: WebGLProgram): boolean {
-			let result: boolean = this.mGL.getProgramParameter(
-				program
-				, this.mGL.LINK_STATUS);
-			return result;
-		}
+	link(program: WebGLProgram): void {
+		this.mGL.linkProgram(program);
+	}
 
-		getCompilerMessages(program: WebGLProgram): string {
-			let message = this.mGL.getProgramInfoLog(program) as string;
-			return message;
-		}
+	isCompiled(program: WebGLProgram): boolean {
+		let result: boolean = this.mGL.getProgramParameter(
+			program
+			, this.mGL.LINK_STATUS);
+		return result;
+	}
 
-		deleteProgram(program: WebGLProgram) : void {
-			this.mGL.deleteProgram(program);
-		}
+	getCompilerMessages(program: WebGLProgram): string {
+		let message = this.mGL.getProgramInfoLog(program) as string;
+		return message;
+	}
+
+	deleteProgram(program: WebGLProgram) : void {
+		this.mGL.deleteProgram(program);
 	}
 }

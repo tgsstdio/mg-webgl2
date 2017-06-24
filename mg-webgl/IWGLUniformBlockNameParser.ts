@@ -1,5 +1,6 @@
-namespace Magnesium {
-	export interface IWGLUniformBlockNameParser  {
-			parse(name: string) : WGLUniformBlockNameInfo;
-	}
+import {WGLUniformBlockNameInfo}
+	from './WGLUniformBlockNameInfo';	 
+
+export interface IWGLUniformBlockNameParser  {
+		parse(name: string) : WGLUniformBlockNameInfo;
 }

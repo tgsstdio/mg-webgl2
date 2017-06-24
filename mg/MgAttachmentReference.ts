@@ -1,4 +1,5 @@
-/// <reference path="Magnesium.ts" />
+import {MgImageLayout}
+	from './MgImageLayout';	
 
 export class MgAttachmentReference {
   attachment: number;

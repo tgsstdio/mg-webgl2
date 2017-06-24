@@ -1,5 +1,3 @@
-namespace Magnesium {
-  export interface IWGLRenderer {
-    initialize(): void;
-  }
+export interface IWGLRenderer {
+  initialize(): void;
 }

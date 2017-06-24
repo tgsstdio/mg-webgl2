@@ -1,4 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {IMgImage}
+	from './IMgImage';
+import {IMgImageView}
+	from './IMgImageView';	
 
 export class MgSwapchainBuffer {
   image: IMgImage;

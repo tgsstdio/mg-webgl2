@@ -1,6 +1,9 @@
-  export class StagingBuffer {
-    memory: Magnesium.IMgDeviceMemory;
-    buffer: Magnesium.IMgBuffer;
-  }
+import {IMgDeviceMemory}
+	from '../mg/IMgDeviceMemory';  
+import {IMgBuffer}
+	from '../mg/IMgBuffer'; 
 
-  export default StagingBuffer;
+export class StagingBuffer {
+  memory: IMgDeviceMemory;
+  buffer: IMgBuffer;
+}

@@ -8,7 +8,6 @@
       "removeComments": true,
       "preserveConstEnums": false,
       "outDir": "dist",
-      "outFile":"index.d.ts",
       "sourceMap": false,
       "strictNullChecks":true,
       "alwaysStrict":true,

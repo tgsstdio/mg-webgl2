@@ -1,4 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import {MgImageSubresourceLayers}
+	from './MgImageSubresourceLayers';	  
+import {MgOffset3D}
+	from './MgOffset3D';
+import {MgExtent3D}
+	from './MgExtent3D';	
 
 export class MgBufferImageCopy {
   // WARN: bufferOffset requires UInt64

@@ -1,9 +1,8 @@
-/// <reference path="../mg/MgShaderStageFlagBits.ts" />
+import {MgShaderStageFlagBits}
+	from '../mg/MgShaderStageFlagBits'; 
 
-namespace Magnesium {
-  export class WGLActiveUniformBlockInfo {
-    stage: MgShaderStageFlagBits;
-    bindingIndex: number;
-    stride: number;
-  }
+export class WGLActiveUniformBlockInfo {
+  stage: MgShaderStageFlagBits;
+  bindingIndex: number;
+  stride: number;
 }

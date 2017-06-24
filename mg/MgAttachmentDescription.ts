@@ -1,4 +1,15 @@
-/// <reference path="Magnesium.ts" />
+import {MgAttachmentDescriptionFlagBits}
+	from './MgAttachmentDescriptionFlagBits';	  
+import {MgFormat}
+	from './MgFormat';
+import {MgSampleCountFlagBits}
+	from './MgSampleCountFlagBits';	
+import {MgAttachmentLoadOp}
+	from './MgAttachmentLoadOp';	  
+import {MgAttachmentStoreOp}
+	from './MgAttachmentStoreOp';
+import {MgImageLayout}
+	from './MgImageLayout';	 
 
 export class MgAttachmentDescription {
   flags: MgAttachmentDescriptionFlagBits;

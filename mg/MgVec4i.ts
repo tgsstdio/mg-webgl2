@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgVec4i {
   x: number;
   y: number;

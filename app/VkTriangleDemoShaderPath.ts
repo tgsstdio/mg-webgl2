@@ -1,6 +1,6 @@
-import ITriangleDemoShaderPath from './ITriangleDemoShaderPath'
+import {ITriangleDemoShaderPath} from './ITriangleDemoShaderPath'
 
-class VkTriangleDemoShaderPath implements ITriangleDemoShaderPath {            
+export class VkTriangleDemoShaderPath implements ITriangleDemoShaderPath {            
   private getShaderSource(id:string): string {
     let elem = document.getElementById(id);
     
@@ -21,5 +21,3 @@ class VkTriangleDemoShaderPath implements ITriangleDemoShaderPath {
     return this.getShaderSource('fs');
   }
 }
-
-export default VkTriangleDemoShaderPath;

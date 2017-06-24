@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {MgExtent2D}
+	from './MgExtent2D';	  
+import {MgSurfaceTransformFlagBitsKHR}
+	from './MgSurfaceTransformFlagBitsKHR';
+import {MgCompositeAlphaFlagBitsKHR}
+	from './MgCompositeAlphaFlagBitsKHR';	
+import {MgImageUsageFlagBits}
+	from './MgImageUsageFlagBits';	
 
 export class MgSurfaceCapabilitiesKHR {
   minImageCount: number;

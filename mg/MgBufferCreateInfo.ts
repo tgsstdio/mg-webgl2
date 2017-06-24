@@ -1,4 +1,9 @@
-/// <reference path="Magnesium.ts" />
+import {MgSharingMode}
+	from './MgSharingMode';	  
+import {MgBufferUsageFlagBits}
+	from './MgBufferUsageFlagBits';
+import {MgBufferCreateFlagBits}
+	from './MgBufferCreateFlagBits';	
 
 export class MgBufferCreateInfo	{
 	flags: MgBufferCreateFlagBits;

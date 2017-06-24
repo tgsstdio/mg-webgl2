@@ -1,8 +1,6 @@
-/// <reference path="Magnesium.ts" />
-
-import * as MgPipelineStageFlagBits from './MgPipelineStageFlagBits'
-import * as MgAccessFlagBits from './MgAccessFlagBits'
-import * as MgDependencyFlagBits from './MgDependencyFlagBits'
+import {MgPipelineStageFlagBits} from './MgPipelineStageFlagBits'
+import {MgAccessFlagBits} from './MgAccessFlagBits'
+import {MgDependencyFlagBits} from './MgDependencyFlagBits'
 
 export class MgSubpassDependency {
   srcSubpass: number;

@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgSwapchainKHR}
+	from './IMgSwapchainKHR';	  
+import {MgFormat}
+	from './MgFormat';
+import {MgSwapchainBuffer}
+	from './MgSwapchainBuffer';	
+import {IMgCommandBuffer}
+	from './IMgCommandBuffer';	
 
 export interface IMgSwapchainCollection {
   readonly swapchain: IMgSwapchainKHR;

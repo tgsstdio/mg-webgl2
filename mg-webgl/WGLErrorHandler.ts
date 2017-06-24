@@ -1,26 +1,27 @@
-namespace Magnesium {
-  export class WGLErrorHandler implements IWGLErrorHandler {
-		private mGL: WebGL2RenderingContext;
-    constructor(gl: WebGL2RenderingContext) {
-      this.mGL = gl;
-    }
-    
-    checkError() : void {
-      let error = this.mGL.getError();
+import {IWGLErrorHandler}
+	from './IWGLErrorHandler';	
 
-      if (error != this.mGL.NO_ERROR)
-        throw new Error('WEBGL: ' + error);
-    }
+export class WGLErrorHandler implements IWGLErrorHandler {
+  private mGL: WebGL2RenderingContext;
+  constructor(gl: WebGL2RenderingContext) {
+    this.mGL = gl;
+  }
+  
+  checkError() : void {
+    let error = this.mGL.getError();
 
-		logGLError(message: string) : void {
-      let error = this.mGL.getError();
+    if (error != this.mGL.NO_ERROR)
+      throw new Error('WEBGL: ' + error);
+  }
 
-      if (error != this.mGL.NO_ERROR)
-        console.log(message + ': ' + error);
-    }
+  logGLError(message: string) : void {
+    let error = this.mGL.getError();
 
-		trace(message: string) : void {
-      console.log(message);
-    }
+    if (error != this.mGL.NO_ERROR)
+      console.log(message + ': ' + error);
+  }
+
+  trace(message: string) : void {
+    console.log(message);
   }
 }

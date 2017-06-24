@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice}
+	from '../mg/IMgDevice';
+import {IMgQueue}
+	from './IMgQueue';	  
+import {MgCommandPoolCreateFlagBits}
+	from './MgCommandPoolCreateFlagBits';
+import {IMgThreadPartition}
+	from './IMgThreadPartition';  
 
 export interface IMgQueueInfo	{
   readonly queueIndex: number;

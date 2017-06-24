@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgClearDepthStencilValue {
   depth: number;
   stencil: number;

@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgBlendOp {
 	ADD = 0,
 	SUBTRACT = 1,

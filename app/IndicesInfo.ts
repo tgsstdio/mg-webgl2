@@ -1,7 +1,10 @@
+import {IMgDeviceMemory}
+	from '../mg/IMgDeviceMemory';  
+import {IMgBuffer}
+	from '../mg/IMgBuffer';  
+
 export class IndicesInfo {
-  memory: Magnesium.IMgDeviceMemory;
-  buffer: Magnesium.IMgBuffer;
+  memory: IMgDeviceMemory;
+  buffer: IMgBuffer;
   count: number;
 }
-
-export default IndicesInfo;

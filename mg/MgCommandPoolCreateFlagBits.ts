@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export enum MgCommandPoolCreateFlagBits {
 	// Command buffers have a short lifetime
 	TRANSIENT_BIT = 1 << 0,

@@ -1,22 +1,23 @@
-/// <reference path="../mg-webgl/IWGLBlitOperationEntrypoint.ts" />
+import {IWGLBlitOperationEntrypoint}
+	from './IWGLBlitOperationEntrypoint';
+import {WGLCmdImageInstructionSet}
+	from './WGLCmdImageInstructionSet';
 
-namespace Magnesium {
-  export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
-    initialize() : void {
+export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
+  initialize() : void {
 
-    }
+  }
 
-    copyBuffer(
-      src:number
-      , dst:number
-      , readOffset:number
-      , writeOffset: number
-      , size:number) : void {
+  copyBuffer(
+    src:number
+    , dst:number
+    , readOffset:number
+    , writeOffset: number
+    , size:number) : void {
 
-    }
+  }
 
-    performOperation(instructionSet: GLCmdImageInstructionSet) : void {
+  performOperation(instructionSet: WGLCmdImageInstructionSet) : void {
 
-    }
   }
 }

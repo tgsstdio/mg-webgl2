@@ -1,10 +1,13 @@
-/// <reference path="../mg-webgl/IWGLSemaphoreEntrypoint.ts" />
-/// <reference path="WGLSemaphore.ts" />
+import {IWGLSemaphoreEntrypoint}
+	from './IWGLSemaphoreEntrypoint';	  
+import {WGLSemaphore}
+	from './WGLSemaphore';
+import {IWGLSemaphore}
+	from './IWGLSemaphore';	
 
-namespace Magnesium {
-  export class WGLSemaphoreEntrypoint implements IWGLSemaphoreEntrypoint {
-    createSemaphore() : IWGLSemaphore {
-      return new WGLSemaphore();
-    }
+
+export class WGLSemaphoreEntrypoint implements IWGLSemaphoreEntrypoint {
+  createSemaphore() : IWGLSemaphore {
+    return new WGLSemaphore();
   }
 }

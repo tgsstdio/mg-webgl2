@@ -1,5 +1,3 @@
-/// <reference path="Magnesium.ts" />
-
 export class MgBufferCopy {
   // WARN: srcOffset requires UInt64
   srcOffset: number;

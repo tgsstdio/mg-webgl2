@@ -1,4 +1,11 @@
-/// <reference path="Magnesium.ts" />
+import {IMgDevice}
+	from './IMgDevice';	
+import {MgResult}
+	from './MgResult';     
+import {IMgAllocationCallbacks}
+	from './IMgAllocationCallbacks';	 
+import {MgCommandPoolResetFlagBits}
+	from './MgCommandPoolResetFlagBits';	
 
 export interface IMgCommandPool	{
   destroyCommandPool(device: IMgDevice

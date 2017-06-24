@@ -1,4 +1,7 @@
-/// <reference path="Magnesium.ts" />
+import {MgAccessFlagBits}
+	from './MgAccessFlagBits';	  
+import {IMgBuffer}
+	from './IMgBuffer';
 
 export class MgBufferMemoryBarrier {
   srcAccessMask: MgAccessFlagBits;

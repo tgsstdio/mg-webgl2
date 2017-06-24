@@ -4,14 +4,172 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-import Matrix4 from './Matrix4'
-import ITriangleDemoShaderPath from './ITriangleDemoShaderPath'
-import VertexBufferInfo from './VertexBufferInfo'
-import IndicesInfo from './IndicesInfo'
-import UniformData from './UniformData'
-import UniformBufferObject from './UniformBufferObject'
-import StagingBuffer from './StagingBuffer'
-import TriangleVertex from './TriangleVertex'
+import {Matrix4} from './Matrix4'
+import {ITriangleDemoShaderPath} from './ITriangleDemoShaderPath'
+import {VertexBufferInfo} from './VertexBufferInfo'
+import {IndicesInfo} from './IndicesInfo'
+import {UniformData} from './UniformData'
+import {UniformBufferObject} from './UniformBufferObject'
+import {StagingBuffer} from './StagingBuffer'
+import {TriangleVertex} from './TriangleVertex'
+
+import {IMgPipelineLayout}
+	from '../mg/IMgPipelineLayout';  
+import {IMgPipeline}
+	from '../mg/IMgPipeline';
+import {IMgDescriptorSetLayout}
+	from '../mg/IMgDescriptorSetLayout';  
+import {IMgDescriptorSet}
+	from '../mg/IMgDescriptorSet'; 
+import {IMgSemaphore}
+	from '../mg/IMgSemaphore';  
+import {IMgFence}
+	from '../mg/IMgFence'; 
+import {IMgDescriptorPool}
+	from '../mg/IMgDescriptorPool';  
+import {IMgCommandBuffer}
+	from '../mg/IMgCommandBuffer'; 
+import {IMgGraphicsDevice}
+	from '../mg/IMgGraphicsDevice';  
+import {IMgGraphicsConfiguration}
+	from '../mg/IMgGraphicsConfiguration';
+import {IMgSwapchainCollection}
+	from '../mg/IMgSwapchainCollection';  
+import {IMgPresentationLayer}
+	from '../mg/IMgPresentationLayer';  
+import {MgSampleCountFlagBits}
+	from '../mg/MgSampleCountFlagBits';  
+import {MgGraphicsDeviceCreateInfo}
+	from '../mg/MgGraphicsDeviceCreateInfo'; 
+import {MgResult}
+	from '../mg/MgResult';  
+import {MgSubmitInfo}
+	from '../mg/MgSubmitInfo';
+import {MgFenceCreateInfo}
+	from '../mg/MgFenceCreateInfo';  
+import {MgFenceCreateFlagBits}
+	from '../mg/MgFenceCreateFlagBits'; 
+import {MgBufferUsageFlagBits}
+	from '../mg/MgBufferUsageFlagBits';  
+import {IMgBuffer}
+	from '../mg/IMgBuffer'; 
+import {MgMemoryRequirements}
+	from '../mg/MgMemoryRequirements';  
+import {MgMemoryPropertyFlagBits}
+	from '../mg/MgMemoryPropertyFlagBits';
+import {IMgDeviceMemory}
+	from '../mg/IMgDeviceMemory';  
+import {MgMemoryAllocateInfo}
+	from '../mg/MgMemoryAllocateInfo';
+import {MgCommandBufferLevel}
+	from '../mg/MgCommandBufferLevel';  
+import {MgCommandBufferAllocateInfo}
+	from '../mg/MgCommandBufferAllocateInfo';
+import {MgCommandBufferBeginInfo}
+	from '../mg/MgCommandBufferBeginInfo'  
+import {MgSemaphoreCreateInfo}
+	from '../mg/MgSemaphoreCreateInfo';  
+import {MgBufferCreateInfo}
+	from '../mg/MgBufferCreateInfo'; 
+import {MgBufferCopy}
+	from '../mg/MgBufferCopy';  
+import {MgVertexInputBindingDescription}
+	from '../mg/MgVertexInputBindingDescription';    
+import {MgVertexInputRate}
+	from '../mg/MgVertexInputRate';  
+import {MgVertexInputAttributeDescription}
+	from '../mg/MgVertexInputAttributeDescription';    
+import {MgFormat}
+	from '../mg/MgFormat';  
+import {MgPipelineVertexInputStateCreateInfo}
+	from '../mg/MgPipelineVertexInputStateCreateInfo'; 
+import {MgDescriptorBufferInfo}
+	from '../mg/MgDescriptorBufferInfo';  
+import {MgDescriptorSetLayoutBinding}
+	from '../mg/MgDescriptorSetLayoutBinding';  
+import {MgShaderStageFlagBits}
+	from '../mg/MgShaderStageFlagBits';  
+import {MgDescriptorType}
+	from '../mg/MgDescriptorType';  
+import {MgDescriptorSetLayoutCreateInfo}
+	from '../mg/MgDescriptorSetLayoutCreateInfo';  
+import {MgPipelineLayoutCreateInfo}
+	from '../mg/MgPipelineLayoutCreateInfo';  
+import {IMgShaderModule}
+	from '../mg/IMgShaderModule';  
+import {MgShaderModuleCreateInfo}
+	from '../mg/MgShaderModuleCreateInfo';
+import {MgGraphicsPipelineCreateInfo}
+	from '../mg/MgGraphicsPipelineCreateInfo';  
+import {MgPipelineShaderStageCreateInfo}
+	from '../mg/MgPipelineShaderStageCreateInfo';
+import {MgPipelineInputAssemblyStateCreateInfo}
+	from '../mg/MgPipelineInputAssemblyStateCreateInfo';  
+import {MgPipelineRasterizationStateCreateInfo}
+	from '../mg/MgPipelineRasterizationStateCreateInfo';
+import {MgPrimitiveTopology}
+	from '../mg/MgPrimitiveTopology';  
+import {MgPolygonMode}
+	from '../mg/MgPolygonMode';
+import {MgCullModeFlagBits}
+	from '../mg/MgCullModeFlagBits';  
+import {MgFrontFace}
+	from '../mg/MgFrontFace'; 
+import {MgPipelineColorBlendAttachmentState}
+	from '../mg/MgPipelineColorBlendAttachmentState';  
+import {MgColorComponentFlagBits}
+	from '../mg/MgColorComponentFlagBits';
+import {MgPipelineColorBlendStateCreateInfo}
+	from '../mg/MgPipelineColorBlendStateCreateInfo';  
+import {MgPipelineMultisampleStateCreateInfo}
+	from '../mg/MgPipelineMultisampleStateCreateInfo';
+import {MgPipelineDepthStencilStateCreateInfo}
+	from '../mg/MgPipelineDepthStencilStateCreateInfo';  
+import {MgCompareOp}
+	from '../mg/MgCompareOp';  
+import {MgStencilOpState}
+	from '../mg/MgStencilOpState';  
+import {MgStencilOp}
+	from '../mg/MgStencilOp';  
+import {MgPipelineDynamicStateCreateInfo}
+	from '../mg/MgPipelineDynamicStateCreateInfo';  
+import {MgDynamicState}
+	from '../mg/MgDynamicState';
+import {MgDescriptorPoolSize}
+	from '../mg/MgDescriptorPoolSize';  
+import {MgDescriptorPoolCreateInfo}
+	from '../mg/MgDescriptorPoolCreateInfo';
+import {MgDescriptorSetAllocateInfo}
+	from '../mg/MgDescriptorSetAllocateInfo';  
+import {MgWriteDescriptorSet}
+	from '../mg/MgWriteDescriptorSet';
+import {MgRenderPassBeginInfo}
+	from '../mg/MgRenderPassBeginInfo';  
+import {MgRect2D}
+	from '../mg/MgRect2D';    
+import {MgOffset2D}
+	from '../mg/MgOffset2D';  
+import {MgExtent2D}
+	from '../mg/MgExtent2D';
+import {MgColor4f}
+	from '../mg/MgColor4f';  
+import {MgClearDepthStencilValue}
+	from '../mg/MgClearDepthStencilValue';          
+import {MgClearValue}
+	from '../mg/MgClearValue';  
+import {MgViewport}
+	from '../mg/MgViewport';  
+import {MgSubpassContents}
+	from '../mg/MgSubpassContents';  
+import {MgPipelineBindPoint}
+	from '../mg/MgPipelineBindPoint';  
+import {MgIndexType}
+	from '../mg/MgIndexType'; 
+import {MgSubmitInfoWaitSemaphoreInfo}
+	from '../mg/MgSubmitInfoWaitSemaphoreInfo';  
+import {MgPipelineStageFlagBits}
+	from '../mg/MgPipelineStageFlagBits';           
+
 
 export class VulkanExample {
   vertices: VertexBufferInfo = new VertexBufferInfo();
@@ -25,52 +183,52 @@ export class VulkanExample {
   // The pipeline layout is used by a pipline to access the descriptor sets 
   // It defines interface (without binding any actual data) between the shader stages used by the pipeline and the shader resources
   // A pipeline layout can be shared among multiple pipelines as long as their interfaces match
-  mPipelineLayout: .IMgPipelineLayout;
+  mPipelineLayout: IMgPipelineLayout;
 
   // Pipelines (often called "pipeline state objects") are used to bake all states that affect a pipeline
   // While in OpenGL every state can be changed at (almost) any time, Vulkan requires to layout the graphics (and compute) pipeline states upfront
   // So for each combination of non-dynamic pipeline states you need a new pipeline (there are a few exceptions to this not discussed here)
   // Even though this adds a new dimension of planing ahead, it's a great opportunity for performance optimizations by the driver
-  mPipeline: .IMgPipeline;
+  mPipeline: IMgPipeline;
 
   // The descriptor set layout describes the shader binding layout (without actually referencing descriptor)
   // Like the pipeline layout it's pretty much a blueprint and can be used with different descriptor sets as long as their layout matches
-  mDescriptorSetLayout: .IMgDescriptorSetLayout;
+  mDescriptorSetLayout: IMgDescriptorSetLayout;
 
   // The descriptor set stores the resources bound to the binding points in a shader
   // It connects the binding points of the different shaders with the buffers and images used for those bindings
-  mDescriptorSet: .IMgDescriptorSet;
+  mDescriptorSet: IMgDescriptorSet;
 
   // Synchronization primitives
   // Synchronization is an important concept of Vulkan that OpenGL mostly hid away. Getting this right is crucial to using Vulkan.
 
   // Semaphores
   // Used to coordinate operations within the graphics queue and ensure correct command ordering
-  mPresentCompleteSemaphore: .IMgSemaphore;
-  mRenderCompleteSemaphore: .IMgSemaphore;
+  mPresentCompleteSemaphore: IMgSemaphore;
+  mRenderCompleteSemaphore: IMgSemaphore;
 
   // Fences
   // Used to check the completion of queue operations (e.g. command buffer execution)
-  private mWaitFences = new Array<.IMgFence>();
+  private mWaitFences = new Array<IMgFence>();
 
   private mWidth: number;
   private mHeight: number;
 
-  private mDescriptorPool: .IMgDescriptorPool;
-  private mPrePresentCmdBuffer: .IMgCommandBuffer;
-  private mPostPresentCmdBuffer: .IMgCommandBuffer;
+  private mDescriptorPool: IMgDescriptorPool;
+  private mPrePresentCmdBuffer: IMgCommandBuffer;
+  private mPostPresentCmdBuffer: IMgCommandBuffer;
 
-  private mConfiguration: .IMgGraphicsConfiguration;
-  private mSwapchains: .IMgSwapchainCollection;
-  private mGraphicsDevice: .IMgGraphicsDevice;
-  private mPresentationLayer: .IMgPresentationLayer;
+  private mConfiguration: IMgGraphicsConfiguration;
+  private mSwapchains: IMgSwapchainCollection;
+  private mGraphicsDevice: IMgGraphicsDevice;
+  private mPresentationLayer: IMgPresentationLayer;
   private mTrianglePath: ITriangleDemoShaderPath;
 
   constructor (
-    configuration: .IMgGraphicsConfiguration
-    ,swapchains: .IMgSwapchainCollection
-    ,graphicsDevice: .IMgGraphicsDevice
-    ,presentationLayer: .IMgPresentationLayer
+    configuration: IMgGraphicsConfiguration
+    ,swapchains: IMgSwapchainCollection
+    ,graphicsDevice: IMgGraphicsDevice
+    ,presentationLayer: IMgPresentationLayer
     ,shaderPath: ITriangleDemoShaderPath
   ) {
     this.mConfiguration = configuration;
@@ -93,24 +251,24 @@ export class VulkanExample {
   ): void {
     
     const NO_OF_BUFFERS = 1;
-    let buffers = new Array<.IMgCommandBuffer>(NO_OF_BUFFERS);
-    let pAllocateInfo = new .MgCommandBufferAllocateInfo();      
+    let buffers = new Array<IMgCommandBuffer>(NO_OF_BUFFERS);
+    let pAllocateInfo = new MgCommandBufferAllocateInfo();      
     pAllocateInfo.commandBufferCount = NO_OF_BUFFERS;
     pAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
-    pAllocateInfo.level = .MgCommandBufferLevel.PRIMARY;      
+    pAllocateInfo.level = MgCommandBufferLevel.PRIMARY;      
 
     this.mConfiguration.device.allocateCommandBuffers(pAllocateInfo, buffers);
 
-    let createInfo = new .MgGraphicsDeviceCreateInfo();      
-    createInfo.samples = .MgSampleCountFlagBits.COUNT_1_BIT;
+    let createInfo = new MgGraphicsDeviceCreateInfo();      
+    createInfo.samples = MgSampleCountFlagBits.COUNT_1_BIT;
     createInfo.width = this.mWidth;
     createInfo.height = this.mHeight;      
 
     let setupCmdBuffer = buffers[0];
-    let cmdBufInfo = new .MgCommandBufferBeginInfo();
+    let cmdBufInfo = new MgCommandBufferBeginInfo();
 
     let err = setupCmdBuffer.beginCommandBuffer(cmdBufInfo);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -120,18 +278,18 @@ export class VulkanExample {
       , createInfo);
 
     err = setupCmdBuffer.endCommandBuffer();
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
     
-    let submission = new Array<.MgSubmitInfo>(1);
-    let submit = new .MgSubmitInfo();
-    submit.commandBuffers = new Array<.IMgCommandBuffer>(1);
+    let submission = new Array<MgSubmitInfo>(1);
+    let submit = new MgSubmitInfo();
+    submit.commandBuffers = new Array<IMgCommandBuffer>(1);
     submit.commandBuffers[0] = buffers[0];
     submission[0] = submit;
 
     err = this.mConfiguration.queue.queueSubmit(submission, null);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -161,56 +319,56 @@ export class VulkanExample {
   }
 
   // Create the Vulkan synchronization primitives used in this example
-  drawCmdBuffers: Array<.IMgCommandBuffer>;
+  drawCmdBuffers: Array<IMgCommandBuffer>;
 
   private prepareSynchronizationPrimitives(): void {
     // Semaphores (Used for correct command ordering)
-    let semaphoreCreateInfo = new .MgSemaphoreCreateInfo();
+    let semaphoreCreateInfo = new MgSemaphoreCreateInfo();
 
     // Semaphore used to ensures that image presentation is complete before starting to submit again
     let outPresentComplete 
-      : {pSemaphore:.IMgSemaphore|null}
+      : {pSemaphore:IMgSemaphore|null}
       = { pSemaphore: null };
 
     let err = this.mConfiguration.device.createSemaphore(
       semaphoreCreateInfo
       , null
       , outPresentComplete);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.mPresentCompleteSemaphore = outPresentComplete.pSemaphore as .IMgSemaphore;
+    this.mPresentCompleteSemaphore = outPresentComplete.pSemaphore as IMgSemaphore;
 
 
     // Semaphore used to ensures that all commands submitted have been finished before submitting the image to the queue
     let outRenderComplete 
-      : {pSemaphore:.IMgSemaphore|null}
+      : {pSemaphore:IMgSemaphore|null}
       = { pSemaphore: null };
 
     err = this.mConfiguration.device.createSemaphore(
       semaphoreCreateInfo
       , null
       , outRenderComplete);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.mRenderCompleteSemaphore = outRenderComplete.pSemaphore as .IMgSemaphore;
+    this.mRenderCompleteSemaphore = outRenderComplete.pSemaphore as IMgSemaphore;
 
     // Fences (Used to check draw command buffer completion)
-    let fenceCreateInfo = new .MgFenceCreateInfo();
-    fenceCreateInfo.flags = .MgFenceCreateFlagBits.SIGNALED_BIT;
+    let fenceCreateInfo = new MgFenceCreateInfo();
+    fenceCreateInfo.flags = MgFenceCreateFlagBits.SIGNALED_BIT;
 
     // Create in signaled state so we don't wait on first render of each command buffer
     let noOfCommandBuffers = this.drawCmdBuffers.length; // TODO: drawCmdBuffers.Length;
     for (let i = 0; i < noOfCommandBuffers; i += 1) {
       let outFence
-        : {fence: .IMgFence|null}
+        : {fence:IMgFence|null}
         = {fence:null};
       err = this.mConfiguration.device.createFence(fenceCreateInfo, null, outFence);
-      if (err != .MgResult.SUCCESS) {
+      if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
-      this.mWaitFences.push(outFence.fence as .IMgFence);
+      this.mWaitFences.push(outFence.fence as IMgFence);
     }
   }
 
@@ -221,25 +379,25 @@ export class VulkanExample {
   ): StagingBuffer {
     // HOST_VISIBLE STAGING Vertex buffer
     
-    let vertexBufferInfo = new .MgBufferCreateInfo();
+    let vertexBufferInfo = new MgBufferCreateInfo();
     vertexBufferInfo.size = vertexBufferSize;
     // Buffer is used as the copy source
-    vertexBufferInfo.usage = .MgBufferUsageFlagBits.TRANSFER_SRC_BIT;          
+    vertexBufferInfo.usage = MgBufferUsageFlagBits.TRANSFER_SRC_BIT;          
 
     // Create a host-visible buffer to copy the vertex data to (staging buffer)
     let outBuffer 
-      : {pBuffer:.IMgBuffer|null}
+      : {pBuffer:IMgBuffer|null}
       = {pBuffer:null};
     let err = this.mConfiguration.device.createBuffer(vertexBufferInfo, null, outBuffer );
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
     let sb = new StagingBuffer;
-    sb.buffer = outBuffer.pBuffer as .IMgBuffer;
+    sb.buffer = outBuffer.pBuffer as IMgBuffer;
 
     let outMemReq 
-      : {pMemoryRequirements:.MgMemoryRequirements|null}
+      : {pMemoryRequirements:MgMemoryRequirements|null}
       = {pMemoryRequirements:null};
       this.mConfiguration.device.getBufferMemoryRequirements(
         sb.buffer
@@ -247,33 +405,33 @@ export class VulkanExample {
 
     // Request a host visible memory type that can be used to copy our data do
     // Also request it to be coherent, so that writes are visible to the GPU right after unmapping the buffer
-    let memReqs = outMemReq.pMemoryRequirements as .MgMemoryRequirements;
+    let memReqs = outMemReq.pMemoryRequirements as MgMemoryRequirements;
     let outTypeIndex = {typeIndex:0};
     let isValid: boolean = this.mConfiguration.partition.getMemoryType(
       memReqs.memoryTypeBits
-      , .MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
-        | .MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+      , MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+        | MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
       , outTypeIndex);
 
     if (!isValid) {
       throw new Error('getMemoryType');
     }
 
-    let memAlloc = new .MgMemoryAllocateInfo();        
+    let memAlloc = new MgMemoryAllocateInfo();        
     memAlloc.allocationSize = memReqs.size;
     memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
 
     let outMemory 
-      : {pMemory:.IMgDeviceMemory|null}
+      : {pMemory:IMgDeviceMemory|null}
       = {pMemory:null};
     err = this.mConfiguration.device.allocateMemory(
       memAlloc
       , null
       , outMemory);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    sb.memory = outMemory.pMemory as .IMgDeviceMemory;        
+    sb.memory = outMemory.pMemory as IMgDeviceMemory;        
 
     // Map and copy
     let outData
@@ -285,7 +443,7 @@ export class VulkanExample {
       , memAlloc.allocationSize
       , 0
       , outData);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
     let data = outData.ppData as Uint8Array;
@@ -312,7 +470,7 @@ export class VulkanExample {
       this.mConfiguration.device
       , sb.memory
       , 0);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err);
     }
     return sb;
@@ -322,64 +480,64 @@ export class VulkanExample {
   private setupDeviceLocalVertices(
     vertexBufferSize: number
   ): void {
-    let vertexBufferInfo = new .MgBufferCreateInfo();
+    let vertexBufferInfo = new MgBufferCreateInfo();
     vertexBufferInfo.size = vertexBufferSize;
     // Create a device local buffer to which the (host local) vertex data will be copied and which will be used for rendering
     vertexBufferInfo.usage = 
-      .MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
-      | .MgBufferUsageFlagBits.TRANSFER_DST_BIT;
+      MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
+      | MgBufferUsageFlagBits.TRANSFER_DST_BIT;
 
     let outVertex
-      : { pBuffer:.IMgBuffer|null}
+      : { pBuffer:IMgBuffer|null}
       = { pBuffer:null };
     let err = this.mConfiguration.device.createBuffer(
       vertexBufferInfo
       , null
       , outVertex);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.vertices.buffer = outVertex.pBuffer as .IMgBuffer;
+    this.vertices.buffer = outVertex.pBuffer as IMgBuffer;
 
     let outMemReqs
-      : {pMemoryRequirements:.MgMemoryRequirements|null} 
+      : {pMemoryRequirements:MgMemoryRequirements|null} 
       = {pMemoryRequirements:null};
     this.mConfiguration.device.getBufferMemoryRequirements(
       this.vertices.buffer, outMemReqs);
-    let memReqs = outMemReqs.pMemoryRequirements as .MgMemoryRequirements;
+    let memReqs = outMemReqs.pMemoryRequirements as MgMemoryRequirements;
 
     let outTypeIndex 
       : {typeIndex:number}
       = {typeIndex:0};
     let isValid = this.mConfiguration.partition.getMemoryType(
       memReqs.memoryTypeBits
-      , .MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+      , MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
       , outTypeIndex);
     if (!isValid) {
       throw new Error('getMemoryType');
     }
 
-    let memAlloc = new .MgMemoryAllocateInfo();
+    let memAlloc = new MgMemoryAllocateInfo();
     memAlloc.allocationSize = memReqs.size;
     memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
 
     let outMemory
-      : {pMemory:.IMgDeviceMemory|null}
+      : {pMemory:IMgDeviceMemory|null}
       = {pMemory:null};
     err = this.mConfiguration.device.allocateMemory(
       memAlloc
       , null
       , outMemory);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.vertices.memory = outMemory.pMemory as .IMgDeviceMemory;
+    this.vertices.memory = outMemory.pMemory as IMgDeviceMemory;
 
     err = this.vertices.buffer.bindBufferMemory(
       this.mConfiguration.device
       , this.vertices.memory
       , 0);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
   }
@@ -389,60 +547,60 @@ export class VulkanExample {
     indices:Uint32Array
     , indexBufferSize: number
   ) : StagingBuffer {
-    let indexbufferInfo = new .MgBufferCreateInfo();
+    let indexbufferInfo = new MgBufferCreateInfo();
     indexbufferInfo.size = indexBufferSize;
-    indexbufferInfo.usage = .MgBufferUsageFlagBits.TRANSFER_SRC_BIT;
+    indexbufferInfo.usage = MgBufferUsageFlagBits.TRANSFER_SRC_BIT;
 
     // Copy index data to a buffer visible to the host (staging buffer)
     let outBuffer 
-      : {pBuffer:.IMgBuffer|null}
+      : {pBuffer:IMgBuffer|null}
       = {pBuffer:null};
     let err = this.mConfiguration.device.createBuffer(
       indexbufferInfo
       , null
       , outBuffer);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
     let sb = new StagingBuffer();
-    sb.buffer = outBuffer.pBuffer as .IMgBuffer;
+    sb.buffer = outBuffer.pBuffer as IMgBuffer;
 
     let outMemReqs
-      : {pMemoryRequirements:.MgMemoryRequirements|null}
+      : {pMemoryRequirements:MgMemoryRequirements|null}
       = {pMemoryRequirements:null};
     this.mConfiguration.device.getBufferMemoryRequirements(
       sb.buffer
       , outMemReqs);
-    let memReqs = outMemReqs.pMemoryRequirements as .MgMemoryRequirements;
+    let memReqs = outMemReqs.pMemoryRequirements as MgMemoryRequirements;
 
     let outTypeIndex
       : {typeIndex:number}
       = {typeIndex:0};
     let isValid = this.mConfiguration.partition.getMemoryType(
       memReqs.memoryTypeBits
-      , .MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
-        | .MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+      , MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+        | MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
       ,outTypeIndex);
     if (!isValid) {
       throw new Error('getMemoryType');
     }
 
-    let memAlloc = new .MgMemoryAllocateInfo();
+    let memAlloc = new MgMemoryAllocateInfo();
     memAlloc.allocationSize = memReqs.size;
     memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
 
     let outMemory
-      : {pMemory:.IMgDeviceMemory|null}         
+      : {pMemory:IMgDeviceMemory|null}         
       = {pMemory:null};
     err = this.mConfiguration.device.allocateMemory(
       memAlloc
       , null
       , outMemory);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    sb.memory = outMemory.pMemory as .IMgDeviceMemory;
+    sb.memory = outMemory.pMemory as IMgDeviceMemory;
 
     let outData
       : {ppData: Uint8Array|null}
@@ -453,7 +611,7 @@ export class VulkanExample {
       , indexBufferSize
       , 0
       , outData);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -466,7 +624,7 @@ export class VulkanExample {
       this.mConfiguration.device
       , sb.memory
       , 0);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -478,85 +636,85 @@ export class VulkanExample {
     indexBufferSize: number
   ) : void {
     // Create destination buffer with device only visibility
-    let indexbufferInfo = new .MgBufferCreateInfo();
+    let indexbufferInfo = new MgBufferCreateInfo();
     indexbufferInfo.size = indexBufferSize;
     indexbufferInfo.usage = 
-      .MgBufferUsageFlagBits.INDEX_BUFFER_BIT
-      | .MgBufferUsageFlagBits.TRANSFER_DST_BIT;
+      MgBufferUsageFlagBits.INDEX_BUFFER_BIT
+      | MgBufferUsageFlagBits.TRANSFER_DST_BIT;
 
     let outBuffer
-      : {pBuffer:.IMgBuffer|null}
+      : {pBuffer:IMgBuffer|null}
       = {pBuffer:null};
     let err = this.mConfiguration.device.createBuffer(
       indexbufferInfo
       , null
       , outBuffer);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.indices.buffer = outBuffer.pBuffer as .IMgBuffer;
+    this.indices.buffer = outBuffer.pBuffer as IMgBuffer;
 
     let outMemReqs
-      : {pMemoryRequirements:.MgMemoryRequirements|null}
+      : {pMemoryRequirements:MgMemoryRequirements|null}
       = {pMemoryRequirements:null};
     this.mConfiguration.device.getBufferMemoryRequirements(
       this.indices.buffer
       , outMemReqs);
 
     let memReqs
-      = outMemReqs.pMemoryRequirements as .MgMemoryRequirements;
+      = outMemReqs.pMemoryRequirements as MgMemoryRequirements;
     let outTypeIndex
       : {typeIndex:number}
       = {typeIndex:0};
     let isValid = this.mConfiguration.partition.getMemoryType(
       memReqs.memoryTypeBits
-      , .MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+      , MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
       , outTypeIndex);
     if (!isValid) {
       throw new Error('getMemoryType');
     }
 
-    let memAlloc = new .MgMemoryAllocateInfo();
+    let memAlloc = new MgMemoryAllocateInfo();
     memAlloc.allocationSize = memReqs.size;
     memAlloc.memoryTypeIndex = outTypeIndex.typeIndex;
 
     let outMemory
-      : {pMemory:.IMgDeviceMemory|null}
+      : {pMemory:IMgDeviceMemory|null}
       = {pMemory:null};
     err = this.mConfiguration.device.allocateMemory(
       memAlloc
       , null
       , outMemory);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
     this.indices.memory
-      = outMemory.pMemory as .IMgDeviceMemory;
+      = outMemory.pMemory as IMgDeviceMemory;
 
     err = this.indices.buffer.bindBufferMemory(
       this.mConfiguration.device
       , this.indices.memory
       , 0);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
   }
 
   // Get a new command buffer from the command pool
   // If begin is true, the command buffer is also started so we can start adding commands
-  private getCommandBuffer(begin: boolean) : .IMgCommandBuffer {
-    let buffers = new Array<.IMgCommandBuffer>(1);
+  private getCommandBuffer(begin: boolean) : IMgCommandBuffer {
+    let buffers = new Array<IMgCommandBuffer>(1);
 
-    let cmdBufAllocateInfo = new .MgCommandBufferAllocateInfo();
+    let cmdBufAllocateInfo = new MgCommandBufferAllocateInfo();
     cmdBufAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
-    cmdBufAllocateInfo.level =  .MgCommandBufferLevel.PRIMARY,
+    cmdBufAllocateInfo.level = MgCommandBufferLevel.PRIMARY,
     cmdBufAllocateInfo.commandBufferCount = 1;
 
     let err = this.mConfiguration.device.allocateCommandBuffers(
       cmdBufAllocateInfo
       , buffers);
 
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -565,10 +723,10 @@ export class VulkanExample {
     // If requested, also start the new command buffer
     if (begin)
     {
-      let cmdBufInfo = new .MgCommandBufferBeginInfo();
+      let cmdBufInfo = new MgCommandBufferBeginInfo();
 
       err = cmdBuf.beginCommandBuffer(cmdBufInfo);
-      if (err != .MgResult.SUCCESS) {
+      if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
     }
@@ -582,24 +740,24 @@ export class VulkanExample {
     , vertexSize: number
     , indexBufferSize: number
   ) {
-    let cmdBufferBeginInfo = new .MgCommandBufferBeginInfo();
+    let cmdBufferBeginInfo = new MgCommandBufferBeginInfo();
 
     // Buffer copies have to be submitted to a queue, so we need a command buffer for them
     // Note: Some devices offer a dedicated transfer queue (with only the transfer bit set) that may be faster when doing lots of copies
-    let copyCmd: .IMgCommandBuffer
+    let copyCmd: IMgCommandBuffer
       = this.getCommandBuffer(true);
 
     // Put buffer region copies into command buffer
 
-    let vertRegion = new .MgBufferCopy();
+    let vertRegion = new MgBufferCopy();
     vertRegion.size = vertexSize;
     // Vertex buffer
     copyCmd.cmdCopyBuffer(stagingVertices.buffer, this.vertices.buffer, [vertRegion]);
 
-    let indexRegion = new .MgBufferCopy();
+    let indexRegion = new MgBufferCopy();
     indexRegion.size = indexBufferSize;
     // Index buffer
-    let dstBuffer = this.indices.buffer as .IMgBuffer;
+    let dstBuffer = this.indices.buffer as IMgBuffer;
     copyCmd.cmdCopyBuffer(stagingIndices.buffer, dstBuffer, [indexRegion]);
 
     // Flushing the command buffer will also submit it to the queue and uses a fence to ensure that all commands have been executed before returning
@@ -620,42 +778,42 @@ export class VulkanExample {
   // End the command buffer and submit it to the queue
   // Uses a fence to ensure command buffer has finished executing before deleting it
   flushCommandBuffer(
-    commandBuffer: .IMgCommandBuffer|null
+    commandBuffer: IMgCommandBuffer|null
   ) : void {
     if (commandBuffer == null) {
       return;
     }
 
     let err = commandBuffer.endCommandBuffer();
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
-    let submitInfo = new .MgSubmitInfo();
+    let submitInfo = new MgSubmitInfo();
     submitInfo.commandBuffers = [commandBuffer];
 
     // Create fence to ensure that the command buffer has finished executing
-    let fenceCreateInfo = new .MgFenceCreateInfo();
+    let fenceCreateInfo = new MgFenceCreateInfo();
 
 
     let outFence
-      : {fence:.IMgFence|null} 
+      : {fence:IMgFence|null} 
       = {fence:null};
     err = this.mConfiguration.device.createFence(fenceCreateInfo, null, outFence);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
     // Submit to the queue
-    let fence = outFence.fence  as .IMgFence;
+    let fence = outFence.fence  as IMgFence;
     err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
-    // .Mg.OpenGL
+    // Mg.OpenGL
     err = this.mConfiguration.queue.queueWaitIdle();
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -665,7 +823,7 @@ export class VulkanExample {
       [fence]
       , true
       , MAX_VALUE);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
@@ -741,10 +899,10 @@ export class VulkanExample {
     // Vertex input binding
     const VERTEX_BUFFER_BIND_ID = 0;
 
-    let inputBinding = new .MgVertexInputBindingDescription();
+    let inputBinding = new MgVertexInputBindingDescription();
     inputBinding.binding = VERTEX_BUFFER_BIND_ID;
     inputBinding.stride = VERTEX_STRUCT_SIZE;
-    inputBinding.inputRate = .MgVertexInputRate.VERTEX;
+    inputBinding.inputRate = MgVertexInputRate.VERTEX;
     this.vertices.inputBinding = inputBinding;
 
     // Inpute attribute binding describe shader attribute locations and memory layouts
@@ -755,24 +913,24 @@ export class VulkanExample {
     let vertexSize = 3 * F32_MEMBER_SIZE;
 
     // Attribute location 0: Position
-    let positionAttr = new .MgVertexInputAttributeDescription();
+    let positionAttr = new MgVertexInputAttributeDescription();
     positionAttr.binding = VERTEX_BUFFER_BIND_ID;
     positionAttr.location = 0;
-    positionAttr.format =  .MgFormat.R32G32B32_SFLOAT;
+    positionAttr.format =  MgFormat.R32G32B32_SFLOAT;
     positionAttr.offset = 0;
 
     // Attribute location 1: Color
-    let colorAttr = new .MgVertexInputAttributeDescription();
+    let colorAttr = new MgVertexInputAttributeDescription();
     colorAttr.binding = VERTEX_BUFFER_BIND_ID;
     colorAttr.location = 1;
-    colorAttr.format =  .MgFormat.R32G32B32_SFLOAT;
+    colorAttr.format =  MgFormat.R32G32B32_SFLOAT;
     // NOTE : OFFSET OF DATA SHOULD BE MULTIPLE OF format
     colorAttr.offset = vertexSize;
 
     this.vertices.inputAttributes = [positionAttr, colorAttr];
 
     // Assign to the vertex input state used for pipeline creation
-    let inputState = new .MgPipelineVertexInputStateCreateInfo();
+    let inputState = new MgPipelineVertexInputStateCreateInfo();
     inputState.vertexBindingDescriptions = [this.vertices.inputBinding];
     inputState.vertexAttributeDescriptions = this.vertices.inputAttributes;               
     this.vertices.inputState = inputState;
@@ -784,34 +942,34 @@ export class VulkanExample {
     let structSize = 3 * 16 * 4;
 
     // Vertex shader uniform buffer block
-    let bufferInfo = new .MgBufferCreateInfo();
+    let bufferInfo = new MgBufferCreateInfo();
     bufferInfo.size = structSize;
     // This buffer will be used as a uniform buffer
-    bufferInfo.usage = .MgBufferUsageFlagBits.UNIFORM_BUFFER_BIT;
+    bufferInfo.usage = MgBufferUsageFlagBits.UNIFORM_BUFFER_BIT;
 
     // Create a new buffer
     let outBuffer 
-      : {pBuffer:.IMgBuffer|null}
+      : {pBuffer:IMgBuffer|null}
       = {pBuffer:null};
     let err = this.mConfiguration.device.createBuffer(
       bufferInfo
       , null
       , outBuffer);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    let buffer = outBuffer.pBuffer as .IMgBuffer;
+    let buffer = outBuffer.pBuffer as IMgBuffer;
 
     // Prepare and initialize a uniform buffer block containing shader uniforms
     // Single uniforms like in OpenGL are no longer present in Vulkan. All Shader uniforms are passed via uniform buffer blocks
     let outMemReqs 
-      : {pMemoryRequirements:.MgMemoryRequirements|null}
+      : {pMemoryRequirements:MgMemoryRequirements|null}
       = {pMemoryRequirements:null};      
     // Get memory requirements including size, alignment and memory type 
     this.mConfiguration.device.getBufferMemoryRequirements(
       buffer
       , outMemReqs);
-    let memReqs = outMemReqs.pMemoryRequirements as .MgMemoryRequirements;
+    let memReqs = outMemReqs.pMemoryRequirements as MgMemoryRequirements;
 
     // Get the memory type index that supports host visibile memory access
     // Most implementations offer multiple memory types and selecting the correct one to allocate memory from is crucial
@@ -823,29 +981,29 @@ export class VulkanExample {
 
     let isValid = this.mConfiguration.partition.getMemoryType(
       memReqs.memoryTypeBits
-      , .MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
-        | .MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+      , MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+        | MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
       , outTypeIndex);
     if (!isValid) {
       throw new Error('getMemoryType');
     }
 
-    let allocInfo = new .MgMemoryAllocateInfo();
+    let allocInfo = new MgMemoryAllocateInfo();
     allocInfo.allocationSize = memReqs.size;
     allocInfo.memoryTypeIndex = outTypeIndex.typeIndex;
 
     // Allocate memory for the uniform buffer
     let outMemory
-      : {pMemory:.IMgDeviceMemory|null} 
+      : {pMemory:IMgDeviceMemory|null} 
       = {pMemory:null};
     err = this.mConfiguration.device.allocateMemory(
       allocInfo
       , null
       , outMemory);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    let memory = outMemory.pMemory as .IMgDeviceMemory;
+    let memory = outMemory.pMemory as IMgDeviceMemory;
 
     // Bind memory to buffer
     err = buffer.bindBufferMemory(
@@ -853,12 +1011,12 @@ export class VulkanExample {
       , memory
       , 0);
       
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
     // Store information in the uniform's descriptor that is used by the descriptor set
-    let descriptor = new .MgDescriptorBufferInfo();
+    let descriptor = new MgDescriptorBufferInfo();
     descriptor.buffer = buffer;
     descriptor.offset = 0;
     descriptor.range = structSize;
@@ -872,58 +1030,58 @@ export class VulkanExample {
 
   private setupDescriptorSetLayout(): void {      
     // Binding 0: Uniform buffer (Vertex shader)
-    let binding = new .MgDescriptorSetLayoutBinding();
+    let binding = new MgDescriptorSetLayoutBinding();
     binding.binding = 0;      
     binding.descriptorCount = 1;
-    binding.stageFlags = .MgShaderStageFlagBits.VERTEX_BIT;
+    binding.stageFlags = MgShaderStageFlagBits.VERTEX_BIT;
     binding.immutableSamplers = null;
-    binding.descriptorType = .MgDescriptorType.UNIFORM_BUFFER;
+    binding.descriptorType = MgDescriptorType.UNIFORM_BUFFER;
 
     // Setup layout of descriptors used in this example
     // Basically connects the different shader stages to descriptors for binding uniform buffers, image samplers, etc.
     // So every shader binding should map to one descriptor set layout binding
     let descriptorLayout
-      = new .MgDescriptorSetLayoutCreateInfo();
+      = new MgDescriptorSetLayoutCreateInfo();
     descriptorLayout.bindings = [binding];
 
     let outDescriptorSetLayout
-      : {pSetLayout:.IMgDescriptorSetLayout|null}
+      : {pSetLayout:IMgDescriptorSetLayout|null}
       = {pSetLayout:null};
     let err = this.mConfiguration.device.createDescriptorSetLayout(
       descriptorLayout
       , null
       , outDescriptorSetLayout);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.mDescriptorSetLayout = outDescriptorSetLayout.pSetLayout as .IMgDescriptorSetLayout;
+    this.mDescriptorSetLayout = outDescriptorSetLayout.pSetLayout as IMgDescriptorSetLayout;
 
     // Create the pipeline layout that is used to generate the rendering pipelines that are based on this descriptor set layout
     // In a more complex scenario you would have different pipeline layouts for different descriptor set layouts that could be reused
     let pPipelineLayoutCreateInfo
-      = new .MgPipelineLayoutCreateInfo();
+      = new MgPipelineLayoutCreateInfo();
     pPipelineLayoutCreateInfo.setLayouts = [this.mDescriptorSetLayout];
 
     let outPipelineLayout 
-      : {pPipelineLayout:.IMgPipelineLayout|null}
+      : {pPipelineLayout:IMgPipelineLayout|null}
       = {pPipelineLayout:null};
 
     err = this.mConfiguration.device.createPipelineLayout(
       pPipelineLayoutCreateInfo
       , null
       , outPipelineLayout);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
     this.mPipelineLayout
-      = outPipelineLayout.pPipelineLayout as .IMgPipelineLayout;
+      = outPipelineLayout.pPipelineLayout as IMgPipelineLayout;
   }
 
   private preparePipelines(): void { 
     let modules : {
-      frag: .IMgShaderModule|null
-      ,vert: .IMgShaderModule|null
+      frag: IMgShaderModule|null
+      ,vert: IMgShaderModule|null
       }
       = { frag:null, vert:null };
 
@@ -941,16 +1099,16 @@ export class VulkanExample {
 
     vsPromise
       .then((vs) => {
-        let vsCreateInfo = new .MgShaderModuleCreateInfo();
+        let vsCreateInfo = new MgShaderModuleCreateInfo();
         vsCreateInfo.code = vs;
         vsCreateInfo.codeSize = vs.length;
         // shaderStages[1] = loadShader(getAssetPath() 
         // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
         let outModule
-          : {pShaderModule:.IMgShaderModule|null}
+          : {pShaderModule:IMgShaderModule|null}
           = {pShaderModule:null};
         let err = this.mConfiguration.device.createShaderModule(vsCreateInfo, null, outModule);
-        if (err != .MgResult.SUCCESS) {
+        if (err != MgResult.SUCCESS) {
           throw new Error(err.toString());
         }
         modules.vert = outModule.pShaderModule;
@@ -959,16 +1117,16 @@ export class VulkanExample {
 
     fsPromise
       .then((fs) => {
-        let fsCreateInfo = new .MgShaderModuleCreateInfo();
+        let fsCreateInfo = new MgShaderModuleCreateInfo();
         fsCreateInfo.code = fs;
         fsCreateInfo.codeSize = fs.length;
         // shaderStages[1] = loadShader(getAssetPath() 
         // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
         let outModule
-          : {pShaderModule:.IMgShaderModule|null}
+          : {pShaderModule:IMgShaderModule|null}
           = {pShaderModule:null};
         let err = this.mConfiguration.device.createShaderModule(fsCreateInfo, null, outModule);
-        if (err != .MgResult.SUCCESS) {
+        if (err != MgResult.SUCCESS) {
           throw new Error(err.toString());
         }
         modules.frag = outModule.pShaderModule;
@@ -981,33 +1139,33 @@ export class VulkanExample {
       // Note: There are still a few dynamic states that are not directly part of the pipeline (but the info that they are used is)
 
       let createInfo
-        = new .MgGraphicsPipelineCreateInfo();
+        = new MgGraphicsPipelineCreateInfo();
       
-      let vsStage = new .MgPipelineShaderStageCreateInfo();
-      vsStage.stage = .MgShaderStageFlagBits.VERTEX_BIT;
+      let vsStage = new MgPipelineShaderStageCreateInfo();
+      vsStage.stage = MgShaderStageFlagBits.VERTEX_BIT;
 
-      let vsModule = modules.vert as .IMgShaderModule;
+      let vsModule = modules.vert as IMgShaderModule;
       vsStage.module = vsModule;
       vsStage.name = "vertFunc";
 
-      let fsStage = new .MgPipelineShaderStageCreateInfo();
-      fsStage.stage = .MgShaderStageFlagBits.VERTEX_BIT;
+      let fsStage = new MgPipelineShaderStageCreateInfo();
+      fsStage.stage = MgShaderStageFlagBits.VERTEX_BIT;
 
-      let fsModule = modules.frag as .IMgShaderModule;
+      let fsModule = modules.frag as IMgShaderModule;
       fsStage.module = fsModule;
       fsStage.name = "fragFunc";
 
       // Input assembly state describes how primitives are assembled
       // This pipeline will assemble vertex data as a triangle lists (though we only use one triangle)
-      let iaState = new .MgPipelineInputAssemblyStateCreateInfo();
-      iaState.topology = .MgPrimitiveTopology.TRIANGLE_LIST;
+      let iaState = new MgPipelineInputAssemblyStateCreateInfo();
+      iaState.topology = MgPrimitiveTopology.TRIANGLE_LIST;
 
       // Rasterization state
       let rasterState
-        = new .MgPipelineRasterizationStateCreateInfo();       
-      rasterState.polygonMode = .MgPolygonMode.FILL;
-      rasterState.cullMode = .MgCullModeFlagBits.NONE;
-      rasterState.frontFace = .MgFrontFace.COUNTER_CLOCKWISE;
+        = new MgPipelineRasterizationStateCreateInfo();       
+      rasterState.polygonMode = MgPolygonMode.FILL;
+      rasterState.cullMode = MgCullModeFlagBits.NONE;
+      rasterState.frontFace = MgFrontFace.COUNTER_CLOCKWISE;
       rasterState.depthClampEnable = false;
       rasterState.rasterizerDiscardEnable = false;
       rasterState.depthBiasEnable = false;
@@ -1018,24 +1176,24 @@ export class VulkanExample {
       createInfo.inputAssemblyState = iaState;
       createInfo.rasterizationState = rasterState;
 
-      let attachment = new .MgPipelineColorBlendAttachmentState();
+      let attachment = new MgPipelineColorBlendAttachmentState();
       attachment.colorWriteMask 
-        = .MgColorComponentFlagBits.R_BIT
-        | .MgColorComponentFlagBits.G_BIT
-        | .MgColorComponentFlagBits.B_BIT
-        | .MgColorComponentFlagBits.A_BIT;
+        = MgColorComponentFlagBits.R_BIT
+        | MgColorComponentFlagBits.G_BIT
+        | MgColorComponentFlagBits.B_BIT
+        | MgColorComponentFlagBits.A_BIT;
       attachment.blendEnable = false;
 
       // Color blend state describes how blend factors are calculated (if used)
       // We need one blend attachment state per color attachment (even if blending is not used
-      let cbState = new .MgPipelineColorBlendStateCreateInfo(); 
+      let cbState = new MgPipelineColorBlendStateCreateInfo(); 
       cbState.attachments = [attachment];
       createInfo.colorBlendState = cbState;
 
       // Multi sampling state
       // This example does not make use fo multi sampling (for anti-aliasing), the state must still be set and passed to the pipeline
-      let msState = new .MgPipelineMultisampleStateCreateInfo();
-      msState.rasterizationSamples = .MgSampleCountFlagBits.COUNT_1_BIT;
+      let msState = new MgPipelineMultisampleStateCreateInfo();
+      msState.rasterizationSamples = MgSampleCountFlagBits.COUNT_1_BIT;
       msState.sampleMask = null;
       createInfo.multisampleState = msState;
 
@@ -1052,24 +1210,24 @@ export class VulkanExample {
       // Depth and stencil state containing depth and stencil compare and test operations
       // We only use depth tests and want depth tests and writes to be enabled and compare with less or equal
 
-      let dssState = new .MgPipelineDepthStencilStateCreateInfo();
+      let dssState = new MgPipelineDepthStencilStateCreateInfo();
       dssState.depthTestEnable = true;
       dssState.depthWriteEnable = true;
-      dssState.depthCompareOp = .MgCompareOp.LESS_OR_EQUAL;
+      dssState.depthCompareOp = MgCompareOp.LESS_OR_EQUAL;
       dssState.depthBoundsTestEnable = false;
 
-      let dsBack = new .MgStencilOpState();
-      dsBack.failOp = .MgStencilOp.KEEP;
-      dsBack.passOp = .MgStencilOp.KEEP;
-      dsBack.compareOp = .MgCompareOp.ALWAYS;
+      let dsBack = new MgStencilOpState();
+      dsBack.failOp = MgStencilOp.KEEP;
+      dsBack.passOp = MgStencilOp.KEEP;
+      dsBack.compareOp = MgCompareOp.ALWAYS;
       dssState.back = dsBack;
 
       dssState.stencilTestEnable = false;
 
-      let dsFront = new .MgStencilOpState();
-      dsFront.failOp = .MgStencilOp.KEEP;
-      dsFront.passOp = .MgStencilOp.KEEP;
-      dsFront.compareOp = .MgCompareOp.ALWAYS;
+      let dsFront = new MgStencilOpState();
+      dsFront.failOp = MgStencilOp.KEEP;
+      dsFront.passOp = MgStencilOp.KEEP;
+      dsFront.compareOp = MgCompareOp.ALWAYS;
       dssState.front = dsFront;
 
       createInfo.depthStencilState = dssState;
@@ -1079,16 +1237,16 @@ export class VulkanExample {
       // To be able to change these we need do specify which dynamic states will be changed using this pipeline. Their actual states are set later on in the command buffer.
       // For this example we will set the viewport and scissor using dynamic states        
 
-      let dynamicState = new .MgPipelineDynamicStateCreateInfo();
+      let dynamicState = new MgPipelineDynamicStateCreateInfo();
       dynamicState.dynamicStates = [
-          .MgDynamicState.VIEWPORT
-        ,.MgDynamicState.SCISSOR
+          MgDynamicState.VIEWPORT
+        ,MgDynamicState.SCISSOR
       ];
 
       createInfo.dynamicState = dynamicState;
 
       let out
-        : {pPipelines:Array<.IMgPipeline>|null}
+        : {pPipelines:Array<IMgPipeline>|null}
         = {pPipelines:null};
 
       // Create rendering pipeline using the specified states
@@ -1098,14 +1256,14 @@ export class VulkanExample {
         , null
         , out);
 
-      if (err != .MgResult.SUCCESS) {
+      if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }
 
       vsModule.destroyShaderModule(this.mConfiguration.device, null);
       fsModule.destroyShaderModule(this.mConfiguration.device, null);
 
-      let pipelines = out.pPipelines as Array<.IMgPipeline>;
+      let pipelines = out.pPipelines as Array<IMgPipeline>;
       this.mPipeline = pipelines[0];
   }
 
@@ -1113,61 +1271,61 @@ export class VulkanExample {
   // All descriptors used in this example are allocated from this pool
   private setupDescriptorPool(): void {
     // We need to tell the API the number of max. requested descriptors per type
-    let typeCounts = new Array<.MgDescriptorPoolSize>(1);
+    let typeCounts = new Array<MgDescriptorPoolSize>(1);
 
     // This example only uses one descriptor type (uniform buffer) and only requests one descriptor of this type
-    typeCounts[0] = new .MgDescriptorPoolSize();
-    typeCounts[0].type = .MgDescriptorType.UNIFORM_BUFFER;
+    typeCounts[0] = new MgDescriptorPoolSize();
+    typeCounts[0].type = MgDescriptorType.UNIFORM_BUFFER;
     typeCounts[0].descriptorCount = 1;              
 
     // For additional types you need to add new entries in the type count list
     // E.g. for two combined image samplers :
-    // typeCounts[1] = new .MgDescriptorPoolSize();
-    // typeCounts[1].type = .MgDescriptorType.COMBINED_IMAGE_SAMPLER;
+    // typeCounts[1] = new MgDescriptorPoolSize();
+    // typeCounts[1].type = MgDescriptorType.COMBINED_IMAGE_SAMPLER;
     // typeCounts[1].descriptorCount = 2;        
 
-    let descriptorPoolInfo = new .MgDescriptorPoolCreateInfo();
+    let descriptorPoolInfo = new MgDescriptorPoolCreateInfo();
     descriptorPoolInfo.poolSizes = typeCounts;
     // Set the max. number of descriptor sets that can be requested from this pool (requesting beyond this limit will result in an error)        
     descriptorPoolInfo.maxSets = 1;
 
     let out
-      : {pDescriptorPool:.IMgDescriptorPool|null}
+      : {pDescriptorPool:IMgDescriptorPool|null}
       = {pDescriptorPool:null};
     let err = this.mConfiguration.device.createDescriptorPool(descriptorPoolInfo, null, out);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
-    this.mDescriptorPool = out.pDescriptorPool as .IMgDescriptorPool;
+    this.mDescriptorPool = out.pDescriptorPool as IMgDescriptorPool;
   }    
 
   private setupDescriptorSet(): void
   {
     // Allocate a new descriptor set from the global descriptor pool
-    let allocInfo = new .MgDescriptorSetAllocateInfo();        
+    let allocInfo = new MgDescriptorSetAllocateInfo();        
     allocInfo.descriptorPool = this.mDescriptorPool;
     allocInfo.descriptorSetCount = 1;
     allocInfo.setLayouts = [ this.mDescriptorSetLayout];        
 
     let out
-      : {pDescriptorSets:Array<.IMgDescriptorSet>}
-      = {pDescriptorSets:Array<.IMgDescriptorSet>(1)};
+      : {pDescriptorSets:Array<IMgDescriptorSet>}
+      = {pDescriptorSets:Array<IMgDescriptorSet>(1)};
     let err = this.mConfiguration.device.allocateDescriptorSets(allocInfo, out);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }
 
-    this.mDescriptorSet = out.pDescriptorSets[0] as .IMgDescriptorSet;      
+    this.mDescriptorSet = out.pDescriptorSets[0] as IMgDescriptorSet;      
 
     // Update the descriptor set determining the shader binding points
     // For every binding point used in a shader there needs to be one
     // descriptor set matching that binding point
 
     // Binding 0 : Uniform buffer
-    let writeDescriptor = new .MgWriteDescriptorSet();               
+    let writeDescriptor = new MgWriteDescriptorSet();               
     writeDescriptor.dstSet = this.mDescriptorSet;
     writeDescriptor.descriptorCount = 1,
-    writeDescriptor.descriptorType =  .MgDescriptorType.UNIFORM_BUFFER,
+    writeDescriptor.descriptorType =  MgDescriptorType.UNIFORM_BUFFER,
     writeDescriptor.bufferInfo = [this.uniformDataVS.descriptor];
     // Binds this uniform buffer to binding point 0
     writeDescriptor.dstBinding = 0;
@@ -1185,32 +1343,32 @@ export class VulkanExample {
     // so for static usage withouth having to rebuild
     // them each frame, we use one per frame buffer
     this.drawCmdBuffers
-      = new Array<.IMgCommandBuffer>(
+      = new Array<IMgCommandBuffer>(
         this.mGraphicsDevice.framebuffers.length
       );
 
-    let cmdBufAllocateInfo = new .MgCommandBufferAllocateInfo();                
+    let cmdBufAllocateInfo = new MgCommandBufferAllocateInfo();                
     cmdBufAllocateInfo.commandBufferCount = this.mGraphicsDevice.framebuffers.length;
     cmdBufAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
-    cmdBufAllocateInfo.level = .MgCommandBufferLevel.PRIMARY;             
+    cmdBufAllocateInfo.level = MgCommandBufferLevel.PRIMARY;             
 
     let err = this.mConfiguration.device.allocateCommandBuffers(
       cmdBufAllocateInfo
       , this.drawCmdBuffers);
 
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }      
 
     // Command buffers for submitting present barriers      
-    let presentAllocateInfo = new .MgCommandBufferAllocateInfo();          
+    let presentAllocateInfo = new MgCommandBufferAllocateInfo();          
     presentAllocateInfo.commandBufferCount = 2;
     presentAllocateInfo.commandPool = this.mConfiguration.partition.commandPool;
-    presentAllocateInfo.level = .MgCommandBufferLevel.PRIMARY;
+    presentAllocateInfo.level = MgCommandBufferLevel.PRIMARY;
 
-    let presentBuffers = new Array<.IMgCommandBuffer>(2);
+    let presentBuffers = new Array<IMgCommandBuffer>(2);
     err = this.mConfiguration.device.allocateCommandBuffers(cmdBufAllocateInfo, presentBuffers);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }   
 
@@ -1225,42 +1383,42 @@ export class VulkanExample {
   // Unlike in OpenGL all rendering commands are recorded once into command buffers that are then resubmitted to the queue
   // This allows to generate work upfront and from multiple threads, one of the biggest advantages of Vulkan
   private buildCommandBuffers(): void{
-    let beginInfo = new .MgRenderPassBeginInfo();
+    let beginInfo = new MgRenderPassBeginInfo();
     beginInfo.renderPass = this.mGraphicsDevice.renderpass;
-    beginInfo.renderArea = new .MgRect2D();
-    beginInfo.renderArea.offset = new .MgOffset2D();
+    beginInfo.renderArea = new MgRect2D();
+    beginInfo.renderArea.offset = new MgOffset2D();
     beginInfo.renderArea.offset.x = 0;
     beginInfo.renderArea.offset.y = 0;
-    beginInfo.renderArea.extent = new .MgExtent2D();
+    beginInfo.renderArea.extent = new MgExtent2D();
     beginInfo.renderArea.extent.width = this.mWidth;
     beginInfo.renderArea.extent.height = this.mHeight;
 
     // Set clear values for all framebuffer attachments with loadOp set to clear
     // We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
     
-    let clearColor = new .MgColor4f(0, 0, 0, 0);
-    let depthStencil = new .MgClearDepthStencilValue();
+    let clearColor = new MgColor4f(0, 0, 0, 0);
+    let depthStencil = new MgClearDepthStencilValue();
     depthStencil.depth = 1.0;
     depthStencil.stencil = 0;
-    let clearDepth = new .MgClearValue();
+    let clearDepth = new MgClearValue();
     clearDepth.depthStencil = depthStencil;
 
     let ClearValues = [                
-      .MgClearValue.fromColorAndFormat(this.mSwapchains.format, clearColor)
+      MgClearValue.fromColorAndFormat(this.mSwapchains.format, clearColor)
       , clearDepth
     ];
         
-    let vp = new .MgViewport();
+    let vp = new MgViewport();
     vp.height = this.mHeight;
     vp.width = this.mWidth;
     vp.minDepth = 0.0;
     vp.maxDepth = 1.0;
 
-    let scissor = new .MgRect2D();
-    scissor.extent = new .MgExtent2D();
+    let scissor = new MgRect2D();
+    scissor.extent = new MgExtent2D();
     scissor.extent.width = this.mWidth;
     scissor.extent.height = this.mHeight;
-    scissor.offset = new .MgOffset2D();
+    scissor.offset = new MgOffset2D();
     scissor.offset.x = 0;
     scissor.offset.y = 0;
           
@@ -1270,9 +1428,9 @@ export class VulkanExample {
 
       let cmdBuf = this.drawCmdBuffers[i];
 
-      let cmdBufInfo = new .MgCommandBufferBeginInfo();
+      let cmdBufInfo = new MgCommandBufferBeginInfo();
       let err = cmdBuf.beginCommandBuffer(cmdBufInfo);
-      if (err != .MgResult.SUCCESS) {
+      if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }   
 
@@ -1280,7 +1438,7 @@ export class VulkanExample {
       // This will clear the color and depth attachment
       cmdBuf.cmdBeginRenderPass(
         beginInfo
-        , .MgSubpassContents.INLINE);
+        , MgSubpassContents.INLINE);
 
       // Update dynamic viewport state
       cmdBuf.cmdSetViewport(0, [vp]);            
@@ -1290,7 +1448,7 @@ export class VulkanExample {
 
       // Bind descriptor sets describing shader binding points
       cmdBuf.cmdBindDescriptorSets(
-        .MgPipelineBindPoint.GRAPHICS
+        MgPipelineBindPoint.GRAPHICS
         , this.mPipelineLayout
         , 0
         , 1
@@ -1300,14 +1458,14 @@ export class VulkanExample {
       // Bind the rendering pipeline
       // The pipeline (state object) contains all states of the rendering pipeline, binding it will set all the states specified at pipeline creation time
       cmdBuf.cmdBindPipeline(
-        .MgPipelineBindPoint.GRAPHICS
+        MgPipelineBindPoint.GRAPHICS
         , this.mPipeline);
 
       // Bind triangle vertex buffer (contains position and colors)
       cmdBuf.cmdBindVertexBuffers(0, [this.vertices.buffer ], [ 0 ]);
 
       // Bind triangle index buffer
-      cmdBuf.cmdBindIndexBuffer(this.indices.buffer, 0, .MgIndexType.UINT32);
+      cmdBuf.cmdBindIndexBuffer(this.indices.buffer, 0, MgIndexType.UINT32);
 
       // Draw indexed triangle
       cmdBuf.cmdDrawIndexed(this.indices.count, 1, 0, 0, 1);
@@ -1318,7 +1476,7 @@ export class VulkanExample {
       // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR for presenting it to the windowing system
 
       err = cmdBuf.endCommandBuffer();
-      if (err != .MgResult.SUCCESS) {
+      if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }   
     }
@@ -1405,21 +1563,21 @@ export class VulkanExample {
     // Use a fence to wait until the command buffer has finished execution before using it again
     let fence = this.mWaitFences[currentBufferIndex];
     let err = this.mConfiguration.device.waitForFences([fence] , true, Number.MAX_SAFE_INTEGER);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }  
 
     err = this.mConfiguration.device.resetFences([ fence ]);
 
     // The submit info structure specifices a command buffer queue submission batch
-    let waitSignal = new .MgSubmitInfoWaitSemaphoreInfo();
+    let waitSignal = new MgSubmitInfoWaitSemaphoreInfo();
     // Pointer to the list of pipeline stages that the semaphore waits will occur at      
-    waitSignal.waitDstStageMask = .MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT;
+    waitSignal.waitDstStageMask = MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT;
     // Semaphore(s) to wait upon before the submitted command buffer starts executing      
     waitSignal.waitSemaphore = this.mPresentCompleteSemaphore;
 
     // Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
-    let submitInfo = new .MgSubmitInfo();
+    let submitInfo = new MgSubmitInfo();
     submitInfo.waitSemaphores = [waitSignal];
 
     // Command buffers(s) to execute in this batch (submission)      
@@ -1430,7 +1588,7 @@ export class VulkanExample {
 
     // Submit to the graphics queue passing a wait fence
     err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
-    if (err != .MgResult.SUCCESS) {
+    if (err != MgResult.SUCCESS) {
       throw new Error(err.toString());
     }   
 

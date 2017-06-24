@@ -1,4 +1,4 @@
-import {} from './MgDisplayModeParametersKHR'
+import {MgDisplayModeParametersKHR} from './MgDisplayModeParametersKHR'
 
 export class MgDisplayModeCreateInfoKHR {
   flags: number;
