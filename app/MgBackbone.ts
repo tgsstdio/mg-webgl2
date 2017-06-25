@@ -190,7 +190,7 @@ export class MgBackbone {
       , scissor
       , clear
       );
-    let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint();
+    let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint(gl);
     let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, blit);
     let memoryTypeMap = new WGLDeviceMemoryTypeMap(gl);
     let deviceMemory = new WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
