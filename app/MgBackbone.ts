@@ -101,6 +101,18 @@ import {WGLPresentationBarrierEntrypoint}
 	from '../mg-webgl/WGLPresentationBarrierEntrypoint';  
 import {WGLCmdBlendEntrypoint}
 	from '../mg-webgl/WGLCmdBlendEntrypoint';  
+import {WGLCmdStencilEntrypoint}
+	from '../mg-webgl/WGLCmdStencilEntrypoint';  
+import {WGLCmdDepthEntrypoint}
+	from '../mg-webgl/WGLCmdDepthEntrypoint';	  
+import {WGLCmdRasterizationEntrypoint}
+	from '../mg-webgl/WGLCmdRasterizationEntrypoint';  
+import {WGLCmdScissorsEntrypoint}
+	from '../mg-webgl/WGLCmdScissorsEntrypoint';  
+import {WGLCmdClearEntrypoint}
+	from '../mg-webgl/WGLCmdClearEntrypoint';  
+import {}
+	from '../mg-webgl/';    
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
@@ -162,11 +174,11 @@ export class MgBackbone {
     let cache = new WGLCmdShaderProgramCache(rendererCache);
         let errorHandler = new WGLErrorHandler(gl);
     let blend = new WGLCmdBlendEntrypoint(gl, errorHandler);
-    let stencil = new WGLCmdStencilEntrypoint(gl);
-    let depth = new WGLCmdDepthEntrypoint(gl);
-    let raster = new WGLCmdRasterizationEntrypoint(gl);
-    let scissor = new WGLCmdScissorEntrypoint(gl);
-    let clear = new WGLCmdClearEntrypoint(gl);
+    let stencil = new WGLCmdStencilEntrypoint(gl, errorHandler);
+    let depth = new WGLCmdDepthEntrypoint(gl, errorHandler);
+    let raster = new WGLCmdRasterizationEntrypoint(gl, errorHandler);
+    let scissor = new WGLCmdScissorsEntrypoint(gl, errorHandler);
+    let clear = new WGLCmdClearEntrypoint(gl, errorHandler);
     let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(
       gl
       , draws

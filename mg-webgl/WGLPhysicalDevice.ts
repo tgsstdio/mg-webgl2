@@ -36,6 +36,7 @@ import {IWGLDeviceMemoryTypeMap} from './IWGLDeviceMemoryTypeMap';
 import {MgPhysicalDeviceLimits} from '../mg/MgPhysicalDeviceLimits';
 import {MgQueueFlagBits} from '../mg/MgQueueFlagBits';
 import {MgMemoryType} from '../mg/MgMemoryType';
+import {MgMemoryHeap} from '../mg/MgMemoryHeap';
 
 export class WGLPhysicalDevice implements IMgPhysicalDevice {
   private readonly mDevice : IWGLDevice;
@@ -83,17 +84,19 @@ export class WGLPhysicalDevice implements IMgPhysicalDevice {
   getPhysicalDeviceMemoryProperties(
     out: { pMemoryProperties: MgPhysicalDeviceMemoryProperties|null }
   ) : void {
-    out.pMemoryProperties = new MgPhysicalDeviceMemoryProperties();
-
     let count = this.mDeviceMemoryMap.memoryTypes.length;
     let slots = new Array<MgMemoryType>(count);
-    for(let entry of this.mDeviceMemoryMap.memoryTypes) {
+    for(let i = 0; i < count; i += 1) {
+      let entry = this.mDeviceMemoryMap.memoryTypes[i];
       // THE NUMBER OF SLOTS DETERMINE THE DIFFERENT BUFFER TYPES = no of GLMemoryBufferType enums
       let item = new MgMemoryType();
       item.heapIndex = 0;
-      item.propertyFlags = entry.propertyFlags;
+      item.propertyFlags = entry.propertyFlags; 
+      slots[i] = item;
     }
 
+    out.pMemoryProperties = new MgPhysicalDeviceMemoryProperties();
+    out.pMemoryProperties.memoryHeaps = new Array<MgMemoryHeap>(0);
     out.pMemoryProperties.memoryTypes = slots;
   }
 

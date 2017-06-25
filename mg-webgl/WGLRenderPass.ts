@@ -141,7 +141,7 @@ export class WGLRenderPass implements IWGLRenderPass {
       case MgFormat.R32G32B32A32_SFLOAT:
         return WGLClearAttachmentType.COLOR_FLOAT;
       default:
-        throw new Error("getAttachmentType: format not supported");	
+        throw new Error('getAttachmentType: ' + format + ' not supported');	
     }
   }    
 

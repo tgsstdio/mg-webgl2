@@ -142,7 +142,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
       | WGLDeviceMemoryTypeFlagBits.INDEX
       | WGLDeviceMemoryTypeFlagBits.UNIFORM
       | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
-      | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
+      | WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
 
     const ALL_ON = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
       | MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT

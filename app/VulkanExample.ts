@@ -450,16 +450,15 @@ export class VulkanExample {
 
     let offset: number = 0;
     let localBuffer = new ArrayBuffer(structSize);
+    let localData = new Uint8Array(localBuffer);
     let localView = new Float32Array(localBuffer);
 
-    const FLOAT_SIZE = 4;
-    const POSITION_SIZE = 3 * FLOAT_SIZE;
     for (let vertex of vertexBuffer) {
         
         localView.set(vertex.position, 0);
-        localView.set(vertex.color, POSITION_SIZE);
+        localView.set(vertex.color, 3);
 
-        data.set(localView, offset);
+        data.set(localData, offset);
         offset += structSize;
     }
 

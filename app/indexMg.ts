@@ -4,7 +4,7 @@ if (el !== null) {
   el.innerText = 'Hello World via Typescript'
 }
 
-import initWebGL from './initWebGL.js'
+import initWebGL from './initWebGL'
 
 function start() {
   let canvas = document.getElementById('glCanvas');
