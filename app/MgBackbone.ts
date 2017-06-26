@@ -111,8 +111,8 @@ import {WGLCmdScissorsEntrypoint}
 	from '../mg-webgl/WGLCmdScissorsEntrypoint';  
 import {WGLCmdClearEntrypoint}
 	from '../mg-webgl/WGLCmdClearEntrypoint';  
-import {}
-	from '../mg-webgl/';    
+import {WGLFenceSynchronizationEntrypoint}
+	from '../mg-webgl/WGLFenceSynchronizationEntrypoint';    
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
@@ -228,7 +228,13 @@ export class MgBackbone {
       , fences
       , buffers);
 
-    let device: IMgDevice = new WGLDevice(gl, queue, deviceEntrypoint, memoryTypeMap);
+    let fenceSynchronization = new WGLFenceSynchronizationEntrypoint(150);
+    let device: IMgDevice = new WGLDevice(
+      gl
+      , queue
+      , deviceEntrypoint
+      , memoryTypeMap
+      , fenceSynchronization);
     let physicalDevice: IMgPhysicalDevice = new WGLPhysicalDevice(device, memoryTypeMap);
 
     this.mEntrypoint = new WGLEntrypoint(device, physicalDevice);

@@ -13,7 +13,7 @@ import {IWGLCmdStateRenderer} from './IWGLCmdStateRenderer';
 import {IWGLBlitOperationEntrypoint} from './IWGLBlitOperationEntrypoint';
 import {IWGLSwapchainKHR} from './IWGLSwapchainKHR';
 import {WGLCmdCommandRecording} from './WGLCmdCommandRecording';
-import {IWGLFence} from './IWGLFence';
+import {IWGLSynchronizableFence} from './IWGLSynchronizableFence';
 import {IWGLQueueFence} from './IWGLQueueFence';
 import {MgResult}
 	from '../mg/MgResult';
@@ -198,9 +198,9 @@ export class WGLCmdQueue implements IWGLQueue {
           }
 
           if (order.submissions.size <= 0) {
-            let fence : IWGLFence = order.fence;
-            fence.reset();
-            fence.beginSync();
+            let fence : IWGLSynchronizableFence = order.fence;
+            fence.syncObject.reset();
+            fence.syncObject.beginSync();
             this.mOrders.delete(orderKey);
           }
         }
@@ -251,7 +251,7 @@ export class WGLCmdQueue implements IWGLQueue {
       if (fence != null) {
 
         let order = new WGLQueueSubmitOrder (this.mOrderKey);
-        order.fence = fence as IWGLFence;
+        order.fence = fence as IWGLSynchronizableFence;
         for (let sub of children)
         {
           order.submissions.set (sub.key, sub.orderFence);

@@ -1,9 +1,9 @@
-import {IWGLFence} from './IWGLFence';
+import {IWGLSynchronizableFence} from './IWGLSynchronizableFence';
 import {IWGLSemaphore} from './IWGLSemaphore';
 
 export class WGLQueueSubmitOrder {
   key : number;
-  fence : IWGLFence;
+  fence : IWGLSynchronizableFence;
   submissions: Map<number, IWGLSemaphore>;
 
   constructor(key: number) {

@@ -1,7 +1,9 @@
 import {IMgFence}
 	from '../mg/IMgFence';  
+import {IMgDisposable}
+	from '../mg/IMgDisposable';    
 
-interface IWGLFence extends IMgFence {
+export interface IWGLSyncObject extends IMgDisposable {
   readonly isSignalled: boolean;
   reset() : void;
   beginSync() : void;

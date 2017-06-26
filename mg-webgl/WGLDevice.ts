@@ -160,27 +160,32 @@ import {MgSemaphoreCreateInfo}
 	from '../mg/MgSemaphoreCreateInfo';  
 import {MgFenceCreateInfo}
 	from '../mg/MgFenceCreateInfo';   
-import {IWGLFence}
-	from './IWGLFence';
+import {IWGLSynchronizableFence}
+	from './IWGLSynchronizableFence';
 import {MgBufferCreateInfo}
-	from '../mg/MgBufferCreateInfo';   	    	  	        
+	from '../mg/MgBufferCreateInfo';  
+import {IWGLFenceSynchronizationEntrypoint}
+	from './IWGLFenceSynchronizationEntrypoint';      	  	        
 
 export class WGLDevice implements IWGLDevice {
   private mGL: WebGL2RenderingContext;
   private mQueue: IWGLQueue;
   private mEntrypoint: IWGLDeviceEntrypoint;
   private mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
+  private mFenceSynchonization: IWGLFenceSynchronizationEntrypoint;
 
   constructor(
     gl: WebGL2RenderingContext
     ,queue: IWGLQueue
     , entrypoint: IWGLDeviceEntrypoint
     , deviceMemoryMap: IWGLDeviceMemoryTypeMap
+    , fenceSynchonization: IWGLFenceSynchronizationEntrypoint
   ) {
     this.mGL = gl;
     this.mQueue = queue;
     this.mEntrypoint = entrypoint;
     this.mDeviceMemoryMap = deviceMemoryMap;
+    this.mFenceSynchonization = fenceSynchonization;
   }
 
   destroyDevice(allocator : IMgAllocationCallbacks|null) : void {
@@ -614,8 +619,8 @@ export class WGLDevice implements IWGLDevice {
 
   resetFences(pFences: Array<IMgFence>) : MgResult {
     for (let fence of pFences) {
-        let bFence = fence as IWGLFence;
-        bFence.reset();
+        let bFence = fence as IWGLSynchronizableFence;
+        bFence.syncObject.reset();
     }
     return MgResult.SUCCESS; 
   }
@@ -623,8 +628,8 @@ export class WGLDevice implements IWGLDevice {
   getFenceStatus(
     fence: IMgFence
   ) : MgResult{
-      let bFence = fence as IWGLFence;
-      return (bFence.isSignalled) 
+      let bFence = fence as IWGLSynchronizableFence;
+      return (bFence.syncObject.isSignalled) 
         ? MgResult.SUCCESS 
         : MgResult.NOT_READY;
   }
