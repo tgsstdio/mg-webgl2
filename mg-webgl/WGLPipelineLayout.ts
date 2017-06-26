@@ -53,6 +53,7 @@ export class WGLPipelineLayout implements IWGLPipelineLayout {
   constructor(pCreateInfo: MgPipelineLayoutCreateInfo) {
     if (pCreateInfo.setLayouts.length == 1) {
       let layout = pCreateInfo.setLayouts[0] as IWGLDescriptorSetLayout;
+      this.mBindings = layout.uniforms;
     }
     else {
       this.mBindings = new Array<WGLUniformBinding>(0);

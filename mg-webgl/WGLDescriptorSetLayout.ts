@@ -18,7 +18,7 @@ export class WGLDescriptorSetLayout implements IWGLDescriptorSetLayout {
   constructor(pCreateInfo: MgDescriptorSetLayoutCreateInfo) {
     if (pCreateInfo != null && pCreateInfo.bindings != null) {      
       let highestBinding = 0;
-      let uniforms = new Array<WGLUniformBinding>();
+      let allUniforms = new Array<WGLUniformBinding>();
 
       for (let binding of pCreateInfo.bindings) {
         highestBinding = Math.max(binding.binding, highestBinding);
@@ -28,15 +28,15 @@ export class WGLDescriptorSetLayout implements IWGLDescriptorSetLayout {
         uniform.descriptorType = binding.descriptorType;
         uniform.descriptorCount = binding.descriptorCount;
         uniform.stageFlags = binding.stageFlags;
-        uniforms.push (uniform);
+        allUniforms.push (uniform);
       }
 
       let count = highestBinding + 1;
 
-      uniforms = new Array<WGLUniformBinding>(count);
-      for(let uni of uniforms) {
-        uniforms[uni.binding] = uni;
-      }      
+      this.mUniforms = new Array<WGLUniformBinding>(count);
+      for(let uni of allUniforms) {
+        this.mUniforms[uni.binding] = uni;
+      }
   }
   else {
       this.mUniforms = new Array<WGLUniformBinding>(0);

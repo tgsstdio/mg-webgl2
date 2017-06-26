@@ -165,14 +165,17 @@ import {IWGLSynchronizableFence}
 import {MgBufferCreateInfo}
 	from '../mg/MgBufferCreateInfo';  
 import {IWGLFenceSynchronizationEntrypoint}
-	from './IWGLFenceSynchronizationEntrypoint';      	  	        
+from './IWGLFenceSynchronizationEntrypoint';    import {IWGLSyncObject}
+	from './IWGLSyncObject';
+import {WGLSyncTaskInfo}
+	from './WGLSyncTaskInfo';	  	  	        
 
 export class WGLDevice implements IWGLDevice {
   private mGL: WebGL2RenderingContext;
   private mQueue: IWGLQueue;
   private mEntrypoint: IWGLDeviceEntrypoint;
   private mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
-  private mFenceSynchonization: IWGLFenceSynchronizationEntrypoint;
+  private mFenceSynchronization: IWGLFenceSynchronizationEntrypoint;
 
   constructor(
     gl: WebGL2RenderingContext
@@ -185,7 +188,7 @@ export class WGLDevice implements IWGLDevice {
     this.mQueue = queue;
     this.mEntrypoint = entrypoint;
     this.mDeviceMemoryMap = deviceMemoryMap;
-    this.mFenceSynchonization = fenceSynchonization;
+    this.mFenceSynchronization = fenceSynchonization;
   }
 
   destroyDevice(allocator : IMgAllocationCallbacks|null) : void {
@@ -635,13 +638,30 @@ export class WGLDevice implements IWGLDevice {
   }
 
   // // WARN: timeout requires UInt64
-  waitForFences(pFences: Array<IMgFence>
-    , waitAll: boolean
+  waitForFences(
+    pFences: Array<IMgFence>
+    , waitAll:boolean
     , timeout: number
-    //) : MgResult {
-  ) : never {
-    throw new Error("ERROR: not implemented");
-  }
+  ) : Promise<MgResult> {
+    let syncObjects = Array<IWGLSyncObject>();
+    for (let fence of pFences) {
+      let item = fence as IWGLSynchronizableFence;
+      syncObjects.push(item.syncObject);
+    }
+    
+    return new Promise<MgResult>((resolve) => 
+      {	
+        let syncTask = new WGLSyncTaskInfo(
+          resolve
+          , syncObjects
+          , waitAll
+          , timeout
+          , this.mFenceSynchronization.incrementalTimeoutStep
+        );
+        syncTask.schedule();        
+      }
+    );
+  }    
 
   createBuffer(
     pCreateInfo: MgBufferCreateInfo

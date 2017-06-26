@@ -205,7 +205,7 @@ export interface IMgDevice {
   // WARN: timeout requires UInt64
   waitForFences(pFences: Array<IMgFence>
     , waitAll: boolean
-    , timeout: number) : MgResult;
+    , timeout: number) : Promise<MgResult>;
 
   getBufferMemoryRequirements (
     buffer: IMgBuffer

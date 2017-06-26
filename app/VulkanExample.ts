@@ -176,7 +176,7 @@ export class VulkanExample {
 
   indices: IndicesInfo = new IndicesInfo();
 
-  uboVS: UniformBufferObject;
+  uboVS: UniformBufferObject = new UniformBufferObject();
 
   uniformDataVS: UniformData = new UniformData();
 
@@ -818,18 +818,22 @@ export class VulkanExample {
 
     // Wait for the fence to signal that command buffer has finished executing
     const MAX_VALUE = Number.MAX_SAFE_INTEGER;
-    err = this.mConfiguration.device.waitForFences(
+    this.mConfiguration.device.waitForFences(
       [fence]
       , true
-      , MAX_VALUE);
-    if (err != MgResult.SUCCESS) {
-      throw new Error(err.toString());
-    }
+      , MAX_VALUE)
+    .then ((result) => 
+      {
+        if (result != MgResult.SUCCESS) {
+          throw new Error(result.toString());
+        }
 
-    fence.destroyFence(this.mConfiguration.device, null);
-    this.mConfiguration.device.freeCommandBuffers(
-      this.mConfiguration.partition.commandPool
-      , [commandBuffer]);
+        fence.destroyFence(this.mConfiguration.device, null);
+        this.mConfiguration.device.freeCommandBuffers(
+          this.mConfiguration.partition.commandPool
+          , [commandBuffer]);        
+      }
+    );    
   }    
 
   // Prepare vertex and index buffers for an indexed triangle
@@ -1078,60 +1082,36 @@ export class VulkanExample {
   }
 
   private preparePipelines(): void { 
-    let modules : {
-      frag: IMgShaderModule|null
-      ,vert: IMgShaderModule|null
+    let vs = this.mTrianglePath.openVertexShader();
+      let vsCreateInfo = new MgShaderModuleCreateInfo();
+      vsCreateInfo.code = vs;
+      vsCreateInfo.codeSize = vs.length;
+      // shaderStages[1] = loadShader(getAssetPath() 
+      // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+      let outVsModule
+        : {pShaderModule:IMgShaderModule|null}
+        = {pShaderModule:null};
+      let err = this.mConfiguration.device.createShaderModule(vsCreateInfo, null, outVsModule);
+      if (err != MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }      
+
+      let fs = this.mTrianglePath.openFragmentShader();
+
+      let fsCreateInfo = new MgShaderModuleCreateInfo();
+      fsCreateInfo.code = fs;
+      fsCreateInfo.codeSize = fs.length;
+      // shaderStages[1] = loadShader(getAssetPath() 
+      // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+      let outFsModule
+        : {pShaderModule:IMgShaderModule|null}
+        = {pShaderModule:null};
+
+      err = this.mConfiguration.device.createShaderModule(fsCreateInfo, null, outFsModule);
+      if (err != MgResult.SUCCESS) {
+        throw new Error(err.toString());
       }
-      = { frag:null, vert:null };
-
-    const vsPromise = new Promise<string>(
-      (resolve, reject) => {
-        return this.mTrianglePath.openVertexShader();
-      }
-    )
-
-    const fsPromise = new Promise<string>(
-      (resolve, reject) => {
-        return this.mTrianglePath.openVertexShader();
-      }         
-    );
-
-    vsPromise
-      .then((vs) => {
-        let vsCreateInfo = new MgShaderModuleCreateInfo();
-        vsCreateInfo.code = vs;
-        vsCreateInfo.codeSize = vs.length;
-        // shaderStages[1] = loadShader(getAssetPath() 
-        // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-        let outModule
-          : {pShaderModule:IMgShaderModule|null}
-          = {pShaderModule:null};
-        let err = this.mConfiguration.device.createShaderModule(vsCreateInfo, null, outModule);
-        if (err != MgResult.SUCCESS) {
-          throw new Error(err.toString());
-        }
-        modules.vert = outModule.pShaderModule;
-      })
-      .catch((err) => {throw err});        
-
-    fsPromise
-      .then((fs) => {
-        let fsCreateInfo = new MgShaderModuleCreateInfo();
-        fsCreateInfo.code = fs;
-        fsCreateInfo.codeSize = fs.length;
-        // shaderStages[1] = loadShader(getAssetPath() 
-        // + "shaders/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-        let outModule
-          : {pShaderModule:IMgShaderModule|null}
-          = {pShaderModule:null};
-        let err = this.mConfiguration.device.createShaderModule(fsCreateInfo, null, outModule);
-        if (err != MgResult.SUCCESS) {
-          throw new Error(err.toString());
-        }
-        modules.frag = outModule.pShaderModule;
-      })
-      .catch((err) => {throw err});
-
+     
       // Create the graphics pipeline used in this example
       // Vulkan uses the concept of rendering pipelines to encapsulate fixed states, replacing OpenGL's complex state machine
       // A pipeline is then stored and hashed on the GPU making pipeline changes very fast
@@ -1143,14 +1123,14 @@ export class VulkanExample {
       let vsStage = new MgPipelineShaderStageCreateInfo();
       vsStage.stage = MgShaderStageFlagBits.VERTEX_BIT;
 
-      let vsModule = modules.vert as IMgShaderModule;
+      let vsModule = outVsModule.pShaderModule as IMgShaderModule;
       vsStage.module = vsModule;
       vsStage.name = "vertFunc";
 
       let fsStage = new MgPipelineShaderStageCreateInfo();
       fsStage.stage = MgShaderStageFlagBits.VERTEX_BIT;
 
-      let fsModule = modules.frag as IMgShaderModule;
+      let fsModule = outFsModule.pShaderModule as IMgShaderModule;
       fsStage.module = fsModule;
       fsStage.name = "fragFunc";
 
@@ -1249,7 +1229,7 @@ export class VulkanExample {
         = {pPipelines:null};
 
       // Create rendering pipeline using the specified states
-      let err = this.mConfiguration.device.createGraphicsPipelines(
+      err = this.mConfiguration.device.createGraphicsPipelines(
         null
         , [createInfo]
         , null
@@ -1561,44 +1541,48 @@ export class VulkanExample {
 
     // Use a fence to wait until the command buffer has finished execution before using it again
     let fence = this.mWaitFences[currentBufferIndex];
-    let err = this.mConfiguration.device.waitForFences([fence] , true, Number.MAX_SAFE_INTEGER);
-    if (err != MgResult.SUCCESS) {
-      throw new Error(err.toString());
-    }  
+    this.mConfiguration.device.waitForFences(
+      [fence]
+      , true
+      , Number.MAX_SAFE_INTEGER)
+    .then((result) => {
+      if (result != MgResult.SUCCESS) {
+        throw new Error(result.toString());
+      }
 
-    err = this.mConfiguration.device.resetFences([ fence ]);
+      let err = this.mConfiguration.device.resetFences([ fence ]);
 
-    // The submit info structure specifices a command buffer queue submission batch
-    let waitSignal = new MgSubmitInfoWaitSemaphoreInfo();
-    // Pointer to the list of pipeline stages that the semaphore waits will occur at      
-    waitSignal.waitDstStageMask = MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT;
-    // Semaphore(s) to wait upon before the submitted command buffer starts executing      
-    waitSignal.waitSemaphore = this.mPresentCompleteSemaphore;
+      // The submit info structure specifices a command buffer queue submission batch
+      let waitSignal = new MgSubmitInfoWaitSemaphoreInfo();
+      // Pointer to the list of pipeline stages that the semaphore waits will occur at      
+      waitSignal.waitDstStageMask = MgPipelineStageFlagBits.COLOR_ATTACHMENT_OUTPUT_BIT;
+      // Semaphore(s) to wait upon before the submitted command buffer starts executing      
+      waitSignal.waitSemaphore = this.mPresentCompleteSemaphore;
 
-    // Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
-    let submitInfo = new MgSubmitInfo();
-    submitInfo.waitSemaphores = [waitSignal];
+      // Pipeline stage at which the queue submission will wait (via pWaitSemaphores)
+      let submitInfo = new MgSubmitInfo();
+      submitInfo.waitSemaphores = [waitSignal];
 
-    // Command buffers(s) to execute in this batch (submission)      
-    submitInfo.commandBuffers = [this.drawCmdBuffers[currentBufferIndex]];
-    
-    // Semaphore(s) to be signaled when command buffers have completed
-    submitInfo.signalSemaphores = [this.mRenderCompleteSemaphore];
+      // Command buffers(s) to execute in this batch (submission)      
+      submitInfo.commandBuffers = [this.drawCmdBuffers[currentBufferIndex]];
+      
+      // Semaphore(s) to be signaled when command buffers have completed
+      submitInfo.signalSemaphores = [this.mRenderCompleteSemaphore];
 
-    // Submit to the graphics queue passing a wait fence
-    err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
-    if (err != MgResult.SUCCESS) {
-      throw new Error(err.toString());
-    }   
+      // Submit to the graphics queue passing a wait fence
+      err = this.mConfiguration.queue.queueSubmit([submitInfo], fence);
+      if (err != MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }   
 
-    // Present the current buffer to the swap chain
-    // Pass the semaphore signaled by the command buffer submission from the submit info as the wait semaphore for swap chain presentation
-    // This ensures that the image is not presented to the windowing system until all commands have been submitted
-
-    this.mPresentationLayer.endDraw(
-      [currentBufferIndex]
-      , this.mPrePresentCmdBuffer
-      , [ this.mRenderCompleteSemaphore ]);
+      // Present the current buffer to the swap chain
+      // Pass the semaphore signaled by the command buffer submission from the submit info as the wait semaphore for swap chain presentation
+      // This ensures that the image is not presented to the windowing system until all commands have been submitted
+      this.mPresentationLayer.endDraw(
+        [currentBufferIndex]
+        , this.mPrePresentCmdBuffer
+        , [ this.mRenderCompleteSemaphore ]);  
+    });
   }
 
   private viewChanged(): void

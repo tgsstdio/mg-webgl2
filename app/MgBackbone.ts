@@ -75,8 +75,8 @@ import {WGLCmdVertexArrayEntrypoint}
 	from '../mg-webgl/WGLCmdVertexArrayEntrypoint';  
 import {WGLImageFormatEntrypoint}
 	from '../mg-webgl/WGLImageFormatEntrypoint';  
-import {WGLFenceEntrypoint}
-	from '../mg-webgl/WGLFenceEntrypoint';  
+import {WGLSynchronizableFenceEntrypoint}
+	from '../mg-webgl/WGLSynchronizableFenceEntrypoint';  
 import {WGLBufferEntrypoint}
 	from '../mg-webgl/WGLBufferEntrypoint';
 import {WGLDeviceEntrypoint}
@@ -212,7 +212,7 @@ export class MgBackbone {
     let descriptorSets = new WGLDescriptorSetEntrypoint();
     let vertexArrays = new WGLCmdVertexArrayEntrypoint(gl, errorHandler);
     let imageFormat = new WGLImageFormatEntrypoint();
-    let fences = new WGLFenceEntrypoint(gl);
+    let fences = new WGLSynchronizableFenceEntrypoint(gl);
     let buffers = new WGLBufferEntrypoint(gl);
     let deviceEntrypoint = new WGLDeviceEntrypoint(
       deviceMemory

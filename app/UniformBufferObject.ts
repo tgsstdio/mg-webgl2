@@ -4,6 +4,10 @@ export class UniformBufferObject {
   projectionMatrix: Matrix4;
   modelMatrix: Matrix4;
   viewMatrix: Matrix4;
-}
 
-export default UniformBufferObject;
+  constructor() {
+    this.projectionMatrix = Matrix4.identity;
+    this.modelMatrix = Matrix4.identity;
+    this.viewMatrix = Matrix4.identity;
+  }
+}
