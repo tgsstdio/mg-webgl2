@@ -47,6 +47,7 @@ try {
     , shaderPath
   );
 
+  vk.renderLoop();
 }
 catch(err) {
   console.log(err);

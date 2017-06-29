@@ -52,6 +52,7 @@ export class WGLDescriptorPool implements IWGLDescriptorPool {
       let temp = new WGLDescriptorSet(i, this as IWGLDescriptorPool);
       this.mAvailableSets.push(temp);
     }
+    this.mAllocatedSets = new Map<number, IWGLDescriptorSet>();
 
     let noOfUniformBlocks = 0;
     let noOfStorageBuffers = 0;
@@ -138,9 +139,17 @@ export class WGLDescriptorPool implements IWGLDescriptorPool {
       ,	blocks);
   }
 
-  readonly combinedImageSamplers: IWGLDescriptorPoolResource<WGLImageDescriptor>;
-  readonly uniformBuffers: IWGLDescriptorPoolResource<WGLBufferDescriptor>;
-  readonly storageBuffers: IWGLDescriptorPoolResource<WGLBufferDescriptor>;
+  get combinedImageSamplers(): IWGLDescriptorPoolResource<WGLImageDescriptor> {
+    return this.mCombinedImageSamplers;
+  }
+
+  get uniformBuffers(): IWGLDescriptorPoolResource<WGLBufferDescriptor> {
+    return this.mUniformBuffers;
+  }
+
+  get storageBuffers(): IWGLDescriptorPoolResource<WGLBufferDescriptor> {
+    return this.mStorageBuffers;
+  }
 
   resetResource(resourceInfo: WGLDescriptorPoolResourceInfo) : void {
     if (resourceInfo != null)	{

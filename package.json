@@ -6,15 +6,20 @@
   "main": "main.js",
   "scripts": {
     "start": "webpack --config webpack.config.js && node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "tsc -p test.tsconfig.json && mocha init ut/test && webpack --config test.webpack.config.js",
+    "test": "mocha ut/test"
   },
   "keywords": [
     "webgl2"
   ],
   "dependencies": {
-    "@types/webgl2": "0.0.1"
+    "@types/webgl2": "0.0.1",
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
     "standard": "10.0.2",
     "ts-loader": "^2.2.0",
     "typescript": "2.3.4",

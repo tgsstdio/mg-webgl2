@@ -1128,7 +1128,7 @@ export class VulkanExample {
       vsStage.name = "vertFunc";
 
       let fsStage = new MgPipelineShaderStageCreateInfo();
-      fsStage.stage = MgShaderStageFlagBits.VERTEX_BIT;
+      fsStage.stage = MgShaderStageFlagBits.FRAGMENT_BIT;
 
       let fsModule = outFsModule.pShaderModule as IMgShaderModule;
       fsStage.module = fsModule;

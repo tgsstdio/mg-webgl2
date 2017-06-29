@@ -69,17 +69,17 @@ export class WGLGraphicsPipelineCompiler implements IWGLGraphicsPipelineCompiler
 	compile(info: MgGraphicsPipelineCreateInfo): WebGLProgram {
 		let modules = new Array<WebGLShader>();
 		if (info.stages != null) {
-			for (let stage of info.stages) {
-				let sModule = stage.module as IWGLShaderModule;
+			for (let stageInfo of info.stages) {
+				let sModule = stageInfo.module as IWGLShaderModule;
 				let fileContents = sModule.code.substring(0, sModule.codeSize);
 				const FILE_PREFIX = ""
 
 				let shaderId = WGLGraphicsPipelineCompiler.compileShader(
 					this.mShaders
-					, stage.stage
+					, stageInfo.stage
 					, fileContents
 					, FILE_PREFIX
-					, stage.name);
+					, stageInfo.name);
 				modules.push(shaderId);
 			}
 		}

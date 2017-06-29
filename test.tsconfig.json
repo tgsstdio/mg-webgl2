@@ -4,22 +4,22 @@
         "module": "umd",
         "noImplicitAny": true,
         "removeComments": true,
-        "preserveConstEnums": false,
-        "outDir": "dist/Magnesium",
-        "sourceMap": true,
+        "preserveConstEnums": true,
+        "outDir": "ut",      
+        "sourceMap": false,
         "strictNullChecks":true,
         "alwaysStrict":true,
         "noImplicitThis":true,
         "noFallthroughCasesInSwitch":true,
-        "types" : ["webgl2"]
+        "types" : ["webgl2", "mocha"]
     },
     "include": [
         "mg/*",
         "mg-webgl/*",
-        "app/*"
+        "test/",
+        "node_modules/chai/"
     ],
     "exclude": [
-        "node_modules",
         "**/*.spec.ts"
     ]
 }
