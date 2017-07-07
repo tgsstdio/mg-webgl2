@@ -100,10 +100,12 @@ export class WGLCmdVertexArrayEncodingSection
       this.mCurrentVertexArray = vao;
       let nextIndex = bag.vertexArrays.push(vao);
 
-      let instruction = new WGLCmdEncodingInstruction();           
-      instruction.category = WGLCmdEncoderCategory.GRAPHICS;
-      instruction.index = nextIndex,
-      instruction.operation = new WGLCmdBindVertexBuffers();  
+      let inst = new WGLCmdEncodingInstruction();           
+      inst.category = WGLCmdEncoderCategory.GRAPHICS;
+      inst.index = nextIndex,
+      inst.operation = new WGLCmdBindVertexBuffers();  
+
+      instructions.add(inst);
     }
   }
 

@@ -1,0 +1,7 @@
+{
+  "generator-tskmc": {
+    "projectName": 0,
+    "testApproach": "bdd",
+    "useLatest": true
+  }
+}

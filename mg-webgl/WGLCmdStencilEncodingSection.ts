@@ -106,6 +106,7 @@ export class WGLCmdStencilEncodingSection {
       == MgStencilFaceFlagBits.BACK_BIT) as boolean;
   }
 
+  // TODO: fix this issue
   setStencilCompareMask(
       pipeline: IWGLGraphicsPipeline| null
     , bag: WGLCmdGraphicsBag
@@ -132,6 +133,7 @@ export class WGLCmdStencilEncodingSection {
     }        
   }
 
+  // TODO: fix this issue
   setStencilReference(
       pipeline: IWGLGraphicsPipeline| null
     , bag: WGLCmdGraphicsBag

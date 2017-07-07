@@ -1,7 +1,5 @@
 import {IWGLDescriptorSetEntrypoint}
 	from './IWGLDescriptorSetEntrypoint';	  
-import {}
-	from './';
 import {MgDescriptorSetAllocateInfo}
 	from '../mg/MgDescriptorSetAllocateInfo';  
 import {IMgDescriptorSet}

@@ -3,6 +3,17 @@ import {MgBlendFactor} from '../mg/MgBlendFactor';
 import {MgBlendOp} from '../mg/MgBlendOp';
 
 export class WGLGraphicsPipelineBlendColorAttachmentState {
+	constructor() {
+		this.blendEnable = false;
+		this.srcColorBlendFactor = MgBlendFactor.ZERO;
+		this.dstColorBlendFactor = MgBlendFactor.ZERO;
+		this.colorBlendOp = MgBlendOp.ADD;
+		this.srcAlphaBlendFactor = MgBlendFactor.ZERO;
+		this.dstAlphaBlendFactor = MgBlendFactor.ZERO;
+		this.alphaBlendOp = MgBlendOp.ADD;
+		this.colorWriteMask = 0;
+	}
+
 	blendEnable: boolean;
 	srcColorBlendFactor: MgBlendFactor;
 	dstColorBlendFactor: MgBlendFactor;

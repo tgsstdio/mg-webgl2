@@ -1,7 +1,3 @@
-import {}
-	from '../mg/';  
-import {}
-	from '../mg/';   
 import {IWGLCmdRasterizationEntrypoint}
 	from './IWGLCmdRasterizationEntrypoint';	  
 import {IWGLErrorHandler}
@@ -11,11 +7,7 @@ import {WGLRasterizerState}
 import {WGLGraphicsPipelineFlagBits}
 	from './WGLGraphicsPipelineFlagBits';
 import {WGLCmdDepthBiasParameter}
-	from './WGLCmdDepthBiasParameter';	  
-import {}
-	from './';
-import {}
-	from './';	  	  
+	from './WGLCmdDepthBiasParameter';	    
 
 export class WGLCmdRasterizationEntrypoint
   implements IWGLCmdRasterizationEntrypoint {

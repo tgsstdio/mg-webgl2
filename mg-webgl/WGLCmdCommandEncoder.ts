@@ -50,10 +50,12 @@ export class WGLCmdCommandEncoder {
   }
 
   asRecord(): WGLCmdCommandBufferRecord {
-    let replay = this.mInstructions.toReplay();
-    replay.computeGrid = this.mCompute.asGrid();
-    replay.graphicsGrid = this.mGraphics.asGrid();
-    replay.blitGrid = this.mBlit.asGrid();
-    return replay;
+    let record = new WGLCmdCommandBufferRecord();
+    record.contexts = this.mInstructions.contexts;
+    record.instructions = this.mInstructions.instructions;
+    record.computeGrid = this.mCompute.asGrid();
+    record.graphicsGrid = this.mGraphics.asGrid();
+    record.blitGrid = this.mBlit.asGrid();
+    return record;
   }
 }

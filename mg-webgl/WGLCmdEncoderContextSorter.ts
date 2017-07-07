@@ -6,9 +6,16 @@ import {WGLCmdCommandBufferRecord} from './WGLCmdCommandBufferRecord';
 export class WGLCmdEncoderContextSorter {
   private mCurrentContext: WGLCmdEncoderContext | null;
   private mContexts: Array<WGLCmdEncoderContext>;
+  get contexts(): Array<WGLCmdEncoderContext> {
+    return this.mContexts;
+  }
+
   private mInstructions: Array<WGLCmdRecordInstruction>;
-  constructor()
-  {
+  get instructions(): Array<WGLCmdRecordInstruction> {
+    return this.mInstructions;
+  }
+
+  constructor() {
       this.clear();
   }
 
@@ -23,6 +30,7 @@ export class WGLCmdEncoderContextSorter {
     let record = new WGLCmdEncodingInstruction();
     record.index = inst.index;
     record.operation = inst.operation;
+    this.mInstructions.push(record);
 
     if (this.mCurrentContext == null) {
       this.initializeNewContext(inst, currentIndex);
@@ -49,12 +57,5 @@ export class WGLCmdEncoderContextSorter {
     context.last = currentIndex;
     this.mContexts.push(context);
     this.mCurrentContext = context;
-  } 
-
-  toReplay(): WGLCmdCommandBufferRecord {
-    let result = new WGLCmdCommandBufferRecord();
-    result.contexts = this.mContexts;
-    result.instructions = this.mInstructions;
-    return result;
-  }   
+  }
 }

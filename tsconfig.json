@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-      "target":"es6",
+      "target":"ES6",
       "module": "commonjs",
       "isolatedModules": false,
       "noImplicitAny": true,
@@ -17,7 +17,7 @@
   "include": [
       "mg/*",
       "mg-webgl/*",
-      "app/*"
+      "app/*"      
   ],
   "exclude": [
       "node_modules",
