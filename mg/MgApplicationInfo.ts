@@ -1,5 +1,13 @@
 export class MgApplicationInfo {
-  application: string;
+  constructor() {
+    this.applicationName = '';
+    this.applicationVersion = 0;
+    this.engineName = '';
+    this.engineVersion = 0;
+    this.apiVersion = 0;
+  }
+
+  applicationName: string;
   applicationVersion: number;
   engineName: string;
   engineVersion: number;

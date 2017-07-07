@@ -12,6 +12,18 @@ import {MgImageLayout}
 	from './MgImageLayout';	 
 
 export class MgAttachmentDescription {
+  constructor() {
+    this.flags = 0;
+    this.format = MgFormat.UNDEFINED;
+    this.samples = 0;
+    this.loadOp = MgAttachmentLoadOp.LOAD;
+    this.storeOp = MgAttachmentStoreOp.STORE;
+    this.stencilLoadOp = MgAttachmentLoadOp.LOAD;
+    this.stencilStoreOp = MgAttachmentStoreOp.STORE;
+    this.initialLayout = MgImageLayout.UNDEFINED;
+    this.finalLayout = MgImageLayout.UNDEFINED;
+  }
+
   flags: MgAttachmentDescriptionFlagBits;
   format: MgFormat;
   samples: MgSampleCountFlagBits;

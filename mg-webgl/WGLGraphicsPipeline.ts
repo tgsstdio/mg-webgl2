@@ -220,7 +220,7 @@ if (info.rasterizationState == null)
 					dst.alphaBlendOp = src.alphaBlendOp;
 					dst.colorWriteMask = src.colorWriteMask;
 					
-					colorBlend.attachments[i] = dst;
+					colorAttachments[i] = dst;
 				}
 				this.mColorBlendEnums.attachments = colorAttachments;
 			}
