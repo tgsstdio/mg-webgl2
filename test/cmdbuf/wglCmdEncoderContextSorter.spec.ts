@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import {WGLCmdEncoderContextSorter} from '../mg-webgl/WGLCmdEncoderContextSorter'
-import {WGLCmdEncodingInstruction} from '../mg-webgl/WGLCmdEncodingInstruction'
-import {WGLCmdEncoderCategory} from '../mg-webgl/WGLCmdEncoderCategory'
+import {WGLCmdEncoderContextSorter} from '../../mg-webgl/cmdbuf/WGLCmdEncoderContextSorter'
+import {WGLCmdEncodingInstruction} from '../../mg-webgl/cmdbuf/WGLCmdEncodingInstruction'
+import {WGLCmdEncoderCategory} from '../../mg-webgl/cmdbuf/WGLCmdEncoderCategory'
 
 describe('WGLCmdEncoderContextSorter', () => {
   it('should be empty when initialized', () => {

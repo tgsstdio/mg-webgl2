@@ -3,7 +3,7 @@ import {WGLUniformBinding}
 import {IWGLDescriptorSetLayout}
 	from './IWGLDescriptorSetLayout';
 import {MgDescriptorSetLayoutCreateInfo}
-	from '../mg/MgDescriptorSetLayoutCreateInfo';  
+	from '../mg/MgDescriptorSetLayoutCreateInfo';
 import {IMgDevice}
 	from '../mg/IMgDevice'; 
 import {IMgAllocationCallbacks}

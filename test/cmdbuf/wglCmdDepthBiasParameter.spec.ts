@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {WGLCmdDepthBiasParameter} from '../mg-webgl/WGLCmdDepthBiasParameter'
+import {WGLCmdDepthBiasParameter} from '../../mg-webgl/cmdbuf/WGLCmdDepthBiasParameter'
 
 describe('WGLCmdDepthBiasParameter', () => {
   it('should have all fields initialized after new()', () => {

@@ -1,11 +1,11 @@
-import { MgBufferImageCopy } from '../mg/MgBufferImageCopy'
+import { MgBufferImageCopy } from '../../mg/MgBufferImageCopy'
 import { expect } from 'chai'
 import {MgOffset3D}
-	from '../mg/MgOffset3D';
+	from '../../mg/MgOffset3D';
 import {MgExtent3D}
-	from '../mg/MgExtent3D';
+	from '../../mg/MgExtent3D';
   import {MgImageSubresourceLayers}
-	from '../mg/MgImageSubresourceLayers';	
+	from '../../mg/MgImageSubresourceLayers';	
 
 describe('MgBufferImageCopy', () => {
   it('should have all fields initialized after new()', () => {

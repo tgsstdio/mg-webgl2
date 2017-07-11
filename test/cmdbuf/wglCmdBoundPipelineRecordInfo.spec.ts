@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import {WGLCmdBoundPipelineRecordInfo} from '../mg-webgl/WGLCmdBoundPipelineRecordInfo'
-import {MgColor4f} from '../mg/MgColor4f'
-import {WGLCmdScissorParameter} from '../mg-webgl/WGLCmdScissorParameter'
-import {WGLCmdViewportParameter} from '../mg-webgl/WGLCmdViewportParameter'
-import {WGLCmdDepthBiasParameter} from '../mg-webgl/WGLCmdDepthBiasParameter'
+import {WGLCmdBoundPipelineRecordInfo} from '../../mg-webgl/cmdbuf/WGLCmdBoundPipelineRecordInfo'
+import {MgColor4f} from '../../mg/MgColor4f'
+import {WGLCmdScissorParameter} from '../../mg-webgl/cmdbuf/WGLCmdScissorParameter'
+import {WGLCmdViewportParameter} from '../../mg-webgl/cmdbuf/WGLCmdViewportParameter'
+import {WGLCmdDepthBiasParameter} from '../../mg-webgl/cmdbuf/WGLCmdDepthBiasParameter'
 
 describe('WGLCmdBoundPipelineRecordInfo', () => {
   it('should have all fields initialized after new()', () => {

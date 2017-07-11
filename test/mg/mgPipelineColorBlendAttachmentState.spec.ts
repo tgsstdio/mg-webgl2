@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import {MgPipelineColorBlendAttachmentState} from '../mg/MgPipelineColorBlendAttachmentState'
-import {MgBlendFactor} from '../mg/MgBlendFactor'
-import {MgBlendOp} from '../mg/MgBlendOp'
+import {MgPipelineColorBlendAttachmentState} from '../../mg/MgPipelineColorBlendAttachmentState'
+import {MgBlendFactor} from '../../mg/MgBlendFactor'
+import {MgBlendOp} from '../../mg/MgBlendOp'
 
 describe('MgPipelineColorBlendAttachmentState', () => {
   it('should have all fields initialized after new()', () => {

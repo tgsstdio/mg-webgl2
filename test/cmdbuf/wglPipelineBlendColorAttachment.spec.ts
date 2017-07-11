@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import {WGLGraphicsPipelineBlendColorAttachmentState} from '../mg-webgl/WGLGraphicsPipelineBlendColorAttachmentState'
-import {MgBlendFactor} from '../mg/MgBlendFactor'
-import {MgBlendOp} from '../mg/MgBlendOp'
+import {WGLGraphicsPipelineBlendColorAttachmentState} from '../../mg-webgl/pipeline/WGLGraphicsPipelineBlendColorAttachmentState'
+import {MgBlendFactor} from '../../mg/MgBlendFactor'
+import {MgBlendOp} from '../../mg/MgBlendOp'
 
 describe('WGLGraphicsPipelineBlendColorAttachmentState', () => {
   it('should be values in every property when initialized', () => {

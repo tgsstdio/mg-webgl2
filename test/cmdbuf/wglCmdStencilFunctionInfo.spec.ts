@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import {WGLCmdStencilFunctionInfo} from '../mg-webgl/WGLCmdStencilFunctionInfo'
-import {MgCompareOp} from '../mg/MgCompareOp'
+import {WGLCmdStencilFunctionInfo} from '../../mg-webgl/cmdbuf/WGLCmdStencilFunctionInfo'
+import {MgCompareOp} from '../../mg/MgCompareOp'
 
 describe('MgPipelineColorBlendAttachmentState', () => {
   it('should have all fields initialized after new()', () => {

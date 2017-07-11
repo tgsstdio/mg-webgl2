@@ -1,4 +1,4 @@
-import { MgColor4f } from '../mg/MgColor4f'
+import { MgColor4f } from '../../mg/MgColor4f'
 import { expect } from 'chai'
 
 describe('MgColor4f', () => {

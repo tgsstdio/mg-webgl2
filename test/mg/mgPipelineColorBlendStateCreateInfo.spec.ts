@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import {MgPipelineColorBlendStateCreateInfo} from '../mg/MgPipelineColorBlendStateCreateInfo'
-import {MgLogicOp} from '../mg/MgLogicOp'
-import {MgColor4f} from '../mg/MgColor4f'
+import {MgPipelineColorBlendStateCreateInfo} from '../../mg/MgPipelineColorBlendStateCreateInfo'
+import {MgLogicOp} from '../../mg/MgLogicOp'
+import {MgColor4f} from '../../mg/MgColor4f'
 
 describe('MgPipelineColorBlendStateCreateInfo', () => {
   it('should be values in every property when initialized', () => {

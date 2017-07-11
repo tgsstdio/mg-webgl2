@@ -1,5 +1,5 @@
-import { MgBufferCreateInfo } from '../mg/MgBufferCreateInfo'
-import { MgSharingMode } from '../mg/MgSharingMode'
+import { MgBufferCreateInfo } from '../../mg/MgBufferCreateInfo'
+import { MgSharingMode } from '../../mg/MgSharingMode'
 import { expect } from 'chai'
 
 describe('MgBufferCreateInfo', () => {

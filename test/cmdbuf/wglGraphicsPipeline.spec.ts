@@ -1,29 +1,29 @@
-import { MgBufferImageCopy } from '../mg/MgBufferImageCopy'
+import { MgBufferImageCopy } from '../../mg/MgBufferImageCopy'
 import { expect } from 'chai'
 import {WGLGraphicsPipeline}
-	from '../mg-webgl/WGLGraphicsPipeline';
-import {IWGLGraphicsPipelineEntrypoint} from '../mg-webgl/IWGLGraphicsPipelineEntrypoint';
-import {MgGraphicsPipelineCreateInfo} from '../mg/MgGraphicsPipelineCreateInfo';
-import {WGLInternalBlockCache} from '../mg-webgl/WGLInternalBlockCache';
-import {IWGLPipelineLayout} from '../mg-webgl/IWGLPipelineLayout';
-import {WGLBindingPointOffsetInfo} from '../mg-webgl/WGLBindingPointOffsetInfo';
-import {WGLDynamicOffsetInfo} from '../mg-webgl/WGLDynamicOffsetInfo';
-import {WGLUniformBinding} from '../mg-webgl/WGLUniformBinding';
-import {IMgDevice} from '../mg/IMgDevice';
-import {IMgAllocationCallbacks} from '../mg/IMgAllocationCallbacks';
+	from '../../mg-webgl/pipeline/WGLGraphicsPipeline';
+import {IWGLGraphicsPipelineEntrypoint} from '../../mg-webgl/entrypoint/IWGLGraphicsPipelineEntrypoint';
+import {MgGraphicsPipelineCreateInfo} from '../../mg/MgGraphicsPipelineCreateInfo';
+import {WGLInternalBlockCache} from '../../mg-webgl/pipeline/WGLInternalBlockCache';
+import {IWGLPipelineLayout} from '../../mg-webgl/pipeline/IWGLPipelineLayout';
+import {WGLBindingPointOffsetInfo} from '../../mg-webgl/pipeline/WGLBindingPointOffsetInfo';
+import {WGLDynamicOffsetInfo} from '../../mg-webgl/WGLDynamicOffsetInfo';
+import {WGLUniformBinding} from '../../mg-webgl/pipeline/WGLUniformBinding';
+import {IMgDevice} from '../../mg/IMgDevice';
+import {IMgAllocationCallbacks} from '../../mg/IMgAllocationCallbacks';
 
-import {WGLProgramUniformBlock} from '../mg-webgl/WGLProgramUniformBlock';
-import {WGLInternalCacheArrayMapper} from '../mg-webgl/WGLInternalCacheArrayMapper';
-import {MgColor4f} from '../mg/MgColor4f';
-import {MgPipelineVertexInputStateCreateInfo} from '../mg/MgPipelineVertexInputStateCreateInfo';
+import {WGLProgramUniformBlock} from '../../mg-webgl/pipeline/WGLProgramUniformBlock';
+import {WGLInternalCacheArrayMapper} from '../../mg-webgl/pipeline/WGLInternalCacheArrayMapper';
+import {MgColor4f} from '../../mg/MgColor4f';
+import {MgPipelineVertexInputStateCreateInfo} from '../../mg/MgPipelineVertexInputStateCreateInfo';
 import {MgPipelineInputAssemblyStateCreateInfo}
-  from '../mg/MgPipelineInputAssemblyStateCreateInfo'
+  from '../../mg/MgPipelineInputAssemblyStateCreateInfo'
 import {MgPipelineRasterizationStateCreateInfo}
-  from '../mg/MgPipelineRasterizationStateCreateInfo'
+  from '../../mg/MgPipelineRasterizationStateCreateInfo'
 import {MgVertexInputAttributeDescription}
-  from '../mg/MgVertexInputAttributeDescription'
+  from '../../mg/MgVertexInputAttributeDescription'
 import {MgVertexInputBindingDescription}
-  from '../mg/MgVertexInputBindingDescription'  
+  from '../../mg/MgVertexInputBindingDescription'  
 
 class MockWGLGraphicsEntrypoint implements IWGLGraphicsPipelineEntrypoint {
   constructor() {

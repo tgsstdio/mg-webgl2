@@ -1,4 +1,4 @@
-import { MgApplicationInfo } from '../mg/MgApplicationInfo'
+import { MgApplicationInfo } from '../../mg/MgApplicationInfo'
 import { expect } from 'chai'
 
 describe('MgApplicationInfo', () => {

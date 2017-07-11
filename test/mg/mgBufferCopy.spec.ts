@@ -1,4 +1,4 @@
-import { MgBufferCopy } from '../mg/MgBufferCopy'
+import { MgBufferCopy } from '../../mg/MgBufferCopy'
 import { expect } from 'chai'
 
 describe('MgBufferCopy', () => {

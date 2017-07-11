@@ -1,5 +1,5 @@
-import { MgImageSubresourceLayers } from '../mg/MgImageSubresourceLayers'
-import {MgImageAspectFlagBits} from '../mg/MgImageAspectFlagBits'
+import { MgImageSubresourceLayers } from '../../mg/MgImageSubresourceLayers'
+import {MgImageAspectFlagBits} from '../../mg/MgImageAspectFlagBits'
 import { expect } from 'chai'
 
 describe('MgImageSubresourceLayers', () => {

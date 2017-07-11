@@ -1,4 +1,4 @@
-import { MgExtent3D } from '../mg/MgExtent3D'
+import { MgExtent3D } from '../../mg/MgExtent3D'
 import { expect } from 'chai'
 
 describe('MgExtent3D', () => {

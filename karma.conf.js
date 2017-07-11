@@ -26,8 +26,10 @@ module.exports = function (config) {
     files: [
       // { pattern: 'src/*.ts' },
       'test/*.spec.ts',
+      'test/*/*.spec.ts',
       'mg/*.ts',
-      'mg-webgl/*.ts'
+      'mg-webgl/*.ts',
+      'mg-webgl/*/*.ts'
 //      'test/*.js', 'test/*.spec.ts', 'test/*.ts', 'src/*.ts', 'mg/*.ts', 'mg-webgl/*.ts', 'app/*.ts'
     ],
 
@@ -42,6 +44,8 @@ module.exports = function (config) {
       // 'app/*.ts': ['karma-typescript', 'coverage'],
       'mg/*.ts': ['karma-typescript', 'coverage'],
       'mg-webgl/*.ts': ['karma-typescript', 'coverage'],
+      'mg-webgl/*/*.ts': ['karma-typescript', 'coverage'],
+      'test/*/*.spec.ts': ['karma-typescript'],
       'test/*.spec.ts': ['karma-typescript']
     },
 

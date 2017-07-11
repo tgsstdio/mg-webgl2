@@ -1,6 +1,6 @@
-import { MgAttachmentReference } from '../mg/MgAttachmentReference'
+import { MgAttachmentReference } from '../../mg/MgAttachmentReference'
 import {MgImageLayout}
-	from '../mg/MgImageLayout';	
+	from '../../mg/MgImageLayout';	
 import { expect } from 'chai'
 
 describe('MgAttachmentReference', () => {

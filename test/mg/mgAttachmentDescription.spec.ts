@@ -1,8 +1,8 @@
-import { MgAttachmentDescription } from '../mg/MgAttachmentDescription'
-import { MgFormat } from '../mg/MgFormat'
-import { MgAttachmentStoreOp } from '../mg/MgAttachmentStoreOp'
-import { MgAttachmentLoadOp } from '../mg/MgAttachmentLoadOp'
-import { MgImageLayout } from '../mg/MgImageLayout'
+import { MgAttachmentDescription } from '../../mg/MgAttachmentDescription'
+import { MgFormat } from '../../mg/MgFormat'
+import { MgAttachmentStoreOp } from '../../mg/MgAttachmentStoreOp'
+import { MgAttachmentLoadOp } from '../../mg/MgAttachmentLoadOp'
+import { MgImageLayout } from '../../mg/MgImageLayout'
 import { expect } from 'chai'
 
 describe('MgAttachmentDescription', () => {
