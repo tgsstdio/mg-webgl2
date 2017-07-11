@@ -28,7 +28,7 @@ try {
   let canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
 
   let appInfo = new MgApplicationInfo();
-  appInfo.application = "Hello World";
+  appInfo.applicationName = "Hello World";
   appInfo.apiVersion = MgApplicationInfo.generateApiVersion(1, 17, 0);
   appInfo.engineName = "Engine";
   appInfo.engineVersion = 1;

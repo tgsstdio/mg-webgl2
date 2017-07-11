@@ -36,6 +36,10 @@ import {WGLCmdCommandRecording}
 	from './WGLCmdCommandRecording';   
 
 export class WGLCmdRenderpassEncodingSection {
+  constructor() {
+    this.clear();
+  }
+
   boundRenderPass: WGLCmdBeginRenderpassRecord|null;
   clear(): void {
     this.boundRenderPass = null;

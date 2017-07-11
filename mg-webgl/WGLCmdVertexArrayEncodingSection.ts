@@ -49,6 +49,7 @@ export class WGLCmdVertexArrayEncodingSection
     vertexArrays: IWGLCmdVertexArrayEntrypoint
   ) {
     this.mVertexArrays = vertexArrays;
+    this.clear();
   }
 
   clear(): void {

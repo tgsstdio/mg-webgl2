@@ -701,12 +701,14 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
   }
 
   updateViewports(
-    vp: WGLCmdViewportParameter
+    vp: WGLCmdViewportParameter|null
   ): void {
     // viewport
     if (this.changesFoundInViewports(this.mPastViewport, vp)) {
-      this.mScissor.applyViewports(vp);
-      this.mPastViewport = vp;
+      if (vp != null) {
+        this.mScissor.applyViewports(vp);
+      }
+      this.mPastViewport = vp;      
     }
   }    
 
@@ -728,11 +730,12 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
   }
 
   updateScissors(
-    current: WGLCmdScissorParameter
+    current: WGLCmdScissorParameter|null
   ): void {
     // scissor 
     if (this.changesFoundInScissors(this.mPastScissors, current)) {
-      this.mScissor.applyScissors(current);
+      if (current != null)
+        this.mScissor.applyScissors(current);
       this.mPastScissors = current;
     }
   }    

@@ -18,6 +18,10 @@ import {WGLCmdCommandRecording}
 	from './WGLCmdCommandRecording';
 
 export class WGLCmdBlendConstantsEncodingSection {
+  constructor() {
+    this.clear();
+  }
+
   private mBlendConstants: MgColor4f;
   clear() {
     this.mBlendConstants = new MgColor4f(0,0,0,0);

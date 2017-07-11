@@ -21,6 +21,9 @@ export class WGLCmdDepthBiasEncodingSection {
   private mDepthBiasConstantFactor: number;
   private mDepthBiasClamp: number;
   private mDepthBiasSlopeFactor: number;
+  constructor() {
+    this.clear();
+  }
 
   clear() {
     this.mDepthBiasClamp = 0;

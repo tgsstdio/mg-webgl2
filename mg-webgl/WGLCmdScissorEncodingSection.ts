@@ -23,6 +23,7 @@ export class WGLCmdScissorEncodingSection {
   private mPastScissors: WGLCmdScissorParameter;
   constructor() {
     this.mPastScissors = new WGLCmdScissorParameter();
+    this.clear();
   }
 
   clear() : void {

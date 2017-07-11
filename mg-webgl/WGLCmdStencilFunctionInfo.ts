@@ -1,6 +1,12 @@
 import {MgCompareOp} from '../mg/MgCompareOp';
 
 export class WGLCmdStencilFunctionInfo {
+  constructor() {
+    this.referenceMask = 0;
+    this.stencilFunction = MgCompareOp.NEVER;
+    this.compareMask = 0;
+  }
+
   referenceMask: number;
   stencilFunction: MgCompareOp;
   compareMask: number;

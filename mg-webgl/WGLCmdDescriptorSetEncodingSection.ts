@@ -30,6 +30,7 @@ export class WGLCmdDescriptorSetEncodingSection
   private mDSBinder: IWGLDescriptorSetBinder;
   constructor(dsBinder: IWGLDescriptorSetBinder) {
     this.mDSBinder = dsBinder;
+    this.clear();
   }
 
   clear(): void {

@@ -14,6 +14,7 @@ export class WGLCmdStencilFaceEncodingSection {
   constructor(isFront: boolean) {
     this.mIsFront = isFront;
     this.stencilValue = null;
+    this.clear();
   }
 
   clear() {
