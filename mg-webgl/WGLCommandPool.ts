@@ -10,7 +10,7 @@ import {IMgCommandPool}
 import {MgCommandPoolCreateFlagBits}
 	from '../mg/MgCommandPoolCreateFlagBits'; 
 import {IWGLCommandBuffer}
-	from './IWGLCommandBuffer';	  
+	from './cmdbuf/IWGLCommandBuffer';	  
 import {MgCommandPoolResetFlagBits}
 	from '../mg/MgCommandPoolResetFlagBits';     
 

@@ -1,5 +1,5 @@
 import {WGLUniformBinding}
-	from './WGLUniformBinding';	  
+	from './pipeline/WGLUniformBinding';	  
 import {IWGLDescriptorSetLayout}
 	from './IWGLDescriptorSetLayout';
 import {MgDescriptorSetLayoutCreateInfo}

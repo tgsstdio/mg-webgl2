@@ -2,7 +2,7 @@ import {IMgSampler} from '../mg/IMgSampler';
 import {IMgDevice} from '../mg/IMgDevice';
 import {IMgAllocationCallbacks} from '../mg/IMgAllocationCallbacks';
 import {MgSamplerCreateInfo} from '../mg/MgSamplerCreateInfo';
-import {IWGLSamplerEntrypoint} from './IWGLSamplerEntrypoint';
+import {IWGLSamplerEntrypoint} from './entrypoint/IWGLSamplerEntrypoint';
 
 export class WGLSampler implements IMgSampler {
   private mEntrypoint: IWGLSamplerEntrypoint;

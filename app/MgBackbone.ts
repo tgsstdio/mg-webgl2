@@ -24,63 +24,65 @@ import {MgPresentationLayer}
 	from '../mg/MgPresentationLayer';  
 
 import {IWGLSemaphoreEntrypoint}
-	from '../mg-webgl/IWGLSemaphoreEntrypoint';  
+	from '../mg-webgl/entrypoint/IWGLSemaphoreEntrypoint';  
 import {WGLSemaphoreEntrypoint}
-	from '../mg-webgl/WGLSemaphoreEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLSemaphoreEntrypoint';  
 import {WGLCmdDrawEntrypoint}
-	from '../mg-webgl/WGLCmdDrawEntrypoint';
+	from '../mg-webgl/entrypoint/WGLCmdDrawEntrypoint';
 import {WGLCmdStateRendererCacheEntrypoint}
-	from '../mg-webgl/WGLCmdStateRendererCacheEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdStateRendererCacheEntrypoint';  
+import {WGLCmdRenderer}
+	from '../mg-webgl/renderer/WGLCmdRenderer';  
 import {WGLCmdShaderProgramCache}
-	from '../mg-webgl/WGLCmdShaderProgramCache';  
+	from '../mg-webgl/renderer/WGLCmdShaderProgramCache';  
 import {IWGLCmdStateRenderer}
-	from '../mg-webgl/IWGLCmdStateRenderer';  
+	from '../mg-webgl/renderer/IWGLCmdStateRenderer';  
 import {WGLCmdStateRenderer}
-	from '../mg-webgl/WGLCmdStateRenderer';  
+	from '../mg-webgl/renderer/WGLCmdStateRenderer';
 import {IWGLBlitOperationEntrypoint}
-	from '../mg-webgl/IWGLBlitOperationEntrypoint';  
+	from '../mg-webgl/entrypoint/IWGLBlitOperationEntrypoint';  
 import {WGLBlitOperationEntrypoint}
-	from '../mg-webgl/WGLBlitOperationEntrypoint';
+	from '../mg-webgl/entrypoint/WGLBlitOperationEntrypoint';
 import {IWGLQueue}
-	from '../mg-webgl/IWGLQueue';  
+	from '../mg-webgl/queue/IWGLQueue';  
 import {WGLCmdQueue}
-	from '../mg-webgl/WGLCmdQueue';
+	from '../mg-webgl/queue/WGLCmdQueue';
 import {WGLDeviceMemoryTypeMap}
 	from '../mg-webgl/WGLDeviceMemoryTypeMap';  
 import {WGLDeviceMemoryEntrypoint}
-	from '../mg-webgl/WGLDeviceMemoryEntrypoint';
+	from '../mg-webgl/entrypoint/WGLDeviceMemoryEntrypoint';
 import {WGLDeviceImageEntrypoint}
-	from '../mg-webgl/WGLDeviceImageEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLDeviceImageEntrypoint';  
 import {WGLShaderModuleEntrypoint}
-	from '../mg-webgl/WGLShaderModuleEntrypoint';
+	from '../mg-webgl/entrypoint/WGLShaderModuleEntrypoint';
 import {WGLGraphicsPipelineEntrypoint}
-	from '../mg-webgl/WGLGraphicsPipelineEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLGraphicsPipelineEntrypoint';  
 import {WGLErrorHandler}
-	from '../mg-webgl/WGLErrorHandler';      
+	from '../mg-webgl/entrypoint/WGLErrorHandler';      
 import {WGLUniformBlockEntrypoint}
-	from '../mg-webgl/WGLUniformBlockEntrypoint';
+	from '../mg-webgl/entrypoint/WGLUniformBlockEntrypoint';
 import {WGLUniformBlockNameParser}
-	from '../mg-webgl/WGLUniformBlockNameParser';  
-import {WGLGraphicsPipelineCompiler}
-	from '../mg-webgl/WGLGraphicsPipelineCompiler';     
+	from '../mg-webgl/pipeline/WGLUniformBlockNameParser';  
+import {WGLGraphicsPipelineCompilerEntrypoint}
+	from '../mg-webgl/entrypoint/WGLGraphicsPipelineCompilerEntrypoint';     
 import {WGLSamplerEntrypoint}
-	from '../mg-webgl/WGLSamplerEntrypoint';
+	from '../mg-webgl/entrypoint/WGLSamplerEntrypoint';
 import {WGLImageDescriptorEntrypoint}
-	from '../mg-webgl/WGLImageDescriptorEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLImageDescriptorEntrypoint';  
 import {WGLDescriptorPoolEntrypoint}
-	from '../mg-webgl/WGLDescriptorPoolEntrypoint';     
+	from '../mg-webgl/entrypoint/WGLDescriptorPoolEntrypoint';     
 import {WGLDescriptorSetEntrypoint}
-	from '../mg-webgl/WGLDescriptorSetEntrypoint';
+	from '../mg-webgl/entrypoint/WGLDescriptorSetEntrypoint';
 import {WGLCmdVertexArrayEntrypoint}
-	from '../mg-webgl/WGLCmdVertexArrayEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdVertexArrayEntrypoint';  
 import {WGLImageFormatEntrypoint}
-	from '../mg-webgl/WGLImageFormatEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLImageFormatEntrypoint';  
 import {WGLSynchronizableFenceEntrypoint}
-	from '../mg-webgl/WGLSynchronizableFenceEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLSynchronizableFenceEntrypoint';  
 import {WGLBufferEntrypoint}
-	from '../mg-webgl/WGLBufferEntrypoint';
+	from '../mg-webgl/entrypoint/WGLBufferEntrypoint';
 import {WGLDeviceEntrypoint}
-	from '../mg-webgl/WGLDeviceEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLDeviceEntrypoint';  
 import {WGLDevice}
 	from '../mg-webgl/WGLDevice';           
 import {WGLPhysicalDevice}
@@ -89,8 +91,6 @@ import {WGLEntrypoint}
 	from '../mg-webgl/WGLEntrypoint';
 import {WGLPresentationSurface}
 	from '../mg-webgl/WGLPresentationSurface';
-import {WGLCmdRenderer}
-	from '../mg-webgl/WGLCmdRenderer';
 import {WGLGraphicsDevice}
 	from '../mg-webgl/WGLGraphicsDevice';
 import {WGLHtmlSwapchainKHR}
@@ -98,21 +98,21 @@ import {WGLHtmlSwapchainKHR}
 import {WGLSwapchainCollection}
 	from '../mg-webgl/WGLSwapchainCollection';  
 import {WGLPresentationBarrierEntrypoint}
-	from '../mg-webgl/WGLPresentationBarrierEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLPresentationBarrierEntrypoint';  
 import {WGLCmdBlendEntrypoint}
-	from '../mg-webgl/WGLCmdBlendEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdBlendEntrypoint';  
 import {WGLCmdStencilEntrypoint}
-	from '../mg-webgl/WGLCmdStencilEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdStencilEntrypoint';  
 import {WGLCmdDepthEntrypoint}
-	from '../mg-webgl/WGLCmdDepthEntrypoint';	  
+	from '../mg-webgl/entrypoint/WGLCmdDepthEntrypoint';	  
 import {WGLCmdRasterizationEntrypoint}
-	from '../mg-webgl/WGLCmdRasterizationEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdRasterizationEntrypoint';  
 import {WGLCmdScissorsEntrypoint}
-	from '../mg-webgl/WGLCmdScissorsEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdScissorsEntrypoint';  
 import {WGLCmdClearEntrypoint}
-	from '../mg-webgl/WGLCmdClearEntrypoint';  
+	from '../mg-webgl/entrypoint/WGLCmdClearEntrypoint';  
 import {WGLFenceSynchronizationEntrypoint}
-	from '../mg-webgl/WGLFenceSynchronizationEntrypoint';    
+	from '../mg-webgl/entrypoint/WGLFenceSynchronizationEntrypoint';    
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
@@ -200,7 +200,7 @@ export class MgBackbone {
 
     let uniforms = new WGLUniformBlockEntrypoint(gl, errorHandler);
     let parser = new WGLUniformBlockNameParser();
-    let compiler = new WGLGraphicsPipelineCompiler(
+    let compiler = new WGLGraphicsPipelineCompilerEntrypoint(
       errorHandler
       , shaders
       , programs

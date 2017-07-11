@@ -1,7 +1,7 @@
 import {IMgDescriptorSetLayout}
 	from '../mg/IMgDescriptorSetLayout';   
 import {WGLUniformBinding}
-	from './WGLUniformBinding';	  
+	from './pipeline/WGLUniformBinding';	  
 
 export interface IWGLDescriptorSetLayout
   extends IMgDescriptorSetLayout {

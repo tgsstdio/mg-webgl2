@@ -7,7 +7,7 @@ import {IMgImageView}
 import {IMgRenderPass}
 	from '../mg/IMgRenderPass';        
 import {IWGLRenderer}
-	from './IWGLRenderer';	  
+	from './renderer/IWGLRenderer';	  
 import {WGLNullImageView}
 	from './WGLNullImageView';
 import {IWGLRenderPass}

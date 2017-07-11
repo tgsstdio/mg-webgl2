@@ -5,7 +5,7 @@ import {IMgPipelineLayout}
 import {IMgDescriptorSet}
 	from '../mg/IMgDescriptorSet';
 import {IWGLPipelineLayout}
-	from './IWGLPipelineLayout';	
+	from './pipeline/IWGLPipelineLayout';	
 import {IWGLDescriptorSet}
 	from './IWGLDescriptorSet';	
 

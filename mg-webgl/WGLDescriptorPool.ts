@@ -5,7 +5,7 @@ import {IWGLDescriptorSet}
 import {MgDescriptorPoolCreateInfo}
 	from '../mg/MgDescriptorPoolCreateInfo';  
 import {IWGLImageDescriptorEntrypoint}
-	from './IWGLImageDescriptorEntrypoint';	  
+	from './entrypoint/IWGLImageDescriptorEntrypoint';	  
 import {WGLDescriptorSet}
 	from './WGLDescriptorSet';	  
 import {MgDescriptorType}

@@ -9,9 +9,9 @@ import {MgMemoryAllocateInfo}
 import {IWGLDevice}
 	from './IWGLDevice';	  
 import {IWGLQueue}
-	from './IWGLQueue';
+	from './queue/IWGLQueue';
 import {IWGLDeviceEntrypoint}
-	from './IWGLDeviceEntrypoint';	
+	from './entrypoint/IWGLDeviceEntrypoint';	
 import {IWGLDeviceMemoryTypeMap}
 	from './IWGLDeviceMemoryTypeMap';	  
 import {IWGLBuffer}
@@ -53,25 +53,25 @@ import {IWGLImage}
 import {WGLImageView}
 	from './WGLImageView';
 import {WGLShaderModule}
-	from './WGLShaderModule';
+	from './pipeline/WGLShaderModule';
 import {IMgPipeline}
 	from '../mg/IMgPipeline';  
 import {MgComputePipelineCreateInfo}
 	from '../mg/MgComputePipelineCreateInfo';   
 import {IWGLPipelineLayout}
-	from './IWGLPipelineLayout';	  
+	from './pipeline/IWGLPipelineLayout';	  
 import {WGLInternalCacheArrayMapper}
-	from './WGLInternalCacheArrayMapper';
+	from './pipeline/WGLInternalCacheArrayMapper';
 import {WGLInternalBlockCache}
-	from './WGLInternalBlockCache';	  	  
+	from './pipeline/WGLInternalBlockCache';	  	  
 import {WGLGraphicsPipeline}
-	from './WGLGraphicsPipeline';
+	from './pipeline/WGLGraphicsPipeline';
 import {MgPipelineLayoutCreateInfo}
 	from '../mg/MgPipelineLayoutCreateInfo';  
 import {IMgPipelineLayout}
 	from '../mg/IMgPipelineLayout';   
 import {WGLPipelineLayout}
-	from './WGLPipelineLayout';	
+	from './pipeline/WGLPipelineLayout';	
 import {MgSamplerCreateInfo}
 	from '../mg/MgSamplerCreateInfo';  
 import {IMgSampler}
@@ -129,31 +129,31 @@ import {WGLCommandPool}
 import {IWGLCommandPool}
 	from './IWGLCommandPool';  	  
 import {WGLCmdEncoderContextSorter}
-	from './WGLCmdEncoderContextSorter';
+	from './cmdbuf/WGLCmdEncoderContextSorter';
 import {WGLDescriptorSetBinder}
 	from './WGLDescriptorSetBinder';    
 import {WGLCmdDescriptorSetEncodingSection}
-	from './WGLCmdDescriptorSetEncodingSection';
+	from './cmdbuf/WGLCmdDescriptorSetEncodingSection';
 import {WGLCmdVertexArrayEncodingSection}
-	from './WGLCmdVertexArrayEncodingSection';
+	from './cmdbuf/WGLCmdVertexArrayEncodingSection';
 import {WGLCmdDrawEncodingSection}
-	from './WGLCmdDrawEncodingSection';	  
+	from './cmdbuf/WGLCmdDrawEncodingSection';	  
 import {WGLCmdGraphicsEncoder}
-	from './WGLCmdGraphicsEncoder';
+	from './cmdbuf/WGLCmdGraphicsEncoder';
 import {WGLCmdGraphicsBag}
-	from './WGLCmdGraphicsBag';	
+	from './cmdbuf/WGLCmdGraphicsBag';	
 import {WGLCmdComputeEncoder}
-	from './WGLCmdComputeEncoder';	  
+	from './cmdbuf/WGLCmdComputeEncoder';	  
 import {WGLCmdBlitEncoder}
-	from './WGLCmdBlitEncoder';
+	from './cmdbuf/WGLCmdBlitEncoder';
 import {WGLCmdBlitBag}
-	from './WGLCmdBlitBag';
+	from './cmdbuf/WGLCmdBlitBag';
 import {WGLCmdCommandEncoder}
-	from './WGLCmdCommandEncoder';	  
+	from './cmdbuf/WGLCmdCommandEncoder';	  
 import {IWGLCommandBuffer}
-	from './IWGLCommandBuffer';
+	from './cmdbuf/IWGLCommandBuffer';
 import {WGLCmdCommandBuffer}
-	from './WGLCmdCommandBuffer';	
+	from './cmdbuf/WGLCmdCommandBuffer';	
 import {IWGLSwapchainKHR}
 	from './IWGLSwapchainKHR';	  
 import {MgSemaphoreCreateInfo}
@@ -164,8 +164,9 @@ import {IWGLSynchronizableFence}
 	from './IWGLSynchronizableFence';
 import {MgBufferCreateInfo}
 	from '../mg/MgBufferCreateInfo';  
-import {IWGLFenceSynchronizationEntrypoint}
-from './IWGLFenceSynchronizationEntrypoint';    import {IWGLSyncObject}
+import {IWGLFenceSynchronizationEntrypoint} 
+  from './entrypoint/IWGLFenceSynchronizationEntrypoint';
+import {IWGLSyncObject}
 	from './IWGLSyncObject';
 import {WGLSyncTaskInfo}
 	from './WGLSyncTaskInfo';	  	  	        

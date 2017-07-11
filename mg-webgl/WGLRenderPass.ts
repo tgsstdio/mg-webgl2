@@ -1,10 +1,10 @@
 import {IWGLRenderPass} from './IWGLRenderPass';
-import {WGLClearAttachmentInfo} from './WGLClearAttachmentInfo';
+import {WGLClearAttachmentInfo} from './pipeline/WGLClearAttachmentInfo';
 import {MgAttachmentDescription} from '../mg/MgAttachmentDescription';
 import {MgFormat} from '../mg/MgFormat'
 import {IMgDevice} from '../mg/IMgDevice'
 import {IMgAllocationCallbacks} from '../mg/IMgAllocationCallbacks'
-import {WGLClearAttachmentType} from './WGLClearAttachmentType';
+import {WGLClearAttachmentType} from './pipeline/WGLClearAttachmentType';
 
 export class WGLRenderPass implements IWGLRenderPass {
   private mAttachmentFormats: Array<WGLClearAttachmentInfo>;

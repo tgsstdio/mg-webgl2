@@ -1,5 +1,5 @@
 import {IWGLImageDescriptorEntrypoint}
-	from './IWGLImageDescriptorEntrypoint';
+	from './entrypoint/IWGLImageDescriptorEntrypoint';
 
 export class WGLImageDescriptor {
 	private mImageDescriptor: IWGLImageDescriptorEntrypoint;		

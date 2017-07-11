@@ -5,7 +5,7 @@ from '../mg/IMgImage';
 import {WGLImageArraySubresource}
 from './WGLImageArraySubresource';	  
 import {IWGLDeviceImageEntrypoint}
-from './IWGLDeviceImageEntrypoint';
+from './entrypoint/IWGLDeviceImageEntrypoint';
 import {MgImageType}
 	from '../mg/MgImageType';  
 import {MgFormat}

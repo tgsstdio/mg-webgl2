@@ -1,7 +1,7 @@
 import {IWGLDescriptorSetBinder}
 	from './IWGLDescriptorSetBinder';	  
 import {IWGLPipelineLayout}
-	from './IWGLPipelineLayout';	  
+	from './pipeline/IWGLPipelineLayout';	  
 import {IWGLDescriptorSet}
 	from './IWGLDescriptorSet';	  
 import {MgPipelineBindPoint}
