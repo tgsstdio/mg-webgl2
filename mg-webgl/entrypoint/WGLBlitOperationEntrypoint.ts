@@ -11,12 +11,18 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     this.mGL = gl;
   }
 
-  bindCopySrcBuffer(src:WebGLBuffer) : void {
-    this.mGL.bindBuffer(this.mGL.COPY_READ_BUFFER, src);
+  bindCopySrcBuffer(src:IWGLBuffer) : void {
+    if (src.bestBufferTarget != null) {
+      let target = src.bestBufferTarget as number;
+      this.mGL.bindBuffer(target, src.deviceMemory);
+    }
   }
 
-  bindCopyDstBuffer(dst:WebGLBuffer) : void {
-    this.mGL.bindBuffer(this.mGL.COPY_WRITE_BUFFER, dst);
+  bindCopyDstBuffer(dst:IWGLBuffer) : void {
+    if (dst.bestBufferTarget != null) {
+      let target = dst.bestBufferTarget as number;
+      this.mGL.bindBuffer(target, dst.deviceMemory);
+    }
   }
 
   initialize() : void {
@@ -34,6 +40,14 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
       , readOffset
       , writeOffset
       , size);
+  }
+
+  unbindCopySrcBuffer(src:IWGLBuffer) : void {
+    this.mGL.bindBuffer(this.mGL.COPY_READ_BUFFER, null);
+  }
+
+  unbindCopyDstBuffer(dst:IWGLBuffer) : void {
+    this.mGL.bindBuffer(this.mGL.COPY_WRITE_BUFFER, null);
   }
 
   performOperation(instructionSet: WGLCmdImageInstructionSet) : void {

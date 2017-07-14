@@ -38,6 +38,9 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
   }
 
   private mBestTarget: number|null;
+  get bestBufferTarget(): number|null {
+    return this.mBestTarget;
+  }
 
   constructor(
     gl: WebGL2RenderingContext
@@ -80,6 +83,9 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
 
       this.mGL.bufferData(target, this.mBufferSize, flags);
 
+      // ONE TARGET AT A TIME 
+      this.mGL.bindBuffer(target, null);
+
       this.mHandle = null;
     }
   }
@@ -87,18 +93,18 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
   private getEstimatedBufferTarget(
     flags: number
   ) : number|null {
-    
-    let mask = WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
+
+    let mask = WGLDeviceMemoryTypeFlagBits.INDEX;
+    if ((flags & mask) == mask) 
+      return this.mGL.ELEMENT_ARRAY_BUFFER;
+
+    mask = WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
     if ((flags & mask) == mask)
       return this.mGL.COPY_READ_BUFFER;
 
     mask = WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
     if ((flags & mask) == mask)        
       return this.mGL.COPY_WRITE_BUFFER;        
-
-    mask = WGLDeviceMemoryTypeFlagBits.INDEX;
-    if ((flags & mask) == mask) 
-      return this.mGL.ELEMENT_ARRAY_BUFFER;
 
     mask = WGLDeviceMemoryTypeFlagBits.VERTEX;
     if ((flags & mask) == mask)        
@@ -165,6 +171,8 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
         let cache = this.mMappedCache as WGLClientMappedMemory;
         this.mGL.bindBuffer(target, this.mBufferId);
         this.mGL.bufferSubData(target, cache.offset, cache.view, cache.size);
+        // ONE TARGET AT A TIME 
+        this.mGL.bindBuffer(target, null);
       }
 
       this.mMappedCache = null;

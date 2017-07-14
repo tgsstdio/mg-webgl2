@@ -39,6 +39,11 @@ export class WGLBuffer implements IWGLBuffer {
     return this.mMemoryType;
   }
 
+  private mBestBufferTarget: number|null;
+  get bestBufferTarget(): number|null {
+    return this.mBestBufferTarget;
+  }  
+
   private mGL: WebGL2RenderingContext;
   constructor(
     gl: WebGL2RenderingContext
@@ -49,6 +54,7 @@ export class WGLBuffer implements IWGLBuffer {
     this.mMemoryType = WGLBuffer.determineMemoryType(info);
     this.mUsage = info.usage;
     this.mRequestedSize = info.size;
+    this.mBestBufferTarget = null;
   }
 
   private static determineMemoryType(
@@ -121,6 +127,7 @@ export class WGLBuffer implements IWGLBuffer {
     }
     else {
       this.mDeviceMemory = bDevMemory.bufferId;
+      this.mBestBufferTarget = bDevMemory.bestBufferTarget;
     }
 
     return MgResult.SUCCESS;

@@ -139,8 +139,6 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
   {			
     let result = this.mGL.createVertexArray()
     this.mErrHandler.logGLError("GenerateVBO");
-    if (!this.mGL.isVertexArray (result)) 
-      throw new Error("generateVBO");
     return result as WebGLVertexArrayObject;
   }
 

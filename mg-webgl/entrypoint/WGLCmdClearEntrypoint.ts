@@ -21,10 +21,14 @@ export class WGLCmdClearEntrypoint implements IWGLCmdClearEntrypoint {
   }
 
 	initialize () : WGLClearValueState {
+    let color = this.mGL.getParameter(this.mGL.COLOR_CLEAR_VALUE);
+    let depth = this.mGL.getParameter(this.mGL.DEPTH_CLEAR_VALUE);
+    let stencil = this.mGL.getParameter(this.mGL.STENCIL_CLEAR_VALUE);
+
     let result = new WGLClearValueState();
-    result.clearColor = new MgColor4f(0, 0, 0, 0);
-    result.depthValue = 1;
-    result.stencilValue = 0;
+    result.clearColor = new MgColor4f(color[0], color[1], color[2], color[3]);
+    result.depthValue = depth;
+    result.stencilValue = stencil;
     
     this.setClearColor (result.clearColor);
     this.setClearDepthValue (result.depthValue);

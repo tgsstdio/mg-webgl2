@@ -8,9 +8,17 @@ import {WGLDeviceMemoryTypeFlagBits}
 	from './WGLDeviceMemoryTypeFlagBits';  
 
 export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
-  private mGL: WebGL2RenderingContext
-  constructor(gl:WebGL2RenderingContext) {
-    this.mGL = gl;
+  readonly STREAM_READ: number = 0x88E1;
+  readonly STREAM_COPY: number = 0x88E2; 
+  readonly STATIC_READ: number = 0x88E5; 
+  readonly STATIC_COPY: number = 0x88E6;
+  readonly DYNAMIC_READ: number = 0x88E9;
+  readonly DYNAMIC_COPY: number = 0x88EA;
+  readonly STREAM_DRAW: number = 0x88E0;
+  readonly STATIC_DRAW: number = 0x88E4;
+  readonly DYNAMIC_DRAW: number = 0x88E8;
+
+  constructor() {
     this.initialize();
   }
 
@@ -20,10 +28,12 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
   }
 
   private initialize(): void {
-    this.mMemoryTypes = new Array<WGLDeviceMemoryTypeInfo>(8);
+    const MAX_NO_OF_ENTRIES = 11;
+    this.mMemoryTypes = new Array<WGLDeviceMemoryTypeInfo>(MAX_NO_OF_ENTRIES);
 
     let index = this.pushIndirectEntries(0);
     index = this.pushImageEntries(index);
+    index = this.pushIndexEntries(index);
     index = this.pushDrawEntries(index);
     index = this.pushReadEntries(index);
   }
@@ -82,11 +92,62 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     return offset + 1;
   }  
 
+  private pushIndexEntries(
+    offset: number
+  ) : number {
+    const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.INDEX
+      | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
+      | WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
+
+    const ALL_ON = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+      | MgMemoryPropertyFlagBits.HOST_VISIBLE_BIT
+      | MgMemoryPropertyFlagBits.HOST_COHERENT_BIT
+      | MgMemoryPropertyFlagBits.HOST_CACHED_BIT
+      | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
+
+    let info_stream = new WGLDeviceMemoryTypeInfo();
+    info_stream.memoryTypeIndex = SELECTED_TYPE_INDEX;
+    info_stream.index = offset;
+    info_stream.isHosted = false;
+
+    info_stream.propertyFlags
+      = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
+      | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
+
+    info_stream.hint = this.STREAM_DRAW;
+    this.mMemoryTypes[info_stream.index] = info_stream; 
+
+    offset += 1;
+
+    let info_static = new WGLDeviceMemoryTypeInfo();
+    info_static.memoryTypeIndex = SELECTED_TYPE_INDEX;
+    info_static.index = offset;
+    info_static.isHosted = false;
+
+    info_static.propertyFlags
+      = MgMemoryPropertyFlagBits.HOST_CACHED_BIT
+      | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
+      
+    info_static.hint = this.STATIC_DRAW;
+    this.mMemoryTypes[info_static.index] = info_static; 
+
+    offset += 1;
+
+    let dynamic = new WGLDeviceMemoryTypeInfo();
+    dynamic.memoryTypeIndex = SELECTED_TYPE_INDEX;
+    dynamic.index = offset;
+    dynamic.isHosted = false;
+    dynamic.propertyFlags = ALL_ON;
+    dynamic.hint = this.DYNAMIC_DRAW;
+    this.mMemoryTypes[dynamic.index] = dynamic;     
+
+    return offset + 1;      
+  }
+
   private pushDrawEntries(
     offset: number
   ) : number {
     const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.VERTEX
-      | WGLDeviceMemoryTypeFlagBits.INDEX
       | WGLDeviceMemoryTypeFlagBits.UNIFORM
       | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC;
 
@@ -105,7 +166,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
       = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
       | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-    info_stream.hint = this.mGL.STREAM_DRAW;
+    info_stream.hint = this.STREAM_DRAW;
     this.mMemoryTypes[info_stream.index] = info_stream; 
 
     offset += 1;
@@ -119,7 +180,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
       = MgMemoryPropertyFlagBits.HOST_CACHED_BIT
       | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
       
-    info_static.hint = this.mGL.STATIC_DRAW;
+    info_static.hint = this.STATIC_DRAW;
     this.mMemoryTypes[info_static.index] = info_static; 
 
     offset += 1;
@@ -129,7 +190,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     dynamic.index = offset;
     dynamic.isHosted = false;
     dynamic.propertyFlags = ALL_ON;
-    dynamic.hint = this.mGL.DYNAMIC_DRAW;
+    dynamic.hint = this.DYNAMIC_DRAW;
     this.mMemoryTypes[dynamic.index] = dynamic;     
 
     return offset + 1;      
@@ -139,7 +200,6 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     offset: number
   ) : number {
       const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.VERTEX
-      | WGLDeviceMemoryTypeFlagBits.INDEX
       | WGLDeviceMemoryTypeFlagBits.UNIFORM
       | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
       | WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
@@ -159,7 +219,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
       = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
       | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
 
-    info_stream.hint = this.mGL.STREAM_READ;
+    info_stream.hint = this.STREAM_READ;
     this.mMemoryTypes[info_stream.index] = info_stream; 
 
     offset += 1;
@@ -173,7 +233,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
       = MgMemoryPropertyFlagBits.HOST_CACHED_BIT
       | MgMemoryPropertyFlagBits.LAZILY_ALLOCATED_BIT;
       
-    info_static.hint = this.mGL.STATIC_READ;
+    info_static.hint = this.STATIC_READ;
     this.mMemoryTypes[info_static.index] = info_static; 
 
     offset += 1;
@@ -183,7 +243,7 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     dynamic.index = offset;
     dynamic.isHosted = false;
     dynamic.propertyFlags = ALL_ON;
-    dynamic.hint = this.mGL.DYNAMIC_READ;
+    dynamic.hint = this.DYNAMIC_READ;
     this.mMemoryTypes[dynamic.index] = dynamic;  
 
     return offset + 1;

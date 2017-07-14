@@ -180,13 +180,17 @@ class WGLCmdCopyBuffer implements WGLCmdAction {
       if (item.regions.length > 0) {
         entrypoint.bindCopySrcBuffer(item.source);
         entrypoint.bindCopyDstBuffer(item.destination);
-      }
 
-      for (let region of item.regions) {
-        entrypoint.copyBuffer(
-          region.readOffset
-          , region.writeOffset
-          , region.size);
+        for (let region of item.regions) {
+          entrypoint.copyBuffer(
+            region.readOffset
+            , region.writeOffset
+            , region.size);
+        }
+
+        entrypoint.unbindCopySrcBuffer(item.source);
+        entrypoint.unbindCopyDstBuffer(item.destination);
+
       }
     }
   }

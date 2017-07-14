@@ -6,4 +6,5 @@ export interface IWGLDeviceMemory extends IMgDeviceMemory {
   readonly bufferId: WebGLBuffer|null;
   // // WARN: handle requires IntPtr
   readonly handle: ArrayBuffer| null;
+  readonly bestBufferTarget: number| null;
 }

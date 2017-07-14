@@ -93,9 +93,6 @@ export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
     , vertexOffset: number
     , firstInstance: number      
   ) : void {
-    if (firstInstance != 0)
-      throw new Error("firstInstance must be 0");
-
     let draw = new WGLCmdInternalDrawIndexed();
 
     draw.mode = this.getMode(pipeline.topology);

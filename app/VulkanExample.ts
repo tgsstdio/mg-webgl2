@@ -1382,11 +1382,11 @@ export class VulkanExample {
     let clearDepth = new MgClearValue();
     clearDepth.depthStencil = depthStencil;
 
-    let ClearValues = [                
+    beginInfo.clearValues = [                
       MgClearValue.fromColorAndFormat(this.mSwapchains.format, clearColor)
       , clearDepth
     ];
-        
+
     let vp = new MgViewport();
     vp.height = this.mHeight;
     vp.width = this.mWidth;
@@ -1447,6 +1447,7 @@ export class VulkanExample {
       cmdBuf.cmdBindIndexBuffer(this.indices.buffer, 0, MgIndexType.UINT32);
 
       // Draw indexed triangle
+        // DEV: firstInstance SHOULD BE 0 as there are no instances 
       cmdBuf.cmdDrawIndexed(this.indices.count, 1, 0, 0, 1);
 
       cmdBuf.cmdEndRenderPass();
@@ -1574,6 +1575,11 @@ export class VulkanExample {
       if (err != MgResult.SUCCESS) {
         throw new Error(err.toString());
       }   
+      
+      err = this.mConfiguration.queue.queueWaitIdle();
+      if (err != MgResult.SUCCESS) {
+        throw new Error(err.toString());
+      }   
 
       // Present the current buffer to the swap chain
       // Pass the semaphore signaled by the command buffer submission from the submit info as the wait semaphore for swap chain presentation
@@ -1581,7 +1587,9 @@ export class VulkanExample {
       this.mPresentationLayer.endDraw(
         [currentBufferIndex]
         , this.mPrePresentCmdBuffer
-        , [ this.mRenderCompleteSemaphore ]);  
+        , [ this.mRenderCompleteSemaphore ]); 
+
+      console.log('PRESENTED') 
     });
   }
 

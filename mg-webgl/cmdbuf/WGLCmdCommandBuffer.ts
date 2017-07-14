@@ -308,7 +308,13 @@ export class WGLCmdCommandBuffer implements IWGLCommandBuffer {
     , vertexOffset: number
     , firstInstance: number
   ) : void {
-
+    
+    this.mCommandEncoder.graphics.drawIndexed (
+      indexCount
+      , instanceCount
+      , firstIndex
+      , vertexOffset
+      , firstInstance);
   }
 
   // WARN: offset requires UInt64

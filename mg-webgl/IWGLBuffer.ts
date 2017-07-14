@@ -10,4 +10,5 @@ export interface IWGLBuffer extends IMgBuffer {
   readonly requestedSize: number;
   readonly isBufferType: boolean;
   readonly memoryOffset: number;
+  readonly bestBufferTarget: number|null;
 }

@@ -116,6 +116,10 @@ import {WGLFenceSynchronizationEntrypoint}
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
+  get gl(): WebGL2RenderingContext {
+    return this.mGL;
+  }
+
   private mContext: MgDriverContext;
   get context(): MgDriverContext {
     return this.mContext;
@@ -152,7 +156,7 @@ export class MgBackbone {
   } 
 
   constructor(
-    appInfo: MgApplicationInfo
+    appInfo: MgApplicationInfo    
     , canvas: HTMLCanvasElement
   ) {
     // let appInfo = new MgApplicationInfo();
@@ -162,13 +166,14 @@ export class MgBackbone {
     // appInfo.engineVersion = 1;
 
     // let canvas = document.getElementById(elementName) as HTMLCanvasElement;
+    let presentationSurface = new WGLPresentationSurface(canvas);
     let gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
     if (gl == null)
       throw new Error('WebGL 2 context missing');
 
     this.mGL = gl;
 
-    let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint();
+    let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint(gl);
     let draws = new WGLCmdDrawEntrypoint(gl);
     let rendererCache = new WGLCmdStateRendererCacheEntrypoint(gl);
     let cache = new WGLCmdShaderProgramCache(rendererCache);
@@ -192,7 +197,7 @@ export class MgBackbone {
       );
     let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint(gl);
     let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, blit);
-    let memoryTypeMap = new WGLDeviceMemoryTypeMap(gl);
+    let memoryTypeMap = new WGLDeviceMemoryTypeMap();
     let deviceMemory = new WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
     let deviceImage = new WGLDeviceImageEntrypoint(gl);
     let shaders = new WGLShaderModuleEntrypoint(gl);
@@ -244,7 +249,6 @@ export class MgBackbone {
       , MgInstanceExtensionOptions.ALL
     ); 
 
-    let presentationSurface = new WGLPresentationSurface(canvas);
     this.mConfiguration = new MgDefaultGraphicsConfiguration(
       this.mContext
       , presentationSurface);

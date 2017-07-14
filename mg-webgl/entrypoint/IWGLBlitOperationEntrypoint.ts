@@ -1,12 +1,16 @@
 import {WGLCmdImageInstructionSet} from '../cmdbuf/WGLCmdImageInstructionSet'
+import {IWGLBuffer} from '../IWGLBuffer'
 
 export interface IWGLBlitOperationEntrypoint {
   initialize() : void;
 
-  bindCopySrcBuffer(src:WebGLBuffer) : void;
-  bindCopyDstBuffer(dst:WebGLBuffer) : void;
+  bindCopySrcBuffer(src:IWGLBuffer) : void;
+  bindCopyDstBuffer(dst:IWGLBuffer) : void;
 
-  copyBuffer(
+  unbindCopySrcBuffer(src:IWGLBuffer) : void;
+  unbindCopyDstBuffer(dst:IWGLBuffer) : void;
+
+  copyBuffer(    
       readOffset:number
     , writeOffset: number
     , size:number) : void;
