@@ -170,22 +170,24 @@ import {IWGLSyncObject}
 	from './IWGLSyncObject';
 import {WGLSyncTaskInfo}
 	from './WGLSyncTaskInfo';	  	  	        
+import {IWGLBackbufferContext}
+	from './IWGLBackbufferContext';
 
 export class WGLDevice implements IWGLDevice {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mQueue: IWGLQueue;
   private mEntrypoint: IWGLDeviceEntrypoint;
   private mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
   private mFenceSynchronization: IWGLFenceSynchronizationEntrypoint;
 
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     ,queue: IWGLQueue
     , entrypoint: IWGLDeviceEntrypoint
     , deviceMemoryMap: IWGLDeviceMemoryTypeMap
     , fenceSynchonization: IWGLFenceSynchronizationEntrypoint
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mQueue = queue;
     this.mEntrypoint = entrypoint;
     this.mDeviceMemoryMap = deviceMemoryMap;
@@ -539,7 +541,7 @@ export class WGLDevice implements IWGLDevice {
       let dsBinder = new WGLDescriptorSetBinder();
       let descriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);        
       let vertexArrays = new WGLCmdVertexArrayEncodingSection(this.mEntrypoint.vertexArrays);
-      let draws = new WGLCmdDrawEncodingSection(this.mGL);
+      let draws = new WGLCmdDrawEncodingSection(this.mGLContext);
       let graphics = new WGLCmdGraphicsEncoder(
         instructions
         , new WGLCmdGraphicsBag()          

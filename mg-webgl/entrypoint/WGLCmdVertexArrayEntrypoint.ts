@@ -4,30 +4,34 @@ import {IWGLErrorHandler}
 	from './IWGLErrorHandler';
 import {WGLVertexAttributeType}
 	from '../pipeline/WGLVertexAttributeType';	  
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler)
   {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
   bindVertexArray(vbo: WebGLVertexArrayObject|null) : void {
-    this.mGL.bindVertexArray(vbo);
+    this.mGLContext.gl.bindVertexArray(vbo);
   }
 
   unbindVertexArray() : void {
-    this.mGL.bindVertexArray(null);
+    this.mGLContext.gl.bindVertexArray(null);
   }    
 
   bindIndexBuffer(
     buffer: WebGLBuffer
   ) : void {
-    this.mGL.bindBuffer(this.mGL.ELEMENT_ARRAY_BUFFER, buffer);
+    const ELEMENT_ARRAY_BUFFER: number = 0x8893;
+
+    this.mGLContext.gl.bindBuffer(ELEMENT_ARRAY_BUFFER, buffer);
     this.mErrHandler.logGLError("bindIndexBuffer");
   }
 
@@ -45,13 +49,13 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
     , stride: number
     , offset: number
   ): void {
-    this.mGL.enableVertexAttribArray(location);
+    this.mGLContext.gl.enableVertexAttribArray(location);
     /**
     https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/vertexAttribIPointer
     offset "must be a multiple of type."
     stride <= 255
     **/
-    this.mGL.vertexAttribIPointer(
+    this.mGLContext.gl.vertexAttribIPointer(
       location
       , size
       , this.getVertexAttribType(pointerType)
@@ -63,23 +67,29 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
   private getVertexAttribType (
     pointerType: WGLVertexAttributeType
   ) : number {
+    const BYTE: number = 0x1400;
+    const SHORT: number = 0x1402;
+    const UNSIGNED_BYTE: number = 0x1401;
+    const UNSIGNED_SHORT: number = 0x1403;
+    const FLOAT: number = 0x1406;                
+    const HALF_FLOAT: number = 0x140B;   
+    
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer      
-    switch (pointerType)
-    {
+    switch (pointerType) {
     case WGLVertexAttributeType.BYTE:
-      return this.mGL.BYTE;
+      return BYTE;
     case WGLVertexAttributeType.SHORT:
-      return this.mGL.SHORT;
+      return SHORT;
 
     case WGLVertexAttributeType.UNSIGNED_BYTE:
-      return this.mGL.UNSIGNED_BYTE;
+      return UNSIGNED_BYTE;
     case WGLVertexAttributeType.UNSIGNED_SHORT:
-      return this.mGL.UNSIGNED_SHORT;
+      return UNSIGNED_SHORT;
 
     case WGLVertexAttributeType.FLOAT:
-      return this.mGL.FLOAT;
+      return FLOAT;
     case WGLVertexAttributeType.HALF_FLOAT:
-      return this.mGL.HALF_FLOAT;
+      return HALF_FLOAT;
 
     // FORMAT UNAVAILABLE to WebGL2 in OpenGL 4
     // case WGLVertexAttributeType.DOUBLE:
@@ -108,7 +118,7 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
     , stride: number
     , offset: number) : void
   {
-    this.mGL.enableVertexAttribArray(location);
+    this.mGLContext.gl.enableVertexAttribArray(location);
     this.mErrHandler.logGLError(
       "bindFloatVertexAttribute.EnableVertexArrayAttrib");
     /**
@@ -116,7 +126,7 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
     offset "must be a multiple of type."
     stride <= 255
     **/
-    this.mGL.vertexAttribPointer(
+    this.mGLContext.gl.vertexAttribPointer(
       location
       , size
       , this.getVertexAttribType(pointerType)
@@ -131,27 +141,29 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
       location: number
     , divisor: number) : void
   {
-    this.mGL.vertexAttribDivisor(location, divisor);
+    this.mGLContext.gl.vertexAttribDivisor(location, divisor);
     this.mErrHandler.logGLError("setupVertexAttributeDivisor");
   }
 
   generateVBO () : WebGLVertexArrayObject
   {			
-    let result = this.mGL.createVertexArray()
+    let result = this.mGLContext.gl.createVertexArray()
     this.mErrHandler.logGLError("GenerateVBO");
     return result as WebGLVertexArrayObject;
   }
 
   deleteVBO (vbo: WebGLVertexArrayObject) : void {
     //Debug.Assert (GL.IsVertexArray (vbo));
-    this.mGL.deleteVertexArray(vbo);
+    this.mGLContext.gl.deleteVertexArray(vbo);
     this.mErrHandler.logGLError("deleteVBO");
   }
   // WARN : offsets must be long
   bindVertexBuffer(
       bufferId: WebGLBuffer|null
   ) : void {
-    this.mGL.bindBuffer(this.mGL.ARRAY_BUFFER, bufferId);
+    const ARRAY_BUFFER: number = 0x8892;
+
+    this.mGLContext.gl.bindBuffer(ARRAY_BUFFER, bufferId);
     this.mErrHandler.logGLError("bindVertexBuffer");
   }
 

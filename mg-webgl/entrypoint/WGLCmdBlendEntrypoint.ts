@@ -14,15 +14,17 @@ import {IWGLErrorHandler}
 	from './IWGLErrorHandler'; 
 import {MgColor4f}
 	from '../../mg/MgColor4f';   
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext'; 
 
 export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
@@ -69,11 +71,13 @@ export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
   enableBlending(
     blendEnabled: boolean
   ) : void {
+    const BLEND: number = 0x0BE2;
+
 		if (blendEnabled) {
-		  this.mGL.enable(this.mGL.BLEND);
+		  this.mGLContext.gl.enable(BLEND);
     }
 		else {
-			this.mGL.disable(this.mGL.BLEND);
+			this.mGLContext.gl.disable(BLEND);
     }
     this.mErrHandler.logGLError("enableBlending");
   }   
@@ -81,7 +85,7 @@ export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
   setColorMask(
     colorMask: MgColorComponentFlagBits
   ) : void {
-		this.mGL.colorMask(
+		this.mGLContext.gl.colorMask(
       (colorMask & MgColorComponentFlagBits.R_BIT) ==  MgColorComponentFlagBits.R_BIT,
       (colorMask & MgColorComponentFlagBits.G_BIT) == MgColorComponentFlagBits.G_BIT,
       (colorMask & MgColorComponentFlagBits.B_BIT) == MgColorComponentFlagBits.B_BIT,
@@ -92,56 +96,78 @@ export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
 	private getBlendFactorSrc(
     blend: MgBlendFactor
   ): number {
+    const ZERO: number = 0;
+    const ONE: number = 1;
+    const SRC_COLOR: number = 0x0300;
+    const ONE_MINUS_SRC_COLOR: number = 0x0301;
+    const SRC_ALPHA: number = 0x0302;
+    const ONE_MINUS_SRC_ALPHA: number = 0x0303;
+    const DST_ALPHA: number = 0x0304;
+    const ONE_MINUS_DST_ALPHA: number = 0x0305;
+
+    const DST_COLOR: number = 0x0306;
+    const ONE_MINUS_DST_COLOR: number = 0x0307;
+    const SRC_ALPHA_SATURATE: number =  0x0308;    
+
     switch (blend) {
       case MgBlendFactor.DST_ALPHA:
-        return this.mGL.DST_ALPHA;
+        return DST_ALPHA;
       case MgBlendFactor.DST_COLOR:
-        return this.mGL.DST_COLOR;
+        return DST_COLOR;
       case MgBlendFactor.ONE_MINUS_DST_ALPHA:
-        return this.mGL.ONE_MINUS_DST_ALPHA;
+        return ONE_MINUS_DST_ALPHA;
       case MgBlendFactor.ONE_MINUS_DST_COLOR:
-        return this.mGL.ONE_MINUS_DST_COLOR;
+        return ONE_MINUS_DST_COLOR;
       case MgBlendFactor.ONE_MINUS_SRC_ALPHA:
-        return this.mGL.ONE_MINUS_SRC_ALPHA;
+        return ONE_MINUS_SRC_ALPHA;
       case MgBlendFactor.ONE_MINUS_SRC_COLOR:
-        return this.mGL.ONE_MINUS_SRC_COLOR;
+        return ONE_MINUS_SRC_COLOR;
 			case MgBlendFactor.SRC_ALPHA:
-				return this.mGL.SRC_ALPHA;
+				return SRC_ALPHA;
 			case MgBlendFactor.SRC_ALPHA_SATURATE:
-				return this.mGL.SRC_ALPHA_SATURATE;
+				return SRC_ALPHA_SATURATE;
 			case MgBlendFactor.SRC_COLOR:
-				return this.mGL.SRC_COLOR;
+				return SRC_COLOR;
 			case MgBlendFactor.ZERO:
-				return this.mGL.ZERO;
+				return ZERO;
 			case MgBlendFactor.ONE:
-        return this.mGL.ONE;      
+        return ONE;      
 			default:      
-				return this.mGL.ONE;
+				return ONE;
     }
   }
 
 	private getBlendFactorDest(
     blend: MgBlendFactor
   ) : number {
+    const ZERO: number = 0;
+    const ONE: number = 1;
+    const SRC_COLOR: number = 0x0300;
+    const ONE_MINUS_SRC_COLOR: number = 0x0301;
+    const SRC_ALPHA: number = 0x0302;
+    const ONE_MINUS_SRC_ALPHA: number = 0x0303;
+    const DST_ALPHA: number = 0x0304;
+    const ONE_MINUS_DST_ALPHA: number = 0x0305;
+
     switch (blend) {
       case MgBlendFactor.DST_ALPHA:
-        return this.mGL.DST_ALPHA;
+        return DST_ALPHA;
     case MgBlendFactor.ONE_MINUS_DST_ALPHA:
-      return this.mGL.ONE_MINUS_DST_ALPHA;
+      return ONE_MINUS_DST_ALPHA;
     case MgBlendFactor.ONE_MINUS_SRC_ALPHA:
-      return this.mGL.ONE_MINUS_SRC_ALPHA;
+      return ONE_MINUS_SRC_ALPHA;
     case MgBlendFactor.ONE_MINUS_SRC_COLOR:
-      return this.mGL.ONE_MINUS_SRC_COLOR;
+      return ONE_MINUS_SRC_COLOR;
     case MgBlendFactor.ONE:
-      return this.mGL.ONE;
+      return ONE;
     case MgBlendFactor.SRC_ALPHA:
-      return this.mGL.SRC_ALPHA;
+      return SRC_ALPHA;
     case MgBlendFactor.SRC_COLOR:
-      return this.mGL.SRC_COLOR;
+      return SRC_COLOR;
     case MgBlendFactor.ZERO:
-      return this.mGL.ZERO;
+      return ZERO;
     default:
-      return this.mGL.ONE;
+      return ONE;
     }
   }
 
@@ -151,7 +177,7 @@ export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
     , srcAlpha: MgBlendFactor 
     ,	destAlpha: MgBlendFactor
   ): void {
-		this.mGL.blendFuncSeparate(
+		this.mGLContext.gl.blendFuncSeparate(
 			this.getBlendFactorSrc(srcColor),
 			this.getBlendFactorDest(dstColor), 
 			this.getBlendFactorSrc(srcAlpha), 
@@ -161,7 +187,7 @@ export class WGLCmdBlendEntrypoint implements IWGLCmdBlendEntrypoint {
   }
   
   setBlendConstants(blendConstants: MgColor4f): void {
-    this.mGL.blendColor(
+    this.mGLContext.gl.blendColor(
       blendConstants.r
       , blendConstants.g
       , blendConstants.b

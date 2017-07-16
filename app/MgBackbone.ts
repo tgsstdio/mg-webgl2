@@ -113,6 +113,8 @@ import {WGLCmdClearEntrypoint}
 	from '../mg-webgl/entrypoint/WGLCmdClearEntrypoint';  
 import {WGLFenceSynchronizationEntrypoint}
 	from '../mg-webgl/entrypoint/WGLFenceSynchronizationEntrypoint';    
+import {WGLBackbufferContext}
+	from '../mg-webgl/WGLBackbufferContext';    
 
 export class MgBackbone {
   private mGL: WebGL2RenderingContext;
@@ -167,26 +169,22 @@ export class MgBackbone {
 
     // let canvas = document.getElementById(elementName) as HTMLCanvasElement;
     let presentationSurface = new WGLPresentationSurface(canvas);
-    let gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
-    if (gl == null)
-      throw new Error('WebGL 2 context missing');
 
-    this.mGL = gl;
+    let glContext = new WGLBackbufferContext(canvas);
 
-    let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint(gl);
-    let draws = new WGLCmdDrawEntrypoint(gl);
-    let rendererCache = new WGLCmdStateRendererCacheEntrypoint(gl);
+    let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint(glContext);
+    let draws = new WGLCmdDrawEntrypoint(glContext);
+    let rendererCache = new WGLCmdStateRendererCacheEntrypoint(glContext);
     let cache = new WGLCmdShaderProgramCache(rendererCache);
-        let errorHandler = new WGLErrorHandler(gl);
-    let blend = new WGLCmdBlendEntrypoint(gl, errorHandler);
-    let stencil = new WGLCmdStencilEntrypoint(gl, errorHandler);
-    let depth = new WGLCmdDepthEntrypoint(gl, errorHandler);
-    let raster = new WGLCmdRasterizationEntrypoint(gl, errorHandler);
-    let scissor = new WGLCmdScissorsEntrypoint(gl, errorHandler);
-    let clear = new WGLCmdClearEntrypoint(gl, errorHandler);
+    let errorHandler = new WGLErrorHandler(glContext);
+    let blend = new WGLCmdBlendEntrypoint(glContext, errorHandler);
+    let stencil = new WGLCmdStencilEntrypoint(glContext, errorHandler);
+    let depth = new WGLCmdDepthEntrypoint(glContext, errorHandler);
+    let raster = new WGLCmdRasterizationEntrypoint(glContext, errorHandler);
+    let scissor = new WGLCmdScissorsEntrypoint(glContext, errorHandler);
+    let clear = new WGLCmdClearEntrypoint(glContext, errorHandler);
     let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(
-      gl
-      , draws
+        draws
       , cache
       , blend
       , stencil
@@ -195,15 +193,15 @@ export class MgBackbone {
       , scissor
       , clear
       );
-    let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint(gl);
+    let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint(glContext);
     let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, blit);
     let memoryTypeMap = new WGLDeviceMemoryTypeMap();
-    let deviceMemory = new WGLDeviceMemoryEntrypoint(gl, memoryTypeMap);
-    let deviceImage = new WGLDeviceImageEntrypoint(gl);
-    let shaders = new WGLShaderModuleEntrypoint(gl);
-    let programs = new WGLGraphicsPipelineEntrypoint(gl);
+    let deviceMemory = new WGLDeviceMemoryEntrypoint(glContext, memoryTypeMap);
+    let deviceImage = new WGLDeviceImageEntrypoint(glContext);
+    let shaders = new WGLShaderModuleEntrypoint(glContext);
+    let programs = new WGLGraphicsPipelineEntrypoint(glContext);
 
-    let uniforms = new WGLUniformBlockEntrypoint(gl, errorHandler);
+    let uniforms = new WGLUniformBlockEntrypoint(glContext, errorHandler);
     let parser = new WGLUniformBlockNameParser();
     let compiler = new WGLGraphicsPipelineCompilerEntrypoint(
       errorHandler
@@ -211,14 +209,14 @@ export class MgBackbone {
       , programs
       , uniforms
       , parser);
-    let sampler = new WGLSamplerEntrypoint(gl, errorHandler);
+    let sampler = new WGLSamplerEntrypoint(glContext, errorHandler);
     let imageDescriptor = new WGLImageDescriptorEntrypoint();
     let desciptorPool = new WGLDescriptorPoolEntrypoint(imageDescriptor);
     let descriptorSets = new WGLDescriptorSetEntrypoint();
-    let vertexArrays = new WGLCmdVertexArrayEntrypoint(gl, errorHandler);
+    let vertexArrays = new WGLCmdVertexArrayEntrypoint(glContext, errorHandler);
     let imageFormat = new WGLImageFormatEntrypoint();
-    let fences = new WGLSynchronizableFenceEntrypoint(gl);
-    let buffers = new WGLBufferEntrypoint(gl);
+    let fences = new WGLSynchronizableFenceEntrypoint(glContext);
+    let buffers = new WGLBufferEntrypoint(glContext);
     let deviceEntrypoint = new WGLDeviceEntrypoint(
       deviceMemory
       , deviceImage
@@ -235,7 +233,7 @@ export class MgBackbone {
 
     let fenceSynchronization = new WGLFenceSynchronizationEntrypoint(150);
     let device: IMgDevice = new WGLDevice(
-      gl
+      glContext
       , queue
       , deviceEntrypoint
       , memoryTypeMap

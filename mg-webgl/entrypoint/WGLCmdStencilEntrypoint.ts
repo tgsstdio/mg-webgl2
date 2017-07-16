@@ -14,16 +14,17 @@ import {IWGLErrorHandler}
 	from './IWGLErrorHandler';	  
 import {MgStencilFaceFlagBits}
 	from '../../mg/MgStencilFaceFlagBits';  
-   
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';	     
 
 export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
@@ -83,12 +84,16 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
   }
 
   enableStencilBuffer(): void {
-		this.mGL.disable(this.mGL.STENCIL_TEST);
+    const STENCIL_TEST: number = 0x0B90;
+
+		this.mGLContext.gl.disable(STENCIL_TEST);
     this.mErrHandler.logGLError("enableStencilBuffer");
   }
 
   disableStencilBuffer(): void {
-		this.mGL.disable(this.mGL.STENCIL_TEST);
+    const STENCIL_TEST: number = 0x0B90;
+    
+		this.mGLContext.gl.disable(STENCIL_TEST);
     this.mErrHandler.logGLError("disableStencilBuffer");
   }
 
@@ -96,22 +101,26 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     face: MgStencilFaceFlagBits
     , mask: number
   ) : void {
+    const FRONT: number = 0x0404;
+    const BACK: number = 0x0405;
+    const FRONT_AND_BACK: number = 0x0408;
+
     let glFaces : number = 0;
     switch(face) {
       case MgStencilFaceFlagBits.BACK_BIT:
-        glFaces = this.mGL.BACK;
+        glFaces = BACK;
         break;
       case MgStencilFaceFlagBits.FRONT_BIT:
-        glFaces = this.mGL.FRONT;
+        glFaces = FRONT;
         break;
       case MgStencilFaceFlagBits.FRONT_AND_BACK:
-        glFaces = this.mGL.FRONT_AND_BACK;
+        glFaces = FRONT_AND_BACK;
         break;
       default:
         throw new Error('not supported');
     }
 
-    this.mGL.stencilMaskSeparate(glFaces, mask);
+    this.mGLContext.gl.stencilMaskSeparate(glFaces, mask);
     this.mErrHandler.logGLError("setStencilWriteMask");
   }
 
@@ -119,8 +128,10 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     func: MgCompareOp
     , referenceStencil: number
     , compare: number): void {
-			this.mGL.stencilFuncSeparate (
-				this.mGL.FRONT,
+    const FRONT: number = 0x0404;
+
+			this.mGLContext.gl.stencilFuncSeparate (
+				FRONT,
 				this.getStencilFunc (func),
 				referenceStencil,
 				compare);
@@ -131,25 +142,34 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
   private getStencilFunc(
     func: MgCompareOp
   ) : number {
+    const NEVER: number = 0x0200;
+    const LESS: number = 0x0201;
+    const EQUAL: number = 0x0202;
+    const LEQUAL: number = 0x0203;
+    const GREATER: number = 0x0204;
+    const NOTEQUAL: number = 0x0205;
+    const GEQUAL: number = 0x0206;
+    const ALWAYS: number = 0x0207;
+
     switch (func) {
       case MgCompareOp.ALWAYS: 
-        return this.mGL.ALWAYS;
+        return ALWAYS;
       case MgCompareOp.EQUAL:
-        return this.mGL.EQUAL;
+        return EQUAL;
       case MgCompareOp.GREATER:
-        return this.mGL.GREATER;
+        return GREATER;
       case MgCompareOp.GREATER_OR_EQUAL:
-        return this.mGL.GEQUAL;
+        return GEQUAL;
       case MgCompareOp.LESS:
-        return this.mGL.LESS;
+        return LESS;
       case MgCompareOp.LESS_OR_EQUAL:
-        return this.mGL.LEQUAL;
+        return LEQUAL;
       case MgCompareOp.NEVER:
-        return this.mGL.NEVER;
+        return NEVER;
       case MgCompareOp.NOT_EQUAL:
-        return this.mGL.NOTEQUAL;
+        return NOTEQUAL;
       default:
-        return this.mGL.ALWAYS;
+        return ALWAYS;
     }
   }  
 
@@ -158,8 +178,10 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     , referenceStencil: number
     , compare: number
   ): void {		
-    this.mGL.stencilFuncSeparate (
-      this.mGL.BACK,
+    const BACK: number = 0x0405;
+
+    this.mGLContext.gl.stencilFuncSeparate (
+      BACK,
       this.getStencilFunc (func),
       referenceStencil,
       compare);
@@ -172,8 +194,10 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     , referenceStencil: number
     , compare: number
   ): void {
-    this.mGL.stencilFuncSeparate(
-      this.mGL.FRONT_AND_BACK,
+    const FRONT_AND_BACK: number = 0x0408;
+
+    this.mGLContext.gl.stencilFuncSeparate(
+      FRONT_AND_BACK,
       this.getStencilFunc(func),
       referenceStencil,
       compare);
@@ -184,25 +208,34 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
   private getStencilOp(
     operation: MgStencilOp
   ) : number {
+  const KEEP: number = 0x1E00;
+  const REPLACE: number = 0x1E01;
+  const INCR: number = 0x1E02;
+  const DECR: number = 0x1E03;
+  const INVERT: number = 0x150A;
+  const INCR_WRAP: number = 0x8507;
+  const DECR_WRAP: number = 0x8508;
+  const ZERO: number = 0;
+
     switch (operation) {
     case MgStencilOp.KEEP:
-      return this.mGL.KEEP;
+      return KEEP;
     case MgStencilOp.DECREMENT_AND_WRAP:
-      return this.mGL.DECR_WRAP;
+      return DECR_WRAP;
     case MgStencilOp.DECREMENT_AND_CLAMP:
-      return this.mGL.DECR;
+      return DECR;
     case MgStencilOp.INCREMENT_AND_CLAMP:
-      return this.mGL.INCR;
+      return INCR;
     case MgStencilOp.INCREMENT_AND_WRAP:
-      return this.mGL.INCR_WRAP;
+      return INCR_WRAP;
     case MgStencilOp.INVERT:
-      return this.mGL.INVERT;
+      return INVERT;
     case MgStencilOp.REPLACE:
-      return this.mGL.REPLACE;
+      return REPLACE;
     case MgStencilOp.ZERO:
-      return this.mGL.ZERO;
+      return ZERO;
     default:
-      return this.mGL.KEEP;
+      return KEEP;
     }
   }
 
@@ -211,8 +244,10 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     , stencilDepthBufferFail: MgStencilOp
     , stencilPass: MgStencilOp
   ): void {			
-    this.mGL.stencilOpSeparate(
-      this.mGL.FRONT
+    const FRONT: number = 0x0404;
+
+    this.mGLContext.gl.stencilOpSeparate(
+      FRONT
       , this.getStencilOp(stencilFail)
       , this.getStencilOp(stencilDepthBufferFail)
       , this.getStencilOp(stencilPass));
@@ -224,8 +259,10 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     , stencilDepthBufferFail: MgStencilOp
     , stencilPass: MgStencilOp
   ): void	{
-    this.mGL.stencilOpSeparate(
-      this.mGL.BACK
+    const BACK: number = 0x0405;
+
+    this.mGLContext.gl.stencilOpSeparate(
+      BACK
       , this.getStencilOp(stencilFail)
       , this.getStencilOp(stencilDepthBufferFail)
       , this.getStencilOp(stencilPass)
@@ -238,7 +275,7 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     , referenceStencil: number
     , compare: number
   ): void {
-		this.mGL.stencilFunc(
+		this.mGLContext.gl.stencilFunc(
 			this.getStencilFunc (stencilFunction)
       , referenceStencil
       , compare);
@@ -251,7 +288,7 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     ,	stencilDepthBufferFail: MgStencilOp
     ,	stencilPass: MgStencilOp
   ): void {
-    this.mGL.stencilOp(
+    this.mGLContext.gl.stencilOp(
       this.getStencilOp(stencilFail)
       , this.getStencilOp(stencilDepthBufferFail)
       , this.getStencilOp(stencilPass)

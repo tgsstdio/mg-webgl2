@@ -5,16 +5,18 @@ import {WGLSyncObject}
 import {WGLSynchronizableFence}
 	from '../WGLSynchronizableFence';
 import {IMgFence}
-	from '../../mg/IMgFence';  
+  from '../../mg/IMgFence';  
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';  
 
 export class WGLSynchronizableFenceEntrypoint implements IWGLFenceEntrypoint {
-  private mGL: WebGL2RenderingContext;
-  constructor(gl:WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mGLContext: IWGLBackbufferContext;
+  constructor(glContext: IWGLBackbufferContext) {
+    this.mGLContext = glContext;
   }
 
   createFence(): IMgFence {
-    let syncObject = new WGLSyncObject(this.mGL);
+    let syncObject = new WGLSyncObject(this.mGLContext.gl);
     return new WGLSynchronizableFence(syncObject);
   }
 }

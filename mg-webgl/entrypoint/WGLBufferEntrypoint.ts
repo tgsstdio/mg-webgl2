@@ -6,16 +6,18 @@ import {IWGLBuffer}
 	from '../IWGLBuffer';
 import {WGLBuffer}
 	from '../WGLBuffer';	
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLBufferEntrypoint implements IWGLBufferEntrypoint {
-	private mGL: WebGL2RenderingContext;
-	constructor(gl: WebGL2RenderingContext) {
-		this.mGL = gl;
+	private mGLContext: IWGLBackbufferContext;
+	constructor(glContext: IWGLBackbufferContext) {
+		this.mGLContext = glContext;
 	}
 
 	createBuffer( 			
 		createInfo: MgBufferCreateInfo
 	) : IWGLBuffer {
-		return new WGLBuffer(this.mGL, createInfo);
+		return new WGLBuffer(this.mGLContext.gl, createInfo);
 	}
 }

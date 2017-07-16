@@ -15,12 +15,13 @@ import {MgIndexType} from '../../mg/MgIndexType'
 import {MgPrimitiveTopology} from '../../mg/MgPrimitiveTopology'
 import {WGLCmdAction} from './WGLCmdAction'
 import {WGLCmdCommandRecording} from './WGLCmdCommandRecording'
+import {IWGLBackbufferContext} from '../IWGLBackbufferContext'
 
 export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
 {
-  private mGL: WebGL2RenderingContext;
-  constructor(gl: WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mGLContext: IWGLBackbufferContext;
+  constructor(glContext: IWGLBackbufferContext) {
+    this.mGLContext = glContext;
   }
 
   draw(
@@ -167,31 +168,39 @@ export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
   private getIndexBufferType(
     indexType: MgIndexType
   ) : number {
-    switch (indexType)
-    {
-    case MgIndexType.UINT16:
-      return this.mGL.UNSIGNED_SHORT;
-    case MgIndexType.UINT32:
-      return this.mGL.UNSIGNED_INT;	
-    default:
-      throw new Error ("not supported");
+    const UNSIGNED_SHORT: number = 0x1403;
+    const UNSIGNED_INT: number = 0x1405;    
+
+    switch (indexType) {
+      case MgIndexType.UINT16:
+        return UNSIGNED_SHORT;
+      case MgIndexType.UINT32:
+        return UNSIGNED_INT;	
+      default:
+        throw new Error ("not supported");
     }
   }
 
   private getMode(
     topology: MgPrimitiveTopology
   ) : number {
+    const LINES: number = 0x0001;
+    const POINTS: number = 0x0000;
+    const TRIANGLES: number = 0x0004;        
+    const LINE_STRIP: number = 0x0003;
+    const TRIANGLE_FAN: number = 0x0006;        
+
     switch (topology)	{
       case MgPrimitiveTopology.LINE_LIST:
-        return this.mGL.LINES;
+        return LINES;
       case MgPrimitiveTopology.POINT_LIST:
-        return this.mGL.POINTS;
+        return POINTS;
       case MgPrimitiveTopology.TRIANGLE_LIST:
-        return this.mGL.TRIANGLES;
+        return TRIANGLES;
       case MgPrimitiveTopology.LINE_STRIP:
-        return this.mGL.LINE_STRIP;
+        return LINE_STRIP;
       case MgPrimitiveTopology.TRIANGLE_FAN:
-        return this.mGL.TRIANGLE_FAN;
+        return TRIANGLE_FAN;
       default:
         throw new Error ("not supported");
     }

@@ -1,15 +1,17 @@
 import {IWGLGraphicsPipelineEntrypoint}
 	from './IWGLGraphicsPipelineEntrypoint';	  
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';	
 
 export class WGLGraphicsPipelineEntrypoint 
 	implements IWGLGraphicsPipelineEntrypoint	{
-	private mGL: WebGL2RenderingContext;
-	constructor(gl: WebGL2RenderingContext) {
-		this.mGL = gl;
+	private mGLContext: IWGLBackbufferContext;
+	constructor(glContext: IWGLBackbufferContext) {
+		this.mGLContext = glContext;
 	}
 	
 	createProgram() : WebGLProgram {
-		let program = this.mGL.createProgram() as WebGLProgram;
+		let program = this.mGLContext.gl.createProgram() as WebGLProgram;
 		return program;
 	}
 
@@ -17,27 +19,29 @@ export class WGLGraphicsPipelineEntrypoint
 		program: WebGLProgram
 		, shader: WebGLShader
 	) : void {
-		this.mGL.attachShader(program, shader);
-		this.mGL.deleteShader(shader);
+		this.mGLContext.gl.attachShader(program, shader);
+		this.mGLContext.gl.deleteShader(shader);
 	}
 
 	link(program: WebGLProgram): void {
-		this.mGL.linkProgram(program);
+		this.mGLContext.gl.linkProgram(program);
 	}
 
 	isCompiled(program: WebGLProgram): boolean {
-		let result: boolean = this.mGL.getProgramParameter(
+		const LINK_STATUS: number = 0x8B82;
+
+		let result: boolean = this.mGLContext.gl.getProgramParameter(
 			program
-			, this.mGL.LINK_STATUS);
+			, LINK_STATUS);
 		return result;
 	}
 
 	getCompilerMessages(program: WebGLProgram): string {
-		let message = this.mGL.getProgramInfoLog(program) as string;
+		let message = this.mGLContext.gl.getProgramInfoLog(program) as string;
 		return message;
 	}
 
 	deleteProgram(program: WebGLProgram) : void {
-		this.mGL.deleteProgram(program);
+		this.mGLContext.gl.deleteProgram(program);
 	}
 }

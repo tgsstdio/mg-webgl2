@@ -7,24 +7,27 @@ import {IWGLErrorHandler}
 	from './IWGLErrorHandler';
 import {WGLActiveUniformBlockInfo}
 	from '../pipeline/WGLActiveUniformBlockInfo';	
-
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLUniformBlockEntrypoint implements IWGLUniformBlockEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrorHandler: IWGLErrorHandler;    
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errorHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrorHandler = errorHandler;
   }
 
   getNoOfActiveUniformBlocks(program: WebGLProgram) : number {
+    const ACTIVE_UNIFORM_BLOCKS: number = 0x8A36;
+    
     let noOfUniformBlocks = 0;
-    noOfUniformBlocks = this.mGL.getProgramParameter(
+    noOfUniformBlocks = this.mGLContext.gl.getProgramParameter(
       program
-      , this.mGL.ACTIVE_UNIFORM_BLOCKS) as number;
+      , ACTIVE_UNIFORM_BLOCKS) as number;
     this.mErrorHandler.checkError();
     return noOfUniformBlocks;
   }
@@ -33,7 +36,7 @@ export class WGLUniformBlockEntrypoint implements IWGLUniformBlockEntrypoint {
     program: WebGLProgram
     , index: number
   ) : string {
-    let name = this.mGL.getActiveUniformBlockName(program, index) as string;
+    let name = this.mGLContext.gl.getActiveUniformBlockName(program, index) as string;
     this.mErrorHandler.checkError();
     return name;
   }
@@ -42,24 +45,29 @@ export class WGLUniformBlockEntrypoint implements IWGLUniformBlockEntrypoint {
     program: WebGLProgram
     , index: number
   ) : WGLActiveUniformBlockInfo {
-      let binding = this.mGL.getProgramParameter(
+      const UNIFORM_BLOCK_BINDING: number = 0x8A3F;
+
+      let binding = this.mGLContext.gl.getProgramParameter(
         program
-        , this.mGL.UNIFORM_BLOCK_BINDING) as number;
+        , UNIFORM_BLOCK_BINDING) as number;
       this.mErrorHandler.checkError();          
 
-      let bufferDataSize = this.mGL.getProgramParameter(
+      const UNIFORM_BLOCK_DATA_SIZE : number = 0x8A40;
+      let bufferDataSize = this.mGLContext.gl.getProgramParameter(
         program
-        , this.mGL.UNIFORM_BLOCK_DATA_SIZE) as number;
+        , UNIFORM_BLOCK_DATA_SIZE) as number;
       this.mErrorHandler.checkError();  
 
-      let refByFragmentShader = this.mGL.getProgramParameter(
+      const UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER: number = 0x8A46;
+      let refByFragmentShader = this.mGLContext.gl.getProgramParameter(
         program
-        , this.mGL.UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER) as number;
+        , UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER) as number;
       this.mErrorHandler.checkError();  
 
-      let refByVertexShader = this.mGL.getProgramParameter(
+      const UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER: number = 0x8A44;
+      let refByVertexShader = this.mGLContext.gl.getProgramParameter(
         program
-        , this.mGL.UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER) as number;          
+        , UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER) as number;          
       this.mErrorHandler.checkError();          
 
       let stage : MgShaderStageFlagBits = refByFragmentShader ? (MgShaderStageFlagBits.FRAGMENT_BIT) : 0;

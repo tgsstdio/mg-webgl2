@@ -8,21 +8,23 @@ import {IWGLDeviceMemory}
 	from '../IWGLDeviceMemory';
 import {WGLDeviceMemory}
 	from '../WGLDeviceMemory';  	  	
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLDeviceMemoryEntrypoint implements IWGLDeviceMemoryEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mDeviceMemoryMap: IWGLDeviceMemoryTypeMap;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , deviceMemoryMap: IWGLDeviceMemoryTypeMap
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mDeviceMemoryMap = deviceMemoryMap;
   }
 
   createDeviceMemory(createInfo: MgMemoryAllocateInfo) : IWGLDeviceMemory {
     return new WGLDeviceMemory(
-      this.mGL
+      this.mGLContext.gl
       , createInfo
       , this.mDeviceMemoryMap
     );

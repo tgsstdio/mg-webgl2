@@ -1,19 +1,20 @@
 import {IWGLCmdStateRendererCacheEntrypoint} from './IWGLCmdStateRendererCacheEntrypoint';
+import {IWGLBackbufferContext} from '../IWGLBackbufferContext';
 
 export class WGLCmdStateRendererCacheEntrypoint
   implements IWGLCmdStateRendererCacheEntrypoint {
 
-  private mGL: WebGL2RenderingContext;
-  constructor(gl:WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mGLContext: IWGLBackbufferContext;
+  constructor(glContext:IWGLBackbufferContext) {
+    this.mGLContext = glContext;
   }
 
   bindVAO(vao: WebGLVertexArrayObject|null): void {
-    this.mGL.bindVertexArray(vao);
+    this.mGLContext.gl.bindVertexArray(vao);
   }
 
   bindProgram(programID:WebGLProgram|null) : void {
-    this.mGL.useProgram(programID);
+    this.mGLContext.gl.useProgram(programID);
   }
 
   setUniformBlock(
@@ -21,7 +22,7 @@ export class WGLCmdStateRendererCacheEntrypoint
     , activeIndex:number
     , bindingPoint:number
     ) : void {
-    this.mGL.uniformBlockBinding(
+    this.mGLContext.gl.uniformBlockBinding(
       programID
       , activeIndex
       , bindingPoint);
@@ -33,10 +34,12 @@ export class WGLCmdStateRendererCacheEntrypoint
     , texture: WebGLTexture|null
     , sampler: WebGLSampler|null
   ): void {
-    let textureSlot = this.mGL.TEXTURE0 + binding;
-    this.mGL.activeTexture(textureSlot)
-    this.mGL.bindTexture(textureSlot, texture);
-    this.mGL.bindSampler(binding, sampler);
+    const TEXTURE0 = 0x84C0;
+
+    let textureSlot = TEXTURE0 + binding;
+    this.mGLContext.gl.activeTexture(textureSlot)
+    this.mGLContext.gl.bindTexture(textureSlot, texture);
+    this.mGLContext.gl.bindSampler(binding, sampler);
   }
 
   // WARN: offsets requires IntPtr
@@ -47,10 +50,11 @@ export class WGLCmdStateRendererCacheEntrypoint
     , offsets: Array<number>
     , sizes: Array<number>
   ): void {
+    const UNIFORM_BUFFER: number = 0x8A11;
 
     for (let i = 0; i < count; ++i) {
-      this.mGL.bindBufferRange(
-        this.mGL.UNIFORM_BUFFER
+      this.mGLContext.gl.bindBufferRange(
+        UNIFORM_BUFFER
         , i
         , buffers[i]
         , offsets[i]

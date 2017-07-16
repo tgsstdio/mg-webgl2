@@ -5,16 +5,17 @@ import {WGLSemaphore}
 import {IWGLSemaphore}
 	from '../IWGLSemaphore';	
 import {WGLSyncObject}
-	from '../WGLSyncObject';	
+  from '../WGLSyncObject';
+import {IWGLBackbufferContext} from '../IWGLBackbufferContext'
 
 export class WGLSemaphoreEntrypoint implements IWGLSemaphoreEntrypoint {
-  private mGL: WebGL2RenderingContext;
-  constructor(gl:WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mContext: IWGLBackbufferContext;
+  constructor(context:IWGLBackbufferContext) {
+    this.mContext = context;
   }  
   
   createSemaphore() : IWGLSemaphore {
-    let syncObject = new WGLSyncObject(this.mGL);    
+    let syncObject = new WGLSyncObject(this.mContext.gl);    
     return new WGLSemaphore(syncObject);
   }
 }

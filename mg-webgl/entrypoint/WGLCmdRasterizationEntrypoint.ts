@@ -8,21 +8,25 @@ import {WGLGraphicsPipelineFlagBits}
 	from '../pipeline/WGLGraphicsPipelineFlagBits';
 import {WGLCmdDepthBiasParameter}
 	from '../cmdbuf/WGLCmdDepthBiasParameter';	    
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLCmdRasterizationEntrypoint
   implements IWGLCmdRasterizationEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext =glContext;
     this.mErrHandler = errHandler;
   }
 
 	disablePolygonOffset (): void {
-		this.mGL.disable(this.mGL.POLYGON_OFFSET_FILL);
+    const POLYGON_OFFSET_FILL : number = 0x8037;
+
+		this.mGLContext.gl.disable(POLYGON_OFFSET_FILL);
 		this.mErrHandler.logGLError("disablePolygonOffset");
   }
 
@@ -30,30 +34,39 @@ export class WGLCmdRasterizationEntrypoint
 		slopeScaleDepthBias: number
 		, depthBias:number
 	) : void {
-		this.mGL.enable(this.mGL.POLYGON_OFFSET_FILL);
-		this.mGL.polygonOffset(slopeScaleDepthBias, depthBias);
+    const POLYGON_OFFSET_FILL : number = 0x8037;
+
+		this.mGLContext.gl.enable(POLYGON_OFFSET_FILL);
+		this.mGLContext.gl.polygonOffset(slopeScaleDepthBias, depthBias);
 		this.mErrHandler.logGLError("enablePolygonOffset");
   }
 
 	setUsingCounterClockwiseWindings(
 		flag: boolean): void {
+    const CW: number = 0x0900;
+    const CCW: number = 0x0901;
+
     if (flag) {
-      this.mGL.frontFace(this.mGL.CCW);
+      this.mGLContext.gl.frontFace(CCW);
     } 
     else {
-      this.mGL.frontFace(this.mGL.CW);
+      this.mGLContext.gl.frontFace(CW);
     }
 
     this.mErrHandler.logGLError("setUsingCounterClockwiseWindings");
   }
 
 	enableScissorTest(): void {
-		this.mGL.enable(this.mGL.SCISSOR_TEST);
+    const SCISSOR_TEST: number = 0x0C11;
+
+		this.mGLContext.gl.enable(SCISSOR_TEST);
 		this.mErrHandler.logGLError("enableScissorTest");    
   }
 
 	disableScissorTest(): void {
-		this.mGL.disable(this.mGL.SCISSOR_TEST);
+    const SCISSOR_TEST: number = 0x0C11;
+    
+		this.mGLContext.gl.disable(SCISSOR_TEST);
 		this.mErrHandler.logGLError("disableScissorTest");  
   }
 
@@ -61,14 +74,18 @@ export class WGLCmdRasterizationEntrypoint
 		front: boolean
 		, back: boolean
 	): void {
+    const FRONT: number = 0x0404;
+    const BACK: number = 0x0405;
+    const FRONT_AND_BACK: number = 0x0408;
+
     if (front && back) {
-      this.mGL.cullFace(this.mGL.FRONT_AND_BACK);
+      this.mGLContext.gl.cullFace(FRONT_AND_BACK);
     }
     else if (front) {
-      this.mGL.cullFace(this.mGL.FRONT);
+      this.mGLContext.gl.cullFace(FRONT);
     }
     else if (back) {
-      this.mGL.cullFace(this.mGL.BACK);
+      this.mGLContext.gl.cullFace(BACK);
     }
     else {
       // not sure about this
@@ -79,12 +96,16 @@ export class WGLCmdRasterizationEntrypoint
   }
 
 	enableCulling(): void {
-		this.mGL.enable(this.mGL.CULL_FACE);
+    const CULL_FACE: number = 0x0B44;
+
+		this.mGLContext.gl.enable(CULL_FACE);
 		this.mErrHandler.logGLError("enableCulling");
   }
 
 	disableCulling(): void {
-		this.mGL.disable(this.mGL.CULL_FACE);
+    const CULL_FACE: number = 0x0B44;
+
+		this.mGLContext.gl.disable(CULL_FACE);
 		this.mErrHandler.logGLError("disableCulling");
   }
 

@@ -8,22 +8,28 @@ import {IWGLErrorHandler}
 	from '../entrypoint/IWGLErrorHandler';	  
 import {MgColor4f}
 	from '../../mg/MgColor4f';    
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';
 
 export class WGLCmdClearEntrypoint implements IWGLCmdClearEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
 	initialize () : WGLClearValueState {
-    let color = this.mGL.getParameter(this.mGL.COLOR_CLEAR_VALUE);
-    let depth = this.mGL.getParameter(this.mGL.DEPTH_CLEAR_VALUE);
-    let stencil = this.mGL.getParameter(this.mGL.STENCIL_CLEAR_VALUE);
+    const COLOR_CLEAR_VALUE: number = 0x0C22;
+    const DEPTH_CLEAR_VALUE: number = 0x0B73;
+    const STENCIL_CLEAR_VALUE: number = 0x0B91;
+
+    let color = this.mGLContext.gl.getParameter(COLOR_CLEAR_VALUE);
+    let depth = this.mGLContext.gl.getParameter(DEPTH_CLEAR_VALUE);
+    let stencil = this.mGLContext.gl.getParameter(STENCIL_CLEAR_VALUE);
 
     let result = new WGLClearValueState();
     result.clearColor = new MgColor4f(color[0], color[1], color[2], color[3]);
@@ -37,12 +43,16 @@ export class WGLCmdClearEntrypoint implements IWGLCmdClearEntrypoint {
   }
 
 	clearBuffers(combinedMask: WGLQueueClearBufferMask) : void {
-		let bitmask : number
+    const COLOR_BUFFER_BIT: number = 0x00004000;
+    const DEPTH_BUFFER_BIT: number = 0x00000100;
+    const STENCIL_BUFFER_BIT: number = 0x00000400;
+    
+    let bitmask : number
       = (
           (combinedMask & WGLQueueClearBufferMask.COLOR)
            == WGLQueueClearBufferMask.COLOR
         ) 
-        ? this.mGL.COLOR_BUFFER_BIT
+        ? COLOR_BUFFER_BIT
         : 0;
         
 		bitmask |= 
@@ -50,7 +60,7 @@ export class WGLCmdClearEntrypoint implements IWGLCmdClearEntrypoint {
         (combinedMask & WGLQueueClearBufferMask.DEPTH)
          == WGLQueueClearBufferMask.DEPTH
       )
-      ? this.mGL.DEPTH_BUFFER_BIT
+      ? DEPTH_BUFFER_BIT
       : 0;
 
 		bitmask |=       
@@ -58,24 +68,24 @@ export class WGLCmdClearEntrypoint implements IWGLCmdClearEntrypoint {
         (combinedMask & WGLQueueClearBufferMask.STENCIL)
         == WGLQueueClearBufferMask.STENCIL
       ) 
-      ? this.mGL.STENCIL_BUFFER_BIT
+      ? STENCIL_BUFFER_BIT
       : 0;
-		this.mGL.clear (bitmask);
+		this.mGLContext.gl.clear (bitmask);
     this.mErrHandler.logGLError('clearBuffers');    
   }
 
 	setClearStencilValue(stencil: number): void {
-    this.mGL.clearStencil(stencil);
+    this.mGLContext.gl.clearStencil(stencil);
     this.mErrHandler.logGLError('setClearStencilValue');
   }
 
 	setClearDepthValue(depth: number) : void {
-    this.mGL.clearDepth(depth);
+    this.mGLContext.gl.clearDepth(depth);
     this.mErrHandler.logGLError('setClearDepthValue');
   }
   
 	setClearColor(clearValue: MgColor4f) : void {
-    this.mGL.clearColor(
+    this.mGLContext.gl.clearColor(
       clearValue.r
       , clearValue.g
       , clearValue.b

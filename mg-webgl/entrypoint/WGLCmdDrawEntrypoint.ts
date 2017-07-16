@@ -7,12 +7,15 @@ import {MgPrimitiveTopology}
 import {IWGLCmdDrawEntrypoint}
 	from './IWGLCmdDrawEntrypoint';	  
 import {IWGLBuffer}
-	from '../IWGLBuffer';	
+  from '../IWGLBuffer';	
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';	
+  
 
 export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
-  private mGL: WebGL2RenderingContext;
-  constructor(gl: WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mGLContext: IWGLBackbufferContext;
+  constructor(glContext: IWGLBackbufferContext) {
+    this.mGLContext = glContext;
   }
 
   drawIndexed (
@@ -29,7 +32,7 @@ export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
     // let elementCount = this.getPrimitiveTypeElements(
     //  topology, count);
 
-    this.mGL.drawElementsInstanced(
+    this.mGLContext.gl.drawElementsInstanced(
       mode
       , elementCount
       , elementType
@@ -45,7 +48,7 @@ export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
     , instanceCount: number
   ) : void {
     //let mode = this.getPrimitiveType(topology);
-    this.mGL.drawArraysInstanced(
+    this.mGLContext.gl.drawArraysInstanced(
       mode
       , firstIndex
       , indicesCount
@@ -89,7 +92,7 @@ export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
         let firstIndex = indirectArray[2];
         let instanceCount = indirectArray[3]; 
 
-        this.mGL.drawArraysInstanced(
+        this.mGLContext.gl.drawArraysInstanced(
           mode
           , firstIndex
           , vertexCount
@@ -154,7 +157,7 @@ export class WGLCmdDrawEntrypoint implements IWGLCmdDrawEntrypoint {
         //let indexByteSize = this.getIndexByteSize(indexType);
         let indexOffset = firstIndex * indexByteSize;
 
-        this.mGL.drawElementsInstanced(
+        this.mGLContext.gl.drawElementsInstanced(
           mode
           , elementCount
           , elementType

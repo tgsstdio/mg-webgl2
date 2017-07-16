@@ -10,8 +10,10 @@ export interface IWGLBlitOperationEntrypoint {
   unbindCopySrcBuffer(src:IWGLBuffer) : void;
   unbindCopyDstBuffer(dst:IWGLBuffer) : void;
 
-  copyBuffer(    
-      readOffset:number
+  copyBuffer(
+    src:IWGLBuffer
+    , dst:IWGLBuffer    
+    , readOffset:number
     , writeOffset: number
     , size:number) : void;
   performOperation(

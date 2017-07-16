@@ -3,16 +3,18 @@ import {MgCompareOp}
 import {IWGLCmdDepthEntrypoint}
 	from '../entrypoint/IWGLCmdDepthEntrypoint';	  
 import {IWGLErrorHandler}
-	from '../entrypoint/IWGLErrorHandler';
+  from '../entrypoint/IWGLErrorHandler';
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';  
 
 export class WGLCmdDepthEntrypoint implements IWGLCmdDepthEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   ) {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
@@ -28,42 +30,55 @@ export class WGLCmdDepthEntrypoint implements IWGLCmdDepthEntrypoint {
   }
 	
 	enableDepthBuffer(): void {
-		this.mGL.enable(this.mGL.DEPTH_TEST);
+    const DEPTH_TEST: number = 0x0B71;
+
+		this.mGLContext.gl.enable(DEPTH_TEST);
     this.mErrHandler.logGLError("enableDepthBuffer");
   }
 
 	disableDepthBuffer(): void {
-		this.mGL.disable(this.mGL.DEPTH_TEST);
+    const DEPTH_TEST: number = 0x0B71;
+
+		this.mGLContext.gl.disable(DEPTH_TEST);
     this.mErrHandler.logGLError("disableDepthBuffer");
   }
 
   private getDepthFunction(
     compare: MgCompareOp
   ): number {
+    const NEVER: number = 0x0200;
+    const LESS: number = 0x0201;
+    const EQUAL: number = 0x0202;
+    const LEQUAL: number = 0x0203;
+    const GREATER: number = 0x0204;
+    const NOTEQUAL: number = 0x0205;
+    const GEQUAL: number = 0x0206;
+    const ALWAYS: number = 0x0207;
+
     switch (compare) {
       case MgCompareOp.ALWAYS:
-        return this.mGL.ALWAYS;
+        return ALWAYS;
       case MgCompareOp.EQUAL:
-        return this.mGL.EQUAL;
+        return EQUAL;
       case MgCompareOp.GREATER:
-        return this.mGL.GREATER;
+        return GREATER;
       case MgCompareOp.GREATER_OR_EQUAL:
-        return this.mGL.GEQUAL;
+        return GEQUAL;
       case MgCompareOp.LESS:
-        return this.mGL.LESS;
+        return LESS;
       case MgCompareOp.LESS_OR_EQUAL:
-        return this.mGL.LEQUAL;
+        return LEQUAL;
       case MgCompareOp.NEVER:
-        return this.mGL.NEVER;
+        return NEVER;
       case MgCompareOp.NOT_EQUAL:
-        return this.mGL.NOTEQUAL;
+        return NOTEQUAL;
       default:
         throw new Error('not supported');      
     }
   }
 
 	setDepthBufferFunc(func: MgCompareOp): void {
-		this.mGL.depthFunc(
+		this.mGLContext.gl.depthFunc(
       this.getDepthFunction(func)
     );
 
@@ -72,7 +87,7 @@ export class WGLCmdDepthEntrypoint implements IWGLCmdDepthEntrypoint {
 
 	setDepthMask(isMaskOn :boolean): void {
 		// for writing to depth buffer
-		this.mGL.depthMask(isMaskOn);
+		this.mGLContext.gl.depthMask(isMaskOn);
     this.mErrHandler.logGLError("setDepthMask");
   }
 }

@@ -40,6 +40,8 @@ import {MgExtent2D}
 	from '../mg/MgExtent2D';
 import {MgOffset2D}
 	from '../mg/MgOffset2D';                          	  
+import {MgSelectionMethod}
+	from '../mg/MgSelectionMethod';    
 
 export class WGLGraphicsDevice implements IMgGraphicsDevice {      
   private mRenderer: IWGLRenderer;
@@ -72,6 +74,7 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
     , colorPassFormat: MgFormat
     , depthPassFormat: MgFormat
   ) : void {
+    // THIS IS WHERE WE SHOULD CREATE GL CONTEXT 
     // mBBContext.SetupContext(mWindow.WindowInfo, colorPassFormat, depthPassFormat, createInfo);
 
     // mExtensions.Initialize ();
@@ -134,8 +137,13 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
     // MANDATORY
     swapchainCollection.create (setupCmdBuffer, createInfo.width, createInfo.height);
 
-    let colorPassFormat = this.overrideColorFormat(createInfo.color, swapchainCollection.format);
-    let depthPassFormat = this.overrideDepthStencilFormat(createInfo.depthStencil);
+    let colorPassFormat = this.overrideColorFormat(
+      createInfo.color
+      , createInfo.overrideColor
+      , swapchainCollection.format);
+    let depthPassFormat = this.overrideDepthStencilFormat(
+      createInfo.depthStencil
+      , createInfo.overrideDepthStencil);
 
     this.setupContext(createInfo, colorPassFormat, depthPassFormat);
     this.setupRenderpass(colorPassFormat, depthPassFormat);
@@ -168,26 +176,36 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
   }
 
   private overrideDepthStencilFormat(
-    overrideColor: MgFormat
+    selectionMethod: MgSelectionMethod
+    , overrideFormat: MgFormat    
   ) : MgFormat {
-    if (overrideColor == MgFormat.UNDEFINED) {
-      return MgFormat.D24_UNORM_S8_UINT;
-    }
-    else {
-      return overrideColor;
+    switch(selectionMethod) {
+      case MgSelectionMethod.SYSTEM:
+        return MgFormat.D24_UNORM_S8_UINT;
+      case MgSelectionMethod.USE_OVERRIDE:
+        return overrideFormat;
+      case MgSelectionMethod.DISABLE:
+        return MgFormat.UNDEFINED;
+      default:
+        throw new Error('Not supported')
     }
   }    
 
   private overrideColorFormat(
-    overrideColor: MgFormat
-    , swapchainFormat: MgFormat
+    selectionMethod: MgSelectionMethod    
+    , overrideColor: MgFormat
+    , systemColor: MgFormat
   ): MgFormat {
-    if (overrideColor == MgFormat.UNDEFINED) {
-      return swapchainFormat;
-    }
-    else {
-      return overrideColor;
-    }
+    switch(selectionMethod) {
+      case MgSelectionMethod.SYSTEM:
+        return systemColor;
+      case MgSelectionMethod.USE_OVERRIDE:
+        return overrideColor;
+      case MgSelectionMethod.DISABLE:
+        return MgFormat.UNDEFINED;
+      default:
+        throw new Error('Not supported')
+    }    
   }
 
   private mDeviceCreated: boolean = false;

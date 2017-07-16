@@ -183,7 +183,9 @@ class WGLCmdCopyBuffer implements WGLCmdAction {
 
         for (let region of item.regions) {
           entrypoint.copyBuffer(
-            region.readOffset
+            item.source
+            , item.destination
+            , region.readOffset
             , region.writeOffset
             , region.size);
         }

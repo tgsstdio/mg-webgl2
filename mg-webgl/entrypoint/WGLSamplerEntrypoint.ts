@@ -4,25 +4,26 @@ import {MgSamplerAddressMode} from '../../mg/MgSamplerAddressMode';
 import {MgFilter} from '../../mg/MgFilter';
 import {MgSamplerMipmapMode} from '../../mg/MgSamplerMipmapMode';
 import {MgCompareOp} from '../../mg/MgCompareOp';
+import {IWGLBackbufferContext} from '../IWGLBackbufferContext';
 
 export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   private mErrHandler: IWGLErrorHandler;
   constructor(
-    gl: WebGL2RenderingContext
+    glContext: IWGLBackbufferContext
     , errHandler: IWGLErrorHandler
   )
   {
-    this.mGL = gl;
+    this.mGLContext = glContext;
     this.mErrHandler = errHandler;
   }
 
   createSampler() : WebGLSampler {
-    return this.mGL.createSampler() as WebGLSampler;
+    return this.mGLContext.gl.createSampler() as WebGLSampler;
   }
 
   deleteSampler (samplerId: WebGLSampler): void	{
-    this.mGL.deleteSampler(samplerId);
+    this.mGLContext.gl.deleteSampler(samplerId);
   }    
 
   setTextureWrapS (
@@ -30,9 +31,10 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     , addressModeU: MgSamplerAddressMode
   ) : void
   {
-    this.mGL.samplerParameteri (
+    const TEXTURE_WRAP_S: number = 0x2802;
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-      , this.mGL.TEXTURE_WRAP_S
+      , TEXTURE_WRAP_S
       , this.getAddressMode(addressModeU)
     );
     this.mErrHandler.logGLError ("SamplerParameter (TextureWrapS)");
@@ -42,9 +44,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , addressModeV: MgSamplerAddressMode
   ) : void {
-    this.mGL.samplerParameteri (
+    const TEXTURE_WRAP_T: number = 0x2803;
+
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-      , this.mGL.TEXTURE_WRAP_T
+      , TEXTURE_WRAP_T
       , this.getAddressMode(addressModeV)
     );
     this.mErrHandler.logGLError ("SamplerParameter (TextureWrapT)");
@@ -54,9 +58,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , addressModeR: MgSamplerAddressMode
   ) : void {
-    this.mGL.samplerParameteri (
+    const TEXTURE_WRAP_R: number = 0x8072;
+
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-      , this.mGL.TEXTURE_WRAP_R
+      , TEXTURE_WRAP_R
       , this.getAddressMode(addressModeR)
       );
     this.mErrHandler.logGLError ("SamplerParameter (TextureWrapR)");
@@ -66,9 +72,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , minLod: number
   ) : void {
-    this.mGL.samplerParameterf (
+    const TEXTURE_MIN_LOD: number = 0x813A;
+
+    this.mGLContext.gl.samplerParameterf (
       samplerId
-      , this.mGL.TEXTURE_MIN_LOD
+      , TEXTURE_MIN_LOD
       , minLod);
     this.mErrHandler.logGLError("SamplerParameter (TextureMinLod)");
   }
@@ -77,9 +85,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , maxLod: number
   ) : void {
-    this.mGL.samplerParameterf (
+    const TEXTURE_MAX_LOD: number = 0x813B;
+
+    this.mGLContext.gl.samplerParameterf (
       samplerId
-      , this.mGL.TEXTURE_MAX_LOD
+      , TEXTURE_MAX_LOD
       , maxLod);
     this.mErrHandler.logGLError ("SamplerParameter (TextureMaxLod)");
   }
@@ -89,9 +99,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     , minFilter: MgFilter
     , mipmapMode: MgSamplerMipmapMode
   ) : void {
-    this.mGL.samplerParameteri (
+    const TEXTURE_MIN_FILTER: number = 0x2801;
+
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-      , this.mGL.TEXTURE_MIN_FILTER
+      , TEXTURE_MIN_FILTER
       , this.getMinFilterValue(minFilter, mipmapMode));
     this.mErrHandler.logGLError ("SamplerParameter (TextureMinFilter)");
   }
@@ -100,31 +112,38 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     filter: MgFilter
     , mode: MgSamplerMipmapMode
   ) : number {
-    switch (filter)
-    {
-    case MgFilter.LINEAR:
-      return (mode == MgSamplerMipmapMode.LINEAR)
-          ? this.mGL.LINEAR_MIPMAP_LINEAR
-          : this.mGL.LINEAR;
-    case MgFilter.NEAREST:
-      return (mode == MgSamplerMipmapMode.LINEAR)
-        ? this.mGL.NEAREST_MIPMAP_LINEAR
-        : this.mGL.NEAREST;
-    default:
-      throw new Error('getMinFilterValue - filter not supported');
+    const LINEAR_MIPMAP_LINEAR: number = 0x2703;
+    const LINEAR: number = 0x2601;
+    const NEAREST_MIPMAP_LINEAR: number = 0x2702;
+    const NEAREST: number = 0x2600;    
+
+
+    switch (filter) {
+      case MgFilter.LINEAR:
+        return (mode == MgSamplerMipmapMode.LINEAR)
+            ? LINEAR_MIPMAP_LINEAR
+            : LINEAR;
+      case MgFilter.NEAREST:
+        return (mode == MgSamplerMipmapMode.LINEAR)
+          ? NEAREST_MIPMAP_LINEAR
+          : NEAREST;
+      default:
+        throw new Error('getMinFilterValue - filter not supported');
     }
   }       
 
   private getMagFilterValue(filter: MgFilter) : number
   {
-    switch (filter)
-    {
-    case MgFilter.LINEAR:
-      return this.mGL.LINEAR;
-    case MgFilter.NEAREST:
-      return this.mGL.NEAREST;
-    default:
-      throw new Error('GetMagFilterValue - filter not supported');
+    const LINEAR: number = 0x2601;
+    const NEAREST: number = 0x2600;  
+
+    switch (filter) {
+      case MgFilter.LINEAR:
+        return LINEAR;
+      case MgFilter.NEAREST:
+        return NEAREST;
+      default:
+        throw new Error('GetMagFilterValue - filter not supported');
     }
   }    
 
@@ -132,9 +151,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , magFilter: MgFilter
   )	: void {
-    this.mGL.samplerParameteri (
+    const TEXTURE_MAG_FILTER: number = 0x2800; 
+
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-    , this.mGL.TEXTURE_MAG_FILTER
+    , TEXTURE_MAG_FILTER
     , this.getMagFilterValue(magFilter));
     this.mErrHandler.logGLError ("SamplerParameter (TextureMagFilter)");
   }
@@ -143,9 +164,11 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
     samplerId: WebGLSampler
     , compareOp: MgCompareOp) 
   {
-    this.mGL.samplerParameteri (
+    const TEXTURE_COMPARE_FUNC: number = 0x884D; 
+
+    this.mGLContext.gl.samplerParameteri (
       samplerId
-      , this.mGL.TEXTURE_COMPARE_FUNC
+      , TEXTURE_COMPARE_FUNC
       , this.getCompareOp(compareOp) );
     this.mErrHandler.logGLError ("SamplerParameter (TextureCompareFunc)");
   }
@@ -153,23 +176,32 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
   private getCompareOp (
     compareOp: MgCompareOp
   ) : number {
+    const NEVER: number = 0x0200;
+    const LESS: number = 0x0201;
+    const EQUAL: number = 0x0202;
+    const LEQUAL: number = 0x0203;
+    const GREATER: number = 0x0204;
+    const NOTEQUAL: number = 0x0205;
+    const GEQUAL: number = 0x0206;
+    const ALWAYS: number = 0x0207;
+
     switch (compareOp) {
     case MgCompareOp.ALWAYS:
-      return this.mGL.ALWAYS;
+      return ALWAYS;
     case MgCompareOp.EQUAL:
-      return this.mGL.EQUAL;      
+      return EQUAL;      
     case MgCompareOp.LESS:
-      return this.mGL.LESS;
+      return LESS;
     case MgCompareOp.LESS_OR_EQUAL:
-      return this.mGL.LEQUAL;
+      return LEQUAL;
     case MgCompareOp.GREATER:
-      return this.mGL.GREATER;      
+      return GREATER;      
     case MgCompareOp.GREATER_OR_EQUAL:
-      return this.mGL.GEQUAL;        
+      return GEQUAL;        
     case MgCompareOp.NOT_EQUAL:
-      return this.mGL.NOTEQUAL;        
+      return NOTEQUAL;        
     case MgCompareOp.NEVER:
-      return this.mGL.NEVER;       
+      return NEVER;       
     default:
       throw new Error('getCompareOp - compareOp not supported');
     }
@@ -177,19 +209,23 @@ export class WGLSamplerEntrypoint implements IWGLSamplerEntrypoint {
 
   private getAddressMode(mode: MgSamplerAddressMode) : number
   {
+    const CLAMP_TO_EDGE: number = 0x812F;
+    const MIRRORED_REPEAT: number = 0x8370;
+    const REPEAT: number = 0x2901;
+
     switch (mode)
     {
       // case MgSamplerAddressMode.CLAMP_TO_BORDER:
       // 	return this.mGL.CLAMP_ All.ClampToBorder;
       case MgSamplerAddressMode.CLAMP_TO_EDGE:
-        return this.mGL.CLAMP_TO_EDGE;
+        return CLAMP_TO_EDGE;
       case MgSamplerAddressMode.MIRRORED_REPEAT:
-        return this.mGL.MIRRORED_REPEAT;
+        return MIRRORED_REPEAT;
         // EXT ARB_texture_mirror_clamp_to_edge
       // case MgSamplerAddressMode.MIRROR_CLAMP_TO_EDGE:
       // 	return All.MirrorClampToEdge;
       case MgSamplerAddressMode.REPEAT:
-        return this.mGL.REPEAT;
+        return REPEAT;
       default:
         throw new Error('getAddressMode - mode not supported');
     }

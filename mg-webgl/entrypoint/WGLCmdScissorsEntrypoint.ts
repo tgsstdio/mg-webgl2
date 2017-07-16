@@ -6,15 +6,17 @@ import {WGLCmdScissorParameter}
 	from '../cmdbuf/WGLCmdScissorParameter';	
 import {IWGLErrorHandler}
 	from './IWGLErrorHandler';	
+import {IWGLBackbufferContext}
+	from '../IWGLBackbufferContext';		
 
 export class WGLCmdScissorsEntrypoint implements IWGLCmdScissorsEntrypoint {
-	private mGL: WebGL2RenderingContext;
+	private mGLContext: IWGLBackbufferContext;
 	private mErrHandler: IWGLErrorHandler;
 	constructor(
-		gl: WebGL2RenderingContext
+		glContext: IWGLBackbufferContext
 		, errHandler: IWGLErrorHandler
 	) {
-		this.mGL = gl;
+		this.mGLContext = glContext;
 		this.mErrHandler = errHandler;
 	}
 
@@ -24,7 +26,7 @@ export class WGLCmdScissorsEntrypoint implements IWGLCmdScissorsEntrypoint {
 		if (viewports.first != 0)
 			throw new Error('first must be 0');
 
-		this.mGL.viewport(
+		this.mGLContext.gl.viewport(
 			viewports.x
 			, viewports.y
 			, viewports.width
@@ -32,7 +34,7 @@ export class WGLCmdScissorsEntrypoint implements IWGLCmdScissorsEntrypoint {
 		);
 		this.mErrHandler.logGLError("applyViewports.viewport");
 
-		this.mGL.depthRange(
+		this.mGLContext.gl.depthRange(
 			viewports.zNear
 			, viewports.zFar
 		);
@@ -46,7 +48,7 @@ export class WGLCmdScissorsEntrypoint implements IWGLCmdScissorsEntrypoint {
 		if (scissors.first != 0)
 			throw new Error('first must be 0');
 
-		this.mGL.scissor(
+		this.mGLContext.gl.scissor(
 			scissors.x
 			, scissors.y
 			, scissors.width

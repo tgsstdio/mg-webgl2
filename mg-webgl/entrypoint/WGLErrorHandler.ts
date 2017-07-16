@@ -1,23 +1,27 @@
 import {IWGLErrorHandler}
 	from './IWGLErrorHandler';	
-
+import {IWGLBackbufferContext}
+  from '../IWGLBackbufferContext';
+    
 export class WGLErrorHandler implements IWGLErrorHandler {
-  private mGL: WebGL2RenderingContext;
-  constructor(gl: WebGL2RenderingContext) {
-    this.mGL = gl;
+  private mGLContext: IWGLBackbufferContext;
+  constructor(glContext: IWGLBackbufferContext) {
+    this.mGLContext = glContext;
   }
   
   checkError() : void {
-    let error = this.mGL.getError();
+    let error = this.mGLContext.gl.getError();
 
-    if (error != this.mGL.NO_ERROR)
+    const NO_ERROR: number = 0;
+    if (error != NO_ERROR)
       throw new Error('WEBGL: ' + error);
   }
 
   logGLError(message: string) : void {
-    let error = this.mGL.getError();
+    let error = this.mGLContext.gl.getError();
 
-    if (error != this.mGL.NO_ERROR)
+    const NO_ERROR: number = 0;
+    if (error != NO_ERROR)
       console.log(message + ': ' + error);
   }
 
