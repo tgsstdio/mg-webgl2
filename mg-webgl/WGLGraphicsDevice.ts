@@ -41,14 +41,22 @@ import {MgExtent2D}
 import {MgOffset2D}
 	from '../mg/MgOffset2D';                          	  
 import {MgSelectionMethod}
-	from '../mg/MgSelectionMethod';    
+  from '../mg/MgSelectionMethod';    
+import {IWGLBackbufferContext}
+	from './IWGLBackbufferContext';  
 
 export class WGLGraphicsDevice implements IMgGraphicsDevice {      
+  private mGLContext: IWGLBackbufferContext;
   private mRenderer: IWGLRenderer;
   private mGraphicsConfiguration: IMgGraphicsConfiguration;
   private mView: IMgImageView;
   private mFramebuffers: MgFramebufferCollection;  
-  constructor(renderer: IWGLRenderer, configuration:IMgGraphicsConfiguration) {
+  constructor(
+    glContext: IWGLBackbufferContext
+    , renderer: IWGLRenderer
+    , configuration:IMgGraphicsConfiguration
+  ) {
+    this.mGLContext = glContext;
     this.mRenderer = renderer;
     this.mGraphicsConfiguration = configuration;
     this.mView = new WGLNullImageView ();
@@ -75,7 +83,7 @@ export class WGLGraphicsDevice implements IMgGraphicsDevice {
     , depthPassFormat: MgFormat
   ) : void {
     // THIS IS WHERE WE SHOULD CREATE GL CONTEXT 
-    // mBBContext.SetupContext(mWindow.WindowInfo, colorPassFormat, depthPassFormat, createInfo);
+    this.mGLContext.initialize(colorPassFormat, depthPassFormat, createInfo);
 
     // mExtensions.Initialize ();
     // mSelector.Initialize();

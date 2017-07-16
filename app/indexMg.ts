@@ -27,15 +27,6 @@ try {
 
   let shaderPath = new VkTriangleDemoShaderPath();
   
-  let gl = backbone.gl;
-  let vb = gl.createVertexArray();
-  console.log('init : ' + gl.isVertexArray(vb));
-  gl.deleteVertexArray(vb);
-
-  gl.clearColor(0, 0, 0, 0); 
-  gl.clearColor(0, 0, 0, 0); 
-  gl.clear(backbone.gl.COLOR_BUFFER_BIT)  
-
   vk = new VulkanExample(
     backbone.configuration
     , backbone.swapchains

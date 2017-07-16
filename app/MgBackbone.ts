@@ -252,7 +252,8 @@ export class MgBackbone {
       , presentationSurface);
 
     let cmdRenderer = new WGLCmdRenderer(renderer);
-    this.mGraphicsDevice = new WGLGraphicsDevice(cmdRenderer, this.mConfiguration);
+    this.mGraphicsDevice = new WGLGraphicsDevice(glContext, cmdRenderer, this.mConfiguration);
+    this.mGL = glContext.gl;
 
     let swKHR = new WGLHtmlSwapchainKHR();
     this.mSwapchains = new WGLSwapchainCollection(swKHR);
