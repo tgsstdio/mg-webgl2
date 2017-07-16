@@ -102,12 +102,10 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
 
   private mPastBlendConstants: MgColor4f;
 
-  private mGL : WebGL2RenderingContext;
   private mDraws: IWGLCmdDrawEntrypoint;
   private mCache: IWGLCmdShaderProgramCache;    
   constructor(
-    gl: WebGL2RenderingContext
-    , draws: IWGLCmdDrawEntrypoint
+      draws: IWGLCmdDrawEntrypoint
     , cache: IWGLCmdShaderProgramCache
     , blend: IWGLCmdBlendEntrypoint
     , stencil: IWGLCmdStencilEntrypoint
@@ -116,7 +114,6 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
     , scissor: IWGLCmdScissorsEntrypoint
     , clear: IWGLCmdClearEntrypoint
   ) {
-    this.mGL = gl;
     this.mDraws = draws;
     this.mCache = cache;
     this.mBlend = blend;
@@ -899,20 +896,29 @@ export class WGLCmdStateRenderer implements IWGLCmdStateRenderer {
   private getPrimitiveType(
     topology: MgPrimitiveTopology
   ): number
+
   {
+    const POINTS: number = 0x0000;
+    const LINES: number = 0x0001;
+    //const LINE_LOOP: number = 0x0002;
+    const LINE_STRIP: number = 0x0003;
+    const TRIANGLES: number = 0x0004;
+    const TRIANGLE_STRIP: number = 0x0005;
+    const TRIANGLE_FAN: number =  0x0006;
+
     switch(topology) {
       case MgPrimitiveTopology.TRIANGLE_LIST:
-        return this.mGL.TRIANGLES;
+        return TRIANGLES;
       case MgPrimitiveTopology.TRIANGLE_FAN:
-        return this.mGL.TRIANGLE_FAN;
+        return TRIANGLE_FAN;
       case MgPrimitiveTopology.TRIANGLE_STRIP:
-        return this.mGL.TRIANGLE_STRIP;
+        return TRIANGLE_STRIP;
       case MgPrimitiveTopology.POINT_LIST:
-        return this.mGL.POINTS;
+        return POINTS;
       case MgPrimitiveTopology.LINE_STRIP:
-        return this.mGL.LINE_STRIP;
+        return LINE_STRIP;
       case MgPrimitiveTopology.LINE_LIST:
-        return this.mGL.LINES;
+        return LINES;
       default:
         throw new Error('Not supported');
     }
