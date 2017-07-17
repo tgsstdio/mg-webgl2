@@ -99,17 +99,15 @@ export class WGLCmdBlitEncoder implements IWGLCmdBlitEncoder {
 
     let bSrcBuffer = srcBuffer as IWGLBuffer;
     let bDstBuffer = dstBuffer as IWGLBuffer;
+
+    let srcMask = (bSrcBuffer.usage & MgBufferUsageFlagBits.TRANSFER_SRC_BIT);
+    let dstMask = (bDstBuffer.usage & MgBufferUsageFlagBits.TRANSFER_DST_BIT);
+
     if (
       bSrcBuffer.isBufferType 
-      && (
-        (bSrcBuffer.usage | MgBufferUsageFlagBits.TRANSFER_SRC_BIT)
-        == MgBufferUsageFlagBits.TRANSFER_SRC_BIT
-      )  
+      && (srcMask == MgBufferUsageFlagBits.TRANSFER_SRC_BIT)  
       && bDstBuffer.isBufferType
-      && (
-        (bDstBuffer.usage | MgBufferUsageFlagBits.TRANSFER_DST_BIT)
-        == MgBufferUsageFlagBits.TRANSFER_DST_BIT
-      )
+      && (dstMask == MgBufferUsageFlagBits.TRANSFER_DST_BIT)
     ) {
       let copyParams = new Array<WGLCmdCopyBufferRegionRecord>();
       for (var i = 0; i < pRegions.length; i += 1) {

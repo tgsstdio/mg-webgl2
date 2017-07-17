@@ -5,18 +5,26 @@ import {WGLCmdImageInstructionSet}
 import {IWGLBuffer}
 	from '../IWGLBuffer';
 import {IWGLBackbufferContext}
-	from '../IWGLBackbufferContext';
+  from '../IWGLBackbufferContext';
+import {IWGLErrorHandler}
+  from './IWGLErrorHandler';
 
 export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
   private mGLContext: IWGLBackbufferContext;
-  constructor(glContext : IWGLBackbufferContext) {
+  private mErrorHandler: IWGLErrorHandler;
+  constructor(
+    glContext : IWGLBackbufferContext
+    , errorHandler: IWGLErrorHandler
+  ) {
     this.mGLContext = glContext;
+    this.mErrorHandler = errorHandler;
   }
 
   bindCopySrcBuffer(src:IWGLBuffer) : void {
     if (src.bestBufferTarget != null) {
       let target = src.bestBufferTarget as number;
       this.mGLContext.gl.bindBuffer(target, src.deviceMemory);
+      this.mErrorHandler.checkError();      
     }
   }
 
@@ -24,6 +32,7 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     if (dst.bestBufferTarget != null) {
       let target = dst.bestBufferTarget as number;
       this.mGLContext.gl.bindBuffer(target, dst.deviceMemory);
+      this.mErrorHandler.checkError();      
     }
   }
 
@@ -31,6 +40,7 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     const TEXTURE_2D: number = 0x0DE1;
 
     this.mGLContext.gl.enable(TEXTURE_2D);
+    this.mErrorHandler.checkError();    
   }
 
   copyBuffer(
@@ -50,6 +60,7 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
         , readOffset
         , writeOffset
         , size);
+      this.mErrorHandler.checkError();        
     }
   }
 
@@ -57,6 +68,7 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     if (src.bestBufferTarget != null) {
       let target = src.bestBufferTarget as number;      
       this.mGLContext.gl.bindBuffer(target, null);
+      this.mErrorHandler.checkError();      
     }
   }
 
@@ -64,6 +76,7 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     if (dst.bestBufferTarget != null) {
       let target = dst.bestBufferTarget as number;
       this.mGLContext.gl.bindBuffer(target, null);
+      this.mErrorHandler.checkError();
     }
   }
 

@@ -67,7 +67,7 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
 
     this.mBestTarget = this.getEstimatedBufferTarget(slotInfo.memoryTypeIndex);
     this.mBufferSize = pAllocateInfo.allocationSize;
-    this.mIsHostCached = (typeIndex & IS_HOSTED) == IS_HOSTED;
+    this.mIsHostCached = (slotInfo.memoryTypeIndex & IS_HOSTED) == IS_HOSTED;
 
     if (this.mIsHostCached) {
       this.mHandle = new ArrayBuffer(this.mBufferSize);

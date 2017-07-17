@@ -96,7 +96,6 @@ export class WGLDeviceMemoryTypeMap implements IWGLDeviceMemoryTypeMap {
     offset: number
   ) : number {
     const SELECTED_TYPE_INDEX = WGLDeviceMemoryTypeFlagBits.INDEX
-      | WGLDeviceMemoryTypeFlagBits.TRANSFER_SRC
       | WGLDeviceMemoryTypeFlagBits.TRANSFER_DST;
 
     const ALL_ON = MgMemoryPropertyFlagBits.DEVICE_LOCAL_BIT
