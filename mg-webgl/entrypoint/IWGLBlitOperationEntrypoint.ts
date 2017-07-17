@@ -4,6 +4,9 @@ import {IWGLBuffer} from '../IWGLBuffer'
 export interface IWGLBlitOperationEntrypoint {
   initialize() : void;
 
+  getBufferSubData(src:IWGLBuffer, srcOffset:number, srcSize: number, dst: Uint8Array) : void;
+  setBufferSubData(src:Uint8Array, dst:IWGLBuffer, dstOffset:number, dstSize: number) : void;
+
   bindCopySrcBuffer(src:IWGLBuffer) : void;
   bindCopyDstBuffer(dst:IWGLBuffer) : void;
 

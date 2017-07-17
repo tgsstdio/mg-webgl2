@@ -20,18 +20,41 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     this.mErrorHandler = errorHandler;
   }
 
+  getBufferSubData(
+    src:IWGLBuffer
+    , srcOffset:number
+    , srcSize: number
+    , dst: Uint8Array
+  ) : void {
+    let target = this.getSrcTarget(src);
+
+    this.mGLContext.gl.getBufferSubData(target, srcOffset, dst, 0, srcSize);
+  }
+
+  setBufferSubData(src:Uint8Array, dst:IWGLBuffer, dstOffset:number, dstSize: number) : void {
+    let target = this.getSrcTarget(dst);
+    
+    this.mGLContext.gl.bufferSubData(target, dstOffset, src, 0, dstSize);
+  }
+
   bindCopySrcBuffer(src:IWGLBuffer) : void {
     if (src.bestBufferTarget != null) {
-      let target = src.bestBufferTarget as number;
+      let target = this.getSrcTarget(src);  
+
       this.mGLContext.gl.bindBuffer(target, src.deviceMemory);
       this.mErrorHandler.checkError();      
     }
   }
 
+  private getSrcTarget(src:IWGLBuffer): number {
+    return src.bestBufferTarget as number;
+  }
+
   bindCopyDstBuffer(dst:IWGLBuffer) : void {
     if (dst.bestBufferTarget != null) {
-      let target = dst.bestBufferTarget as number;
-      this.mGLContext.gl.bindBuffer(target, dst.deviceMemory);
+      const COPY_WRITE_BUFFER = 0x8F37;       
+
+      this.mGLContext.gl.bindBuffer(COPY_WRITE_BUFFER, dst.deviceMemory);
       this.mErrorHandler.checkError();      
     }
   }
@@ -51,12 +74,13 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
     , size:number
   ) : void {
     if (src.bestBufferTarget != null && dst.bestBufferTarget != null) {
-      let srcTarget = src.bestBufferTarget as number;
-      let dstTarget = dst.bestBufferTarget as number;      
+      const COPY_WRITE_BUFFER = 0x8F37;  
+      
+      let srcTarget = this.getSrcTarget(src);        
 
       this.mGLContext.gl.copyBufferSubData(
         srcTarget
-        , dstTarget
+        , COPY_WRITE_BUFFER
         , readOffset
         , writeOffset
         , size);
@@ -66,16 +90,17 @@ export class WGLBlitOperationEntrypoint implements IWGLBlitOperationEntrypoint {
 
   unbindCopySrcBuffer(src:IWGLBuffer) : void {
     if (src.bestBufferTarget != null) {
-      let target = src.bestBufferTarget as number;      
-      this.mGLContext.gl.bindBuffer(target, null);
+      let srcTarget = this.getSrcTarget(src);      
+      
+      this.mGLContext.gl.bindBuffer(srcTarget, null);
       this.mErrorHandler.checkError();      
     }
   }
 
   unbindCopyDstBuffer(dst:IWGLBuffer) : void {
     if (dst.bestBufferTarget != null) {
-      let target = dst.bestBufferTarget as number;
-      this.mGLContext.gl.bindBuffer(target, null);
+      const COPY_WRITE_BUFFER = 0x8F37; 
+      this.mGLContext.gl.bindBuffer(COPY_WRITE_BUFFER, null);
       this.mErrorHandler.checkError();
     }
   }

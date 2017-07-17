@@ -7,4 +7,5 @@ export class WGLCmdCopyBufferRecord {
   source: IWGLBuffer;
   destination: IWGLBuffer;
   regions: Array<WGLCmdCopyBufferRegionRecord>;
+  isIndexCopy: boolean;
 }

@@ -133,6 +133,7 @@ export class WGLCmdBlitEncoder implements IWGLCmdBlitEncoder {
       }
 
       let item = new WGLCmdCopyBufferRecord();
+      item.isIndexCopy = (bDstBuffer.usage & MgBufferUsageFlagBits.INDEX_BUFFER_BIT) == MgBufferUsageFlagBits.INDEX_BUFFER_BIT;      
       item.source = bSrcBuffer;
       item.destination = bDstBuffer;
       item.regions = copyParams;
@@ -175,22 +176,40 @@ class WGLCmdCopyBuffer implements WGLCmdAction {
       return; 
 
     if (item.regions != null) {
-      if (item.regions.length > 0) {
-        entrypoint.bindCopySrcBuffer(item.source);
-        entrypoint.bindCopyDstBuffer(item.destination);
-
+      if (item.isIndexCopy) {
+        // USE STAGING BUFFER 
         for (let region of item.regions) {
-          entrypoint.copyBuffer(
-            item.source
-            , item.destination
-            , region.readOffset
-            , region.writeOffset
-            , region.size);
+          let stagingBuffer: ArrayBuffer = new ArrayBuffer(region.size);
+          let stagingView: Uint8Array = new Uint8Array(stagingBuffer);
+          
+          entrypoint.bindCopySrcBuffer(item.source);
+          entrypoint.getBufferSubData(item.source, region.readOffset, region.size, stagingView);
+
+          entrypoint.bindCopySrcBuffer(item.destination);
+
+          entrypoint.setBufferSubData(stagingView, item.destination, region.writeOffset, region.size);
         }
 
         entrypoint.unbindCopySrcBuffer(item.source);
-        entrypoint.unbindCopyDstBuffer(item.destination);
+        entrypoint.unbindCopySrcBuffer(item.destination);
+      }
+      else {
+        if (item.regions.length > 0) {
+          entrypoint.bindCopySrcBuffer(item.source);
+          entrypoint.bindCopyDstBuffer(item.destination);
 
+          for (let region of item.regions) {
+            entrypoint.copyBuffer(
+              item.source
+              , item.destination
+              , region.readOffset
+              , region.writeOffset
+              , region.size);
+          }
+
+          entrypoint.unbindCopySrcBuffer(item.source);
+          entrypoint.unbindCopyDstBuffer(item.destination);
+        }
       }
     }
   }

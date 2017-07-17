@@ -130,7 +130,8 @@ export class WGLBackbufferContext implements IWGLBackbufferContext {
       ,{
         alpha: hasAlpha
         , depth: isDepth
-        , stencil: isStencil
+				, stencil: isStencil
+				, premultipledAlpha: false
       }
     ) as WebGL2RenderingContext;
     if (gl == null)

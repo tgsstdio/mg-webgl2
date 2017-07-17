@@ -449,17 +449,17 @@ export class VulkanExample {
     let data = outData.ppData as Uint8Array;
 
     let offset: number = 0;
-    let localBuffer = new ArrayBuffer(structSize);
-    let localData = new Uint8Array(localBuffer);
-    let localView = new Float32Array(localBuffer);
-
+    let input = new DataView(data.buffer, data.byteOffset);
     for (let vertex of vertexBuffer) {
-        
-        localView.set(vertex.position, 0);
-        localView.set(vertex.color, 3);
+      input.setFloat32(offset + 0, vertex.position[0], true);
+      input.setFloat32(offset + 4, vertex.position[1], true);
+      input.setFloat32(offset + 8, vertex.position[2], true);
 
-        data.set(localData, offset);
-        offset += structSize;
+      input.setFloat32(offset + 12, vertex.color[0], true);
+      input.setFloat32(offset + 16, vertex.color[1], true);
+      input.setFloat32(offset + 20, vertex.color[2], true);
+
+      offset += structSize;
     }
 
     sb.memory.unmapMemory(
@@ -548,7 +548,8 @@ export class VulkanExample {
   ) : StagingBuffer {
     let indexbufferInfo = new MgBufferCreateInfo();
     indexbufferInfo.size = indexBufferSize;
-    indexbufferInfo.usage = MgBufferUsageFlagBits.TRANSFER_SRC_BIT;
+    // DEV: WebGL cannot copy internal gl buffer data between element array data and non element array data
+    indexbufferInfo.usage = MgBufferUsageFlagBits.TRANSFER_SRC_BIT;    
 
     // Copy index data to a buffer visible to the host (staging buffer)
     let outBuffer 
@@ -615,7 +616,15 @@ export class VulkanExample {
     }
 
     let data = outData.ppData as Uint8Array;
-    data.set(indices, 0);
+    
+    // JS : THIS IS DUMB
+    let input = new DataView(data.buffer, data.byteOffset);
+    
+    let offset = 0;    
+    for (let i = 0; i < indices.length; i += 1) {
+      input.setUint32(offset, indices[i], true);
+      offset += indices.BYTES_PER_ELEMENT;
+    }
 
     sb.memory.unmapMemory(this.mConfiguration.device);
 
