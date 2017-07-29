@@ -159,6 +159,11 @@ export class MgBackbone {
     return this.mPresentationLayer;
   } 
 
+  private mVertexArrays: IWGLCmdVertexArrayEntrypoint;
+  get vertexArrays(): IWGLCmdVertexArrayEntrypoint {
+    return this.mVertexArrays;
+  }
+
   constructor(
     appInfo: MgApplicationInfo    
     , canvas: HTMLCanvasElement
@@ -215,7 +220,7 @@ export class MgBackbone {
     let imageDescriptor = new WGLImageDescriptorEntrypoint();
     let desciptorPool = new WGLDescriptorPoolEntrypoint(imageDescriptor);
     let descriptorSets = new WGLDescriptorSetEntrypoint();
-    let vertexArrays = new WGLCmdVertexArrayEntrypoint(glContext, errorHandler);
+    this.mVertexArrays = new WGLCmdVertexArrayEntrypoint(glContext, errorHandler);
     let imageFormat = new WGLImageFormatEntrypoint();
     let fences = new WGLSynchronizableFenceEntrypoint(glContext);
     let buffers = new WGLBufferEntrypoint(glContext);
@@ -227,7 +232,7 @@ export class MgBackbone {
       , sampler
       , desciptorPool
       , descriptorSets
-      , vertexArrays
+      , this.mVertexArrays
       , imageFormat
       , semaphores
       , fences

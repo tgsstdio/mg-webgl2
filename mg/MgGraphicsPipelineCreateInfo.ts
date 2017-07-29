@@ -35,7 +35,7 @@ export class MgGraphicsPipelineCreateInfo	{
   multisampleState : MgPipelineMultisampleStateCreateInfo;
   depthStencilState : MgPipelineDepthStencilStateCreateInfo;
   colorBlendState : MgPipelineColorBlendStateCreateInfo;
-  dynamicState : MgPipelineDynamicStateCreateInfo;
+  dynamicState : MgPipelineDynamicStateCreateInfo|null;
   layout : IMgPipelineLayout;
   renderPass : IMgRenderPass;
   subpass : number;

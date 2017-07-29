@@ -163,7 +163,7 @@ export interface IMgDevice {
 
   createRenderPass(pCreateInfo: MgRenderPassCreateInfo
     , allocator: IMgAllocationCallbacks|null
-    , out: { pRenderPass: IMgRenderPass }) : MgResult;
+    , out: { pRenderPass: IMgRenderPass|null }) : MgResult;
 
   createCommandPool(pCreateInfo: MgCommandPoolCreateInfo
     , allocator: IMgAllocationCallbacks|null

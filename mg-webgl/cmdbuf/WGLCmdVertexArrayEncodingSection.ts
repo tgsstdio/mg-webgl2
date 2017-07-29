@@ -110,7 +110,7 @@ export class WGLCmdVertexArrayEncodingSection
     }
   }
 
-  private generateVBO(
+  public generateVBO(
     pipeline: IWGLGraphicsPipeline
     , vertexData: WGLCmdVertexBufferParameter
   ): WGLCmdVertexBufferObject {

@@ -242,7 +242,7 @@ export class VulkanExample {
 
     this.mConfiguration.initialize(this.mWidth, this.mHeight);
     this.initSwapchain(this.mWidth, this.mHeight);
-    this.prepare();
+    // this.prepare();
   }
 
   private initSwapchain(
