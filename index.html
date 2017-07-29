@@ -1,16 +1,21 @@
- <html>
-   <head>
-     <title>WEBGL2 Quickstart</title>
-   </head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>WEBGL2 Quickstart</title>
+  </head>
    <body>
     <h1>WEBGL2 Quickstart</h1>
-    <div id='messageLog' > </div>    
+    <div id="messageLog" > </div>    
     <canvas id="glCanvas" width="640" height="480" style='background-color: black'>
       Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
     </canvas>
     <script id="vs" type="x-shader/x-vertex">
         #version 300 es
 
+        precision highp float;
+        precision highp int;
+        
         layout (location = 0) in vec3 inPos;
         layout (location = 1) in vec3 inColor;
 
@@ -21,7 +26,7 @@
         };
 
         uniform UBO ubo;
-        out vec3 outColor;
+        flat out vec3 outColor;
 
         void vertFunc() 
         {
@@ -36,7 +41,7 @@
         precision highp float;
         precision highp int;
 
-        in vec3 outColor;
+        flat in vec3 outColor;
 
         out vec4 outFragColor;
 
@@ -45,7 +50,33 @@
             outFragColor = vec4(outColor, 1.0);
         }        
     </script>    
-  
+    <script id="vs-old" type="x-shader/x-vertex">
+        #version 300 es
+        #define POSITION_LOCATION 0
+        #define COLOR_LOCATION 1
+        
+        precision highp float;
+        precision highp int;
+        layout(location = POSITION_LOCATION) in vec2 pos;
+        layout(location = COLOR_LOCATION) in vec4 color;
+        flat out vec4 v_color;
+        void main()
+        {
+            v_color = color;
+            gl_Position = vec4(pos + vec2(float(gl_InstanceID) - 0.5, 0.0), 0.0, 1.0);
+        }
+    </script>        
+    <script id="fs-old" type="x-shader/x-fragment">
+        #version 300 es
+        precision highp float;
+        precision highp int;
+        flat in vec4 v_color;
+        out vec4 color;
+        void main()
+        {
+            color = v_color;
+        }
+    </script>    
     <script src='dist/bundle.js'></script>
    </body>
  </html>

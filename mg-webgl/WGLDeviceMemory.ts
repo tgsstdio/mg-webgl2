@@ -148,13 +148,14 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
       (this.mIsHostCached) 
         ? this.mHandle as ArrayBuffer
         : new ArrayBuffer(size);
-    let viewOffset = (this.mIsHostCached)
+    let srcOffset = (this.mIsHostCached)
       ? offset
       : 0;
-    let view = new Uint8Array(buffer, viewOffset, size);
+    let view = new Uint8Array(buffer, srcOffset, size);
     this.mMappedCache
       = new WGLClientMappedMemory(
         buffer
+        , srcOffset
         , offset
         , size          
         , view);
@@ -170,7 +171,7 @@ export class WGLDeviceMemory implements IWGLDeviceMemory {
         let target = this.mBestTarget as number;
         let cache = this.mMappedCache as WGLClientMappedMemory;
         this.mGL.bindBuffer(target, this.mBufferId);
-        this.mGL.bufferSubData(target, cache.offset, cache.view, cache.size);
+        this.mGL.bufferSubData(target, cache.dstOffset, cache.view, cache.srcOffset, cache.size);
         // ONE TARGET AT A TIME 
         this.mGL.bindBuffer(target, null);
       }

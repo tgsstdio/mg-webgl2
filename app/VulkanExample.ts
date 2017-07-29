@@ -1384,7 +1384,7 @@ export class VulkanExample {
     // Set clear values for all framebuffer attachments with loadOp set to clear
     // We use two attachments (color and depth) that are cleared at the start of the subpass and as such we need to set clear values for both
     
-    let clearColor = new MgColor4f(1, 0, 0, 1);
+    let clearColor = new MgColor4f(0, 0, 0, 1);
     let depthStencil = new MgClearDepthStencilValue();
     depthStencil.depth = 1.0;
     depthStencil.stencil = 0;

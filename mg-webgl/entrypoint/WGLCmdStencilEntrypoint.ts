@@ -45,24 +45,25 @@ export class WGLCmdStencilEntrypoint implements IWGLCmdStencilEntrypoint {
     let initialValue = new WGLQueueRendererStencilState();
     initialValue.flags = 0; // !QueueDrawItemBitFlags.StencilEnabled | !QueueDrawItemBitFlags.TwoSidedStencilMode
     const INT_MAX_VALUE = 0x7FFFFFFF;
+    const INITIAL_WRITE_MASK  = ~0;
     let front = new WGLGraphicsPipelineStencilMasks();
-    front.writeMask = ~0;
+    front.writeMask = INITIAL_WRITE_MASK;
     front.reference = ~0,
     front.compareMask = INT_MAX_VALUE;
     initialValue.front = front;
 
     let back = new WGLGraphicsPipelineStencilMasks();    
-    back.writeMask = ~0;
+    back.writeMask = INITIAL_WRITE_MASK;
     back.reference = ~0;
-    back.compareMask = 0x7FFFFFFF;
+    back.compareMask = INT_MAX_VALUE;
     initialValue.back = back;
 
     initialValue.settings = this.getDefaultEnums();    
 
     this.disableStencilBuffer ();
     this.setStencilWriteMask(
-      MgStencilFaceFlagBits.FRONT_BIT
-      , initialValue.front.writeMask);
+      MgStencilFaceFlagBits.FRONT_AND_BACK
+      , INITIAL_WRITE_MASK);
 
     this.setFrontFaceCullStencilFunction(
       initialValue.settings.frontStencilFunction

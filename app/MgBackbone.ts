@@ -113,13 +113,15 @@ import {WGLCmdClearEntrypoint}
 	from '../mg-webgl/entrypoint/WGLCmdClearEntrypoint';  
 import {WGLFenceSynchronizationEntrypoint}
 	from '../mg-webgl/entrypoint/WGLFenceSynchronizationEntrypoint';    
+import {IWGLBackbufferContext}
+	from '../mg-webgl/IWGLBackbufferContext';    
 import {WGLBackbufferContext}
 	from '../mg-webgl/WGLBackbufferContext';    
 
 export class MgBackbone {
-  private mGL: WebGL2RenderingContext;
+  private mGLContext: IWGLBackbufferContext;
   get gl(): WebGL2RenderingContext {
-    return this.mGL;
+    return this.mGLContext.gl;
   }
 
   private mContext: MgDriverContext;
@@ -253,7 +255,7 @@ export class MgBackbone {
 
     let cmdRenderer = new WGLCmdRenderer(renderer);
     this.mGraphicsDevice = new WGLGraphicsDevice(glContext, cmdRenderer, this.mConfiguration);
-    this.mGL = glContext.gl;
+    this.mGLContext = glContext;
 
     let swKHR = new WGLHtmlSwapchainKHR();
     this.mSwapchains = new WGLSwapchainCollection(swKHR);

@@ -43,20 +43,20 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
   //     }
 
   bindIntVertexAttribute (
-    location: number
+    attributeLoc: number
     , size: number
     , pointerType: WGLVertexAttributeType
     , stride: number
     , offset: number
   ): void {
-    this.mGLContext.gl.enableVertexAttribArray(location);
+    this.mGLContext.gl.enableVertexAttribArray(attributeLoc);
     /**
     https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/vertexAttribIPointer
     offset "must be a multiple of type."
     stride <= 255
     **/
     this.mGLContext.gl.vertexAttribIPointer(
-      location
+      attributeLoc
       , size
       , this.getVertexAttribType(pointerType)
       , stride
@@ -111,14 +111,14 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
   }
 
   bindFloatVertexAttribute(
-      location: number
+      attributeLoc: number
     , size: number
     , pointerType: WGLVertexAttributeType
     , isNormalized: boolean
     , stride: number
     , offset: number) : void
   {
-    this.mGLContext.gl.enableVertexAttribArray(location);
+    this.mGLContext.gl.enableVertexAttribArray(attributeLoc);
     this.mErrHandler.logGLError(
       "bindFloatVertexAttribute.EnableVertexArrayAttrib");
     /**
@@ -127,7 +127,7 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
     stride <= 255
     **/
     this.mGLContext.gl.vertexAttribPointer(
-      location
+      attributeLoc
       , size
       , this.getVertexAttribType(pointerType)
       , isNormalized
@@ -138,10 +138,10 @@ export class WGLCmdVertexArrayEntrypoint implements IWGLCmdVertexArrayEntrypoint
   }
 
   setupVertexAttributeDivisor(
-      location: number
+      attributeLoc: number
     , divisor: number) : void
   {
-    this.mGLContext.gl.vertexAttribDivisor(location, divisor);
+    this.mGLContext.gl.vertexAttribDivisor(attributeLoc, divisor);
     this.mErrHandler.logGLError("setupVertexAttributeDivisor");
   }
 

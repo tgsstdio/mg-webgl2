@@ -118,10 +118,14 @@ export class WGLCmdVertexArrayEncodingSection
     let bufferIds = new Array<WebGLBuffer|null>(noOfBindings);
     let offsets = new Array<number>(noOfBindings);
 
+    for (let i =0 ; i < noOfBindings; i += 1) {
+      bufferIds[i] = null;
+      offsets[i] = 0;
+    }
+
     for (let i = 0; i < vertexData.pBuffers.length; i += 1) {
         let index = i + vertexData.firstBinding;
         let buffer = vertexData.pBuffers[index] as IWGLBuffer;
-        // SILENT error
         if (
           (buffer.usage & MgBufferUsageFlagBits.VERTEX_BUFFER_BIT)
             == MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
@@ -129,25 +133,18 @@ export class WGLCmdVertexArrayEncodingSection
             bufferIds[i] = buffer.deviceMemory;
             offsets[i] = (vertexData.pOffsets != null) ? vertexData.pOffsets[i] : 0;
         }
-        else {
-            bufferIds[i] = 0;
-            offsets[i] = 0;
-        }
     }
 
     let vbo = this.mVertexArrays.generateVBO();
-
     this.mVertexArrays.bindVertexArray(vbo);
-    // only one buffer can be attached in WebGL 2.0
-    if (pipeline.vertexInput.attributes.length >= 1) {
-        let bufferId = bufferIds[0];
-        let binding = pipeline.vertexInput.bindings[0];
-        let offset = offsets[0];
-        this.mVertexArrays.bindVertexBuffer(bufferId);
-    }
 
     // WEBGL: need to bind single buffer as vertex buffer to vertex array
     for (let attribute of pipeline.vertexInput.attributes) {          
+      let bufferId = bufferIds[attribute.binding];
+      let binding = pipeline.vertexInput.bindings[attribute.binding];
+      let offset = offsets[attribute.binding];     
+      this.mVertexArrays.bindVertexBuffer(bufferId);
+
       if (attribute.function == WGLVertexAttribFunction.FLOAT) {
           // NOT direct state access, must be currently bound
           this.mVertexArrays.bindFloatVertexAttribute(

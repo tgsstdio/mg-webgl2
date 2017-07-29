@@ -490,7 +490,7 @@ if (info.rasterizationState == null)
 			perInstance.set (def.binding, def);
 		}
 
-		let keys = new Array<number>(perInstance.size);
+		let keys = new Array<number>();
 		for (let key of perInstance.keys()) {
 			keys.push(key);
 		}

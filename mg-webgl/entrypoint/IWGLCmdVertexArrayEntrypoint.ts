@@ -6,14 +6,14 @@ export interface IWGLCmdVertexArrayEntrypoint {
   ): void;
 
   bindIntVertexAttribute(
-    location: number
+    attributeLoc: number
     , size: number
     , pointerType: WGLVertexAttributeType
     , stride: number
     , offset: number): void;
 
   bindFloatVertexAttribute(
-    location: number
+    attributeLoc: number
     , size: number
     , pointerType: WGLVertexAttributeType
     , isNormalized: boolean
@@ -21,7 +21,7 @@ export interface IWGLCmdVertexArrayEntrypoint {
     , offset: number): void;
 
   setupVertexAttributeDivisor(
-    location: number
+    attributeLoc: number
     , divisor: number) : void;
 
   generateVBO (): WebGLVertexArrayObject;

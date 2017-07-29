@@ -1,16 +1,19 @@
 export class WGLClientMappedMemory {
   private mBuffer: ArrayBuffer;
   private mView: Uint8Array;
-  private mOffset: number;
+  private mSrcOffset: number;
+  private mDstOffset: number;
   private mSize: number;
   constructor(
     buffer: ArrayBuffer         
-    , offset: number
+    , srcOffset: number
+    , dstOffset: number
     , size: number
     , view: Uint8Array
   ) {
     this.mBuffer = buffer;
-    this.mOffset = offset;
+    this.mSrcOffset = srcOffset;
+    this.mDstOffset = dstOffset;
     this.mSize = size;
     this.mView = view;
   }
@@ -23,9 +26,13 @@ export class WGLClientMappedMemory {
     return this.mView;
   }
 
-  get offset(): number {
-    return this.mOffset;
+  get srcOffset(): number {
+    return this.mSrcOffset;
   }
+
+  get dstOffset(): number {
+    return this.mDstOffset;
+  }  
 
   get size(): number {
     return this.mSize;
