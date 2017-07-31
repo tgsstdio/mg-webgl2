@@ -123,6 +123,10 @@ export class WGLCmdVertexArrayEncodingSection
       offsets[i] = 0;
     }
 
+    let noOfOffsets = (vertexData.pOffsets != null)
+      ? vertexData.pOffsets.length
+      : 0;
+    let currentOffset = 0;    
     for (let i = 0; i < vertexData.pBuffers.length; i += 1) {
         let index = i + vertexData.firstBinding;
         let buffer = vertexData.pBuffers[index] as IWGLBuffer;
@@ -131,7 +135,11 @@ export class WGLCmdVertexArrayEncodingSection
             == MgBufferUsageFlagBits.VERTEX_BUFFER_BIT
         ) {
             bufferIds[i] = buffer.deviceMemory;
-            offsets[i] = (vertexData.pOffsets != null) ? vertexData.pOffsets[i] : 0;
+
+            if (vertexData.pOffsets != null && currentOffset < 0) {
+              offsets[i] = vertexData.pOffsets[currentOffset];
+              currentOffset += 1;
+            }
         }
     }
 

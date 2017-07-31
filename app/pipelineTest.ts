@@ -34,6 +34,8 @@ import {MgVertexInputRate} from '../mg/MgVertexInputRate';
 import {MgFormat} from '../mg/MgFormat';
 import {WGLCmdVertexArrayEncodingSection} from '../mg-webgl/cmdbuf/WGLCmdVertexArrayEncodingSection';
 import {WGLCmdVertexBufferParameter} from '../mg-webgl/cmdbuf/WGLCmdVertexBufferParameter';
+import {MockWebGLBuffer} from './MockWebGLBuffer';
+import {MgBufferUsageFlagBits} from '../mg/MgBufferUsageFlagBits';
 
 function getShaderSource (id:string) : string {
   let node = document.getElementById(id)
@@ -143,7 +145,7 @@ export function pipelineTest (backbone: MgBackbone) {
   let colorAttribute = new MgVertexInputAttributeDescription();  
   colorAttribute.binding = 1;
   colorAttribute.format = MgFormat.R32G32B32_SFLOAT;
-  colorAttribute.location = 0;
+  colorAttribute.location = 1;  
   colorAttribute.offset = 0;  
 
   vertInputState.vertexBindingDescriptions = [positionBinding, colorBinding];
@@ -249,7 +251,20 @@ export function pipelineTest (backbone: MgBackbone) {
 
   let vaEncoder = new WGLCmdVertexArrayEncodingSection(backbone.vertexArrays);
 
-  let vertexData = new WGLCmdVertexBufferParameter();
+
+
+  let vPosBuffer = new MockWebGLBuffer();
+  vPosBuffer.usage = MgBufferUsageFlagBits.VERTEX_BUFFER_BIT;
+  vPosBuffer.deviceMemory = vertexPosBuffer;
+
+  let vColorBuffer =new MockWebGLBuffer();
+  vColorBuffer.usage = MgBufferUsageFlagBits.VERTEX_BUFFER_BIT;
+  vColorBuffer.deviceMemory = vertexColorBuffer;
+  
+  let vertexData = new WGLCmdVertexBufferParameter();    
+  vertexData.firstBinding = 0;
+  vertexData.pBuffers = [vPosBuffer, vColorBuffer];
+  vertexData.pOffsets = [];
 
   let boundVAO = vaEncoder.generateVBO(graphicsProgram, vertexData);
 
@@ -265,16 +280,17 @@ export function pipelineTest (backbone: MgBackbone) {
   // gl.vertexAttribDivisor(vertexColorLocation, 1) // attribute used once per instance
   // gl.bindVertexArray(null)
 
+  let va = boundVAO.vertexArray;
 
   // -- Render
   gl.clearColor(0.0, 0.0, 1.0, 1.0)
   gl.clear(gl.COLOR_BUFFER_BIT)
-  gl.bindVertexArray(boundVAO.vertexArray)
+  gl.bindVertexArray(va)
   gl.drawArraysInstanced(gl.TRIANGLES, 0, 3, 2)
   // -- Delete WebGL resources
   gl.deleteBuffer(vertexPosBuffer)
   gl.deleteBuffer(vertexColorBuffer)
-  gl.deleteVertexArray(boundVAO.vertexArray)
+  gl.deleteVertexArray(va)
 }
 
 export default pipelineTest;

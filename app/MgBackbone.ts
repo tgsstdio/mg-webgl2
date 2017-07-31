@@ -116,7 +116,9 @@ import {WGLFenceSynchronizationEntrypoint}
 import {IWGLBackbufferContext}
 	from '../mg-webgl/IWGLBackbufferContext';    
 import {WGLBackbufferContext}
-	from '../mg-webgl/WGLBackbufferContext';    
+  from '../mg-webgl/WGLBackbufferContext';  
+import {IWGLCmdVertexArrayEntrypoint}
+	from '../mg-webgl/entrypoint/IWGLCmdVertexArrayEntrypoint';     
 
 export class MgBackbone {
   private mGLContext: IWGLBackbufferContext;
