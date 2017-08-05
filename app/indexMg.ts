@@ -8,7 +8,7 @@ import {VulkanExample} from './VulkanExample';
 import {MgBackbone} from './MgBackbone';
 import {VkTriangleDemoShaderPath} from './VkTriangleDemoShaderPath';
 import {MgApplicationInfo} from '../mg/MgApplicationInfo';
-import {pipelineTest} from './pipelineTest';
+import {pipelineTest} from './pipelineTest2';
 
 let vk: VulkanExample;
 let backbone: MgBackbone;
