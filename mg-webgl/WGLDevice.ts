@@ -541,7 +541,7 @@ export class WGLDevice implements IWGLDevice {
       let dsBinder = new WGLDescriptorSetBinder();
       let descriptorSets = new WGLCmdDescriptorSetEncodingSection(dsBinder);        
       let vertexArrays = new WGLCmdVertexArrayEncodingSection(this.mEntrypoint.vertexArrays);
-      let draws = new WGLCmdDrawEncodingSection(this.mGLContext);
+      let draws = new WGLCmdDrawEncodingSection();
       let graphics = new WGLCmdGraphicsEncoder(
         instructions
         , new WGLCmdGraphicsBag()          

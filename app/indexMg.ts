@@ -8,7 +8,7 @@ import {VulkanExample} from './VulkanExample';
 import {MgBackbone} from './MgBackbone';
 import {VkTriangleDemoShaderPath} from './VkTriangleDemoShaderPath';
 import {MgApplicationInfo} from '../mg/MgApplicationInfo';
-import {pipelineTest} from './pipelineTest2';
+import {pipelineTest} from './pipelineTest3';
 
 let vk: VulkanExample;
 let backbone: MgBackbone;
@@ -37,6 +37,8 @@ try {
   );
 
   pipelineTest(backbone)
+
+  // vk.renderLoop(); 
 }
 catch(err) {
   console.log(err);

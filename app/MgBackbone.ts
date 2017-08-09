@@ -118,7 +118,9 @@ import {IWGLBackbufferContext}
 import {WGLBackbufferContext}
   from '../mg-webgl/WGLBackbufferContext';  
 import {IWGLCmdVertexArrayEntrypoint}
-	from '../mg-webgl/entrypoint/IWGLCmdVertexArrayEntrypoint';     
+  from '../mg-webgl/entrypoint/IWGLCmdVertexArrayEntrypoint'; 
+import {IWGLCmdDrawEntrypoint}
+	from '../mg-webgl/entrypoint/IWGLCmdDrawEntrypoint';     
 
 export class MgBackbone {
   private mGLContext: IWGLBackbufferContext;
@@ -166,6 +168,11 @@ export class MgBackbone {
     return this.mVertexArrays;
   }
 
+  private mDraws: IWGLCmdDrawEntrypoint;
+  get draws(): IWGLCmdDrawEntrypoint {
+    return this.mDraws;
+  }
+
   constructor(
     appInfo: MgApplicationInfo    
     , canvas: HTMLCanvasElement
@@ -182,7 +189,7 @@ export class MgBackbone {
     let glContext = new WGLBackbufferContext(canvas);
 
     let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint(glContext);
-    let draws = new WGLCmdDrawEntrypoint(glContext);
+    this.mDraws = new WGLCmdDrawEntrypoint(glContext);
     let rendererCache = new WGLCmdStateRendererCacheEntrypoint(glContext);
     let cache = new WGLCmdShaderProgramCache(rendererCache);
     let errorHandler = new WGLErrorHandler(glContext);
@@ -193,7 +200,7 @@ export class MgBackbone {
     let scissor = new WGLCmdScissorsEntrypoint(glContext, errorHandler);
     let clear = new WGLCmdClearEntrypoint(glContext, errorHandler);
     let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(
-        draws
+        this.mDraws
       , cache
       , blend
       , stencil

@@ -19,11 +19,6 @@ import {IWGLBackbufferContext} from '../IWGLBackbufferContext'
 
 export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
 {
-  private mGLContext: IWGLBackbufferContext;
-  constructor(glContext: IWGLBackbufferContext) {
-    this.mGLContext = glContext;
-  }
-
   draw(
     pipeline: IWGLGraphicsPipeline
     , bag: WGLCmdGraphicsBag
@@ -94,16 +89,22 @@ export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
     , vertexOffset: number
     , firstInstance: number      
   ) : void {
+    if (vertexOffset != 0)
+      throw new Error("vertexOffset must be 0");
+
+    if (firstInstance != 0)
+      throw new Error("firstInstance must be 0");
+
     let draw = new WGLCmdInternalDrawIndexed();
 
     draw.mode = this.getMode(pipeline.topology);
-    draw.elementCount
-      = this.getElementCount(pipeline.topology, indexCount);
+    draw.elementCount =  indexCount;
     draw.elementType = this.getIndexBufferType(indexBuffer.indexType);
     let indexByteSize = this.getIndexByteSize(indexBuffer.indexType);
     draw.indexOffset = indexBuffer.offset + (firstIndex * indexByteSize);
     draw.instanceCount = instanceCount;
-      // ALWAYS draw.firstInstance = 0;
+    // ALWAYS draw.vertexOffset = 0;
+    // ALWAYS draw.firstInstance = 0;
 
     let nextIndex = bag.drawIndexeds.push(draw);
 
@@ -201,26 +202,6 @@ export class WGLCmdDrawEncodingSection implements IWGLCmdDrawEncodingSection
         return LINE_STRIP;
       case MgPrimitiveTopology.TRIANGLE_FAN:
         return TRIANGLE_FAN;
-      default:
-        throw new Error ("not supported");
-    }
-  }
-
-  private getElementCount(
-    topology: MgPrimitiveTopology
-    , vertexCount: number    
-  ) : number {
-    switch (topology)	{
-      case MgPrimitiveTopology.LINE_LIST:
-        return vertexCount / 2;
-      case MgPrimitiveTopology.POINT_LIST:
-        return vertexCount;
-      case MgPrimitiveTopology.TRIANGLE_LIST:
-        return vertexCount / 3;
-      case MgPrimitiveTopology.LINE_STRIP:
-        return vertexCount - 1;
-      case MgPrimitiveTopology.TRIANGLE_FAN:
-        return vertexCount - 2;
       default:
         throw new Error ("not supported");
     }

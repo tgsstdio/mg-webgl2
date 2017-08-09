@@ -1457,7 +1457,7 @@ export class VulkanExample {
 
       // Draw indexed triangle
         // DEV: firstInstance SHOULD BE 0 as there are no instances 
-      cmdBuf.cmdDrawIndexed(this.indices.count, 1, 0, 0, 1);
+      cmdBuf.cmdDrawIndexed(this.indices.count, 1, 0, 0, 0);
 
       cmdBuf.cmdEndRenderPass();
 
