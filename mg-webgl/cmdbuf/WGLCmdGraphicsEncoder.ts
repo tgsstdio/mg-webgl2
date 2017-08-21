@@ -171,7 +171,7 @@ export class WGLCmdGraphicsEncoder implements IWGLCmdGraphicsEncoder {
   bindVertexBuffers(
     firstBinding: number
     , pBuffers: Array<IMgBuffer>
-    , pOffsets: Array<number>
+    , pOffsets: Array<number>|null
   ) {
     this.mVertexArrays.bindVertexBuffers(
       firstBinding

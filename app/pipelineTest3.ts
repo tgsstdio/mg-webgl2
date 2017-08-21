@@ -53,6 +53,10 @@ import {MockWGLCmdBlitOperationEntrypoint} from './MockWGLCmdBlitOperationEntryp
 import {WGLCmdGraphicsGrid} from '../mg-webgl/cmdbuf/WGLCmdGraphicsGrid';
 import {MockCmdStateRenderer} from './MockCmdStateRenderer';
 import {WGLCmdDrawEntrypoint} from '../mg-webgl/entrypoint/WGLCmdDrawEntrypoint';
+import {WGLCmdGraphicsEncoder} from '../mg-webgl/cmdbuf/WGLCmdGraphicsEncoder';
+import {MockWGLCmdDescriptorSetEncodingSection} from './MockWGLCmdDescriptorSetEncodingSection';
+import {MgSubpassContents} from '../mg/MgSubpassContents';
+import {MgRenderPassBeginInfo} from '../mg/MgRenderPassBeginInfo';
 
 function getShaderSource (id:string) : string {
   let node = document.getElementById(id)
@@ -273,7 +277,23 @@ export function pipelineTest (backbone: MgBackbone) {
 
 
   let vaEncoder = new WGLCmdVertexArrayEncodingSection(backbone.vertexArrays);
-  vaEncoder.bindIndexBuffer(indicesBuffer, 0, MgIndexType.UINT32);
+
+  var draw = new WGLCmdDrawEncodingSection();
+  var bag = new WGLCmdGraphicsBag();
+  var sorter = new WGLCmdEncoderContextSorter();
+
+  let dSets = new MockWGLCmdDescriptorSetEncodingSection();
+  let gEncoder = new WGLCmdGraphicsEncoder(
+    sorter,
+    bag,
+    dSets,
+    vaEncoder,
+    draw);
+  
+  let passBegin = new MgRenderPassBeginInfo();  
+  gEncoder.beginRenderPass(passBegin, MgSubpassContents.INLINE);
+  gEncoder.bindPipeline(graphicsProgram);  
+  gEncoder.bindIndexBuffer(indicesBuffer, 0, MgIndexType.UINT32);
 
   let vPosBuffer = new MockWebGLBuffer();
   vPosBuffer.usage = MgBufferUsageFlagBits.VERTEX_BUFFER_BIT;
@@ -288,7 +308,8 @@ export function pipelineTest (backbone: MgBackbone) {
   vertexData.pBuffers = [vPosBuffer];
   vertexData.pOffsets = [];
 
-  let boundVAO = vaEncoder.generateVBO(graphicsProgram, vertexData);
+  gEncoder.bindVertexBuffers(0, [vPosBuffer], null);
+ // let boundVAO = vaEncoder.generateVBO(graphicsProgram, vertexData);
 
   // NEED TO TEST generateVBO code here
   // let vertexArray = gl.createVertexArray()
@@ -302,35 +323,37 @@ export function pipelineTest (backbone: MgBackbone) {
   // gl.vertexAttribDivisor(vertexColorLocation, 1) // attribute used once per instance
   // gl.bindVertexArray(null)
 
-  let va = boundVAO.vertexArray;
+  //let va = boundVAO.vertexArray;
 
-  var draw = new WGLCmdDrawEncodingSection();
-  var bag = new WGLCmdGraphicsBag();
-  var sorter = new WGLCmdEncoderContextSorter();
+  // var indexInfo = new WGLCmdIndexBufferParameter();
+  // indexInfo.buffer = indicesBuffer;
+  // indexInfo.indexType = MgIndexType.UINT32;
+  // indexInfo.offset =  0;  
 
-  var indexInfo = new WGLCmdIndexBufferParameter();
-  indexInfo.buffer = indicesBuffer;
-  indexInfo.indexType = MgIndexType.UINT32;
-  indexInfo.offset =  0;
+  // draw.drawIndexed(
+  //   graphicsProgram,
+  //   indexInfo,
+  //   bag,
+  //   sorter,
+  //   3,
+  //   1,
+  //   0,
+  //   0,
+  //   0);
 
-  draw.drawIndexed(
-    graphicsProgram,
-    indexInfo,
-    bag,
-    sorter,
-    3,
-    1,
-    0,
-    0,
-    0);
+  gEncoder.drawIndexed(3, 1, 0, 0, 0);
+  gEncoder.endRenderPass();
 
   // -- Render
   gl.clearColor(0.0, 0.0, 1.0, 1.0)
   gl.clear(gl.COLOR_BUFFER_BIT)
-  gl.bindVertexArray(va)
+  // gl.bindVertexArray(va)
   
-  var graphicsGrid = new WGLCmdGraphicsGrid();
-  var renderer = new MockCmdStateRenderer(backbone.draws);
+  var graphicsGrid = gEncoder.asGrid();
+  var renderer = new MockCmdStateRenderer(
+    backbone.draws,
+    backbone.cache
+  );
   var recording = new WGLCmdCommandRecording(
         new WGLCmdComputeRecording(
           new WGLCmdComputeGrid(),
@@ -342,9 +365,14 @@ export function pipelineTest (backbone: MgBackbone) {
             new MockWGLCmdBlitOperationEntrypoint()
           )
         );
-  graphicsGrid.drawIndexeds = bag.drawIndexeds.toArray();
 
-  sorter.instructions[0].perform(recording);
+  for (let context of sorter.contexts) {
+    for (let i = context.first; i <= context.last; i += 1)
+    {
+        sorter.instructions[i].perform(recording);
+    }
+  }
+
 
   //gl.drawElementsInstanced(gl.TRIANGLES, 3, gl.UNSIGNED_INT, 0, 1)
 
@@ -353,7 +381,7 @@ export function pipelineTest (backbone: MgBackbone) {
 
   gl.deleteBuffer(vertexPosBuffer)
   // gl.deleteBuffer(vertexColorBuffer)
-  gl.deleteVertexArray(va)
+ // gl.deleteVertexArray(va)
 }
 
 export default pipelineTest;

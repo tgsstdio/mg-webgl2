@@ -13,6 +13,6 @@ export interface IWGLCmdShaderProgramCache {
   ) : void;
 
   readonly vao: WebGLVertexArrayObject|null;
-  setVAO(vertexArray: WebGLVertexArrayObject) : void;
+  setVAO(vertexArray: WebGLVertexArrayObject|null) : void;
   setDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void;
 }

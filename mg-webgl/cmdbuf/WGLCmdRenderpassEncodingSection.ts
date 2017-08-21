@@ -78,13 +78,14 @@ export class WGLCmdRenderpassEncodingSection {
 
     let glPass = pass.renderPass as IWGLRenderPass;
 
-    let noOfAttachments = glPass.attachmentFormats == null 
-      ? 0 
-      : glPass.attachmentFormats.length;
-    let noOfClearValues = pass.clearValues == null 
-      ? 0
-      : pass.clearValues.length;
-
+    let noOfAttachments = glPass != null 
+      && glPass.attachmentFormats != null 
+      ? glPass.attachmentFormats.length
+      : 0;
+    let noOfClearValues = 
+      pass != null && pass.clearValues != null 
+      ? pass.clearValues.length
+      : 0;
     let finalLength = Math.min(noOfAttachments, noOfClearValues);
 
     let attachments = new Array<WGLCmdClearValueArrayItem>(finalLength);

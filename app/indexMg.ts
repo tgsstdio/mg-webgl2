@@ -38,7 +38,7 @@ try {
 
   pipelineTest(backbone)
 
-  // vk.renderLoop(); 
+  //vk.renderLoop(); 
 }
 catch(err) {
   console.log(err);

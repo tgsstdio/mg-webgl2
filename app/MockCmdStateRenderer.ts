@@ -15,14 +15,21 @@ import {WGLCmdVertexBufferObject} from '../mg-webgl/cmdbuf/WGLCmdVertexBufferObj
 import {WGLCmdDescriptorSetParameter} from '../mg-webgl/cmdbuf/WGLCmdDescriptorSetParameter';
 import {IWGLCmdDrawEntrypoint}
 	from '../mg-webgl/entrypoint/IWGLCmdDrawEntrypoint';	
+import {IWGLCmdShaderProgramCache}
+	from '../mg-webgl/renderer/IWGLCmdShaderProgramCache';	
 
 export class MockCmdStateRenderer implements IWGLCmdStateRenderer {
+  private mCache: IWGLCmdShaderProgramCache;  
   private mDraws: IWGLCmdDrawEntrypoint;
   /**
    *
    */
-  constructor(draws: IWGLCmdDrawEntrypoint) {
+  constructor(
+    draws: IWGLCmdDrawEntrypoint,
+    cache: IWGLCmdShaderProgramCache
+  ) {
     this.mDraws = draws;
+    this.mCache = cache;
   }
 
   // TODO : hide these implementation details
@@ -120,7 +127,7 @@ export class MockCmdStateRenderer implements IWGLCmdStateRenderer {
   }
 
   bindVertexArrays(vao: WGLCmdVertexBufferObject) : void {
-
+    this.mCache.setVAO(vao.vertexArray);
   }
 
   bindDescriptorSets(ds: WGLCmdDescriptorSetParameter) : void {

@@ -2,14 +2,14 @@ import {IMgDisposable} from '../../mg/IMgDisposable';
 import {IWGLCmdVertexArrayEntrypoint} from '../entrypoint/IWGLCmdVertexArrayEntrypoint';
 
 export class WGLCmdVertexBufferObject implements IMgDisposable {
-  private mVertexArray : WebGLVertexArrayObject;
-  get vertexArray(): WebGLVertexArrayObject {
+  private mVertexArray : WebGLVertexArrayObject|null;
+  get vertexArray(): WebGLVertexArrayObject|null {
     return this.mVertexArray;
   }
 
   private mFactory: IWGLCmdVertexArrayEntrypoint;
   constructor(
-    vbo: WebGLVertexArrayObject
+    vbo: WebGLVertexArrayObject|null
     , factory : IWGLCmdVertexArrayEntrypoint
   ) {
     this.mVertexArray = vbo;

@@ -121,6 +121,8 @@ import {IWGLCmdVertexArrayEntrypoint}
   from '../mg-webgl/entrypoint/IWGLCmdVertexArrayEntrypoint'; 
 import {IWGLCmdDrawEntrypoint}
 	from '../mg-webgl/entrypoint/IWGLCmdDrawEntrypoint';     
+import {IWGLCmdShaderProgramCache}
+	from '../mg-webgl/renderer/IWGLCmdShaderProgramCache';  
 
 export class MgBackbone {
   private mGLContext: IWGLBackbufferContext;
@@ -173,6 +175,11 @@ export class MgBackbone {
     return this.mDraws;
   }
 
+  private mCache: IWGLCmdShaderProgramCache;
+  get cache(): IWGLCmdShaderProgramCache {
+    return this.mCache;
+  }
+
   constructor(
     appInfo: MgApplicationInfo    
     , canvas: HTMLCanvasElement
@@ -191,7 +198,7 @@ export class MgBackbone {
     let semaphores: IWGLSemaphoreEntrypoint = new WGLSemaphoreEntrypoint(glContext);
     this.mDraws = new WGLCmdDrawEntrypoint(glContext);
     let rendererCache = new WGLCmdStateRendererCacheEntrypoint(glContext);
-    let cache = new WGLCmdShaderProgramCache(rendererCache);
+    this.mCache = new WGLCmdShaderProgramCache(rendererCache);
     let errorHandler = new WGLErrorHandler(glContext);
     let blend = new WGLCmdBlendEntrypoint(glContext, errorHandler);
     let stencil = new WGLCmdStencilEntrypoint(glContext, errorHandler);
@@ -201,7 +208,7 @@ export class MgBackbone {
     let clear = new WGLCmdClearEntrypoint(glContext, errorHandler);
     let renderer: IWGLCmdStateRenderer = new WGLCmdStateRenderer(
         this.mDraws
-      , cache
+      , this.mCache
       , blend
       , stencil
       , depth
