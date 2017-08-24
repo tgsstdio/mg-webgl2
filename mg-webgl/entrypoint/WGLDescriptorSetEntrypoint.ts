@@ -46,7 +46,7 @@ export class WGLDescriptorSetEntrypoint implements IWGLDescriptorSetEntrypoint {
 		for (let i = 0; i < pAllocateInfo.descriptorSetCount; i += 1)	{
 			let bSetLayout = pAllocateInfo.setLayouts[i] as IWGLDescriptorSetLayout;
 
-			sortedResources = new Array<WGLDescriptorPoolResourceInfo>(0);
+			sortedResources = new Array<WGLDescriptorPoolResourceInfo>();
 			for (let uniform of bSetLayout.uniforms) {
 				highestBinding = Math.max(highestBinding, uniform.binding);
 				

@@ -225,12 +225,12 @@ if (info.rasterizationState == null)
 				this.mColorBlendEnums.attachments = colorAttachments;
 			}
 			else {
-				this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(0);
+				this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>();
 			}
 		} 
 		else {
 			this.mBlendConstants = new MgColor4f( 0, 0, 0, 0 );
-			this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>(0);
+			this.mColorBlendEnums.attachments = new Array<WGLGraphicsPipelineBlendColorAttachmentState>();
 
 			// NO LOGIC OPS in WebGL1/2
 			// this.mColorBlendEnums.logicOpEnable = false;

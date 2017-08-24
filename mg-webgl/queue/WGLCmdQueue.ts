@@ -158,7 +158,7 @@ export class WGLCmdQueue implements IWGLQueue {
   queueWaitIdle () : MgResult	{
     do
     {
-      let requestKeys = new Array<number>(this.mSubmissions.size);
+      let requestKeys = new Array<number>();
       
       // Copy keys across to temp array
       for (let key of this.mSubmissions.keys()) {
@@ -181,7 +181,7 @@ export class WGLCmdQueue implements IWGLQueue {
           let order: WGLQueueSubmitOrder = this.mOrders.get(orderKey) as WGLQueueSubmitOrder;
 
           // Copy keys across to temp array
-          let submissionKeys = new Array<number>(order.submissions.size);            
+          let submissionKeys = new Array<number>();            
           for (let key of order.submissions.keys()) {
             submissionKeys.push(key);
           }

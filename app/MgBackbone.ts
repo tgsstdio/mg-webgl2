@@ -180,6 +180,11 @@ export class MgBackbone {
     return this.mCache;
   }
 
+  private mBlit: IWGLBlitOperationEntrypoint;
+  get blit(): IWGLBlitOperationEntrypoint {
+    return this.mBlit;
+  } 
+
   constructor(
     appInfo: MgApplicationInfo    
     , canvas: HTMLCanvasElement
@@ -216,8 +221,8 @@ export class MgBackbone {
       , scissor
       , clear
       );
-    let blit: IWGLBlitOperationEntrypoint = new WGLBlitOperationEntrypoint(glContext, errorHandler);
-    let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, blit);
+    this.mBlit = new WGLBlitOperationEntrypoint(glContext, errorHandler);
+    let queue: IWGLQueue = new WGLCmdQueue(semaphores, renderer, this.mBlit);
     let memoryTypeMap = new WGLDeviceMemoryTypeMap();
     let deviceMemory = new WGLDeviceMemoryEntrypoint(glContext, memoryTypeMap);
     let deviceImage = new WGLDeviceImageEntrypoint(glContext);

@@ -20,6 +20,11 @@ enum MgClearColorCategory {
 export class MgClearValue {
   private mValue: MgClearColorValue | MgClearDepthStencilValue;
 
+  constructor() {
+    // choose a default value for union
+    this.mValue = new MgClearColorValue();      
+  }
+
   get color() : MgClearColorValue {
     return this.mValue as MgClearColorValue;
   }

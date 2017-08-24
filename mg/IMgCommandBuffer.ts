@@ -71,7 +71,7 @@ export interface IMgCommandBuffer	{
   // WARN: pOffsets requires UInt64
   cmdBindVertexBuffers(firstBinding: number
     , pBuffers: Array<IMgBuffer>
-    , pOffsets: Array<number>) : void;
+    , pOffsets: Array<number>|null) : void;
   cmdDraw(vertexCount: number
     , instanceCount: number
     , firstVertex: number
